@@ -13,18 +13,18 @@
             });
         })
         .config(function ($stateProvider, $urlRouterProvider) {
-            $stateProvider
+            $stateProvider            
+            .state("app.home", {
+                url: "/home",
+                templateUrl: "app/menu/menuPage.html",
+                controller: "appCtrl"
+            })
             .state("app", {
                 url: "/app",
                 abstract: true,
-                templateUrl: "app/templates/view-menu.html",
-                controller: "appCtrl"
+                templateUrl: "app/weather/weatherMainPage.html",
+                controller: "weatherMainPageCtrl"
             })
-            .state("app.home", {
-                url: "/home",
-                templateUrl: "app/templates/view-home.html",
-                controller: "homeCtrl"
-            });
             $urlRouterProvider.otherwise("/app/home");
         });
 })();

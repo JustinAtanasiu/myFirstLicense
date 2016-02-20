@@ -4,14 +4,15 @@
     angular.module("myapp.controllers", [])
 
     .controller("appCtrl", ["$scope", function ($scope) {
-    }])
-
-    //homeCtrl provides the logic for the home screen
-    .controller("homeCtrl", ["$scope", "$state", function ($scope, $state) {
-        $scope.refresh = function () {
+         $scope.refresh = function () {
             //refresh binding
             $scope.$broadcast("scroll.refreshComplete");
         };
+    }])
+
+    //homeCtrl provides the logic for the home screen
+    .controller("weatherMainPageCtrl", ["$scope", "$state", function ($scope, $state) {
+       
     }])
 
     //errorCtrl managed the display of error messages bubbled up from other controllers, directives, myappService
