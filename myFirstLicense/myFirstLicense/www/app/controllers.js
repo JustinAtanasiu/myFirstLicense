@@ -10,8 +10,15 @@
         };
     }])
 
-    //homeCtrl provides the logic for the home screen
     .controller("weatherMainPageCtrl", ["$scope", "$state", function ($scope, $state) {
+       
+    }])
+    
+    .controller("calendarMainPageCtrl", ["$scope", "$state", function ($scope, $state) {
+       
+    }])
+    
+    .controller("newsMainPageCtrl", ["$scope", "$state", function ($scope, $state) {
        
     }])
 

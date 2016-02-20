@@ -25,6 +25,18 @@
                 templateUrl: "app/weather/weatherMainPage.html",
                 controller: "weatherMainPageCtrl"
             })
+            .state("calendar", {
+                url: "/calendar",
+                abstract: true,
+                templateUrl: "app/calendar/calendarMainPage.html",
+                controller: "calendarMainPageCtrl"
+            })
+            .state("news", {
+                url: "/news",
+                abstract: true,
+                templateUrl: "app/news/newsMainPage.html",
+                controller: "newsMainPageCtrl"
+            })
             $urlRouterProvider.otherwise("/app/home");
         });
 })();
