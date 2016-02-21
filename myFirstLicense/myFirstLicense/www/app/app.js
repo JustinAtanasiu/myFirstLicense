@@ -13,30 +13,28 @@
             });
         })
         .config(function ($stateProvider, $urlRouterProvider) {
-            $stateProvider            
-            .state("app.home", {
-                url: "/home",
+            $stateProvider      
+            
+            .state("app", {
+                url: "/app",      
                 templateUrl: "app/menu/menuPage.html",
                 controller: "appCtrl"
-            })
-            .state("app", {
-                url: "/app",
-                abstract: true,
+            })            
+            .state("weather", {
+                url: "/weather",
                 templateUrl: "app/weather/weatherMainPage.html",
                 controller: "weatherMainPageCtrl"
             })
             .state("calendar", {
                 url: "/calendar",
-                abstract: true,
                 templateUrl: "app/calendar/calendarMainPage.html",
                 controller: "calendarMainPageCtrl"
             })
             .state("news", {
                 url: "/news",
-                abstract: true,
                 templateUrl: "app/news/newsMainPage.html",
                 controller: "newsMainPageCtrl"
             })
-            $urlRouterProvider.otherwise("/app/home");
+            $urlRouterProvider.otherwise("app");
         });
 })();

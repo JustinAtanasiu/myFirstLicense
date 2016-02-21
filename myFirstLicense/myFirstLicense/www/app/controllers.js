@@ -3,11 +3,8 @@
 
     angular.module("myapp.controllers", [])
 
-    .controller("appCtrl", ["$scope", function ($scope) {
-         $scope.refresh = function () {
-            //refresh binding
-            $scope.$broadcast("scroll.refreshComplete");
-        };
+    .controller("appCtrl", ["$scope", "$ionicPopover", function ($scope, $ionicPopover, $ionicSideMenuDelegate) {
+       
     }])
 
     .controller("weatherMainPageCtrl", ["$scope", "$state", function ($scope, $state) {
