@@ -22,18 +22,27 @@
             })            
             .state("weather", {
                 url: "/weather",
+                cache: false,
                 templateUrl: "app/weather/weatherMainPage.html",
                 controller: "weatherMainPageCtrl"
             })
             .state("calendar", {
                 url: "/calendar",
+                cache: false,
                 templateUrl: "app/calendar/calendarMainPage.html",
                 controller: "calendarMainPageCtrl"
             })
             .state("news", {
                 url: "/news",
+                cache: false,
                 templateUrl: "app/news/newsMainPage.html",
                 controller: "newsMainPageCtrl"
+            })
+            .state("financialManager", {
+                url: "/financialManager",
+                cache: false,
+                templateUrl: "app/financialManager/financialManagerPage.html",
+                controller: "financialManagerCtrl"
             })
             $urlRouterProvider.otherwise("app");
         });

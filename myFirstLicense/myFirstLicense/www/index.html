@@ -1,5 +1,6 @@
 ﻿<!DOCTYPE html>
 <html ng-app="myapp">
+
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
@@ -7,42 +8,46 @@
     <link href="lib/ionic/css/ionic.css" rel="stylesheet">
     <link href="css/app.css" rel="stylesheet">
 </head>
+
 <body>
     <div class="bar bar-header bar-assertive" ng-controller="errorCtrl" ng-show="activeError" style="z-index: 1000">
         <h1 class="title">Error: {{error}}</h1>
         <button class="button icon ion-close-round" ng-click="dismissError()"></button>
     </div>
-   <ion-side-menus>
-    <ion-side-menu-content>
-        <ion-nav-bar  class="bar-light">                        
-            <ion-nav-buttons side="left">
-                <button menu-toggle="left" class="button button-icon icon ion-navicon"></button>
-            </ion-nav-buttons>
-        </ion-nav-bar>
-        <ion-nav-view animation="slide-left-right"></ion-nav-view>        
-    </ion-side-menu-content>
-    <ion-side-menu side="left">
-        <header class="bar bar-header bar-light">
-            <h1 class="title">Tools List</h1>
-        </header>  
-        <ion-content class="has-header">
-      <ion-list>        
-        <ion-item menu-close href="#/weather">
-          Weather
-        </ion-item>
-        <ion-item menu-close href="#/calendar">
-          Calendar
-        </ion-item>
-        <ion-item menu-close href="#/news">
-          News
-        </ion-item>
-        <ion-item menu-close href="#/app">
-          Menu
-        </ion-item>
-      </ion-list>
-    </ion-content>      
-    </ion-side-menu>
-</ion-side-menus>
+    <ion-side-menus>
+        <ion-side-menu-content>
+            <ion-nav-bar class="bar-light">
+                <ion-nav-buttons side="left">
+                    <button menu-toggle="left" class="button button-icon icon ion-navicon"></button>
+                </ion-nav-buttons>
+            </ion-nav-bar>
+            <ion-nav-view animation="slide-left-right"></ion-nav-view>
+        </ion-side-menu-content>
+        <ion-side-menu side="left">
+            <header class="bar bar-header bar-light">
+                <h1 class="title">Tools List</h1>
+            </header>
+            <ion-content class="has-header">
+                <ion-list>
+                    <ion-item menu-close href="#/weather">
+                        Weather
+                    </ion-item>
+                    <ion-item menu-close href="#/calendar">
+                        Calendar
+                    </ion-item>
+                    <ion-item menu-close href="#/news">
+                        News
+                    </ion-item>
+                     <ion-item menu-close href="#/financialManager">
+                        Financial Manager
+                    </ion-item>
+                    <ion-item menu-close href="#/app">
+                        Menu
+                    </ion-item>
+                </ion-list>
+            </ion-content>
+        </ion-side-menu>
+    </ion-side-menus>
     <div class="spinner">
         <ion-spinner icon="android" class="spinnerSpinner"></ion-spinner>
         <div class="spinnerBackground"></div>
@@ -62,4 +67,5 @@
     <script src="app/controllers.js"></script>
     <script src="app/app.js"></script>
 </body>
+
 </html>
