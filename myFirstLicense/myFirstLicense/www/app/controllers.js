@@ -4,11 +4,33 @@
     angular.module("myapp.controllers", [])
 
         .controller("appCtrl", ["$scope", "$ionicPopover", function ($scope, $ionicPopover, $ionicSideMenuDelegate) {
+            $scope.$on('$ionicView.beforeEnter', function (e, data) {
+                $scope.$root.showMenuItems = true;
+                $scope.$root.showSignUp = false;
+            });
+        }])
 
+        .controller("signInCtrl", ["$scope", "$state", function ($scope, $state) {
+            $scope.$on('$ionicView.beforeEnter', function (e, data) {
+                $scope.$root.showMenuItems = false;
+                $scope.$root.showSignUp = true;
+            });
+        }])
+
+        .controller("signUpCtrl", ["$scope", "$state", function ($scope, $state) {
+            $scope.$on('$ionicView.beforeEnter', function (e, data) {
+                $scope.$root.showMenuItems = false;
+                $scope.$root.showSignUp = false;
+            });
         }])
 
         .controller("weatherMainPageCtrl", ["$scope", "$state", "$http", function ($scope, $state, $http) {
-            var onSuccess = function (position) {               
+            $scope.$on('$ionicView.beforeEnter', function (e, data) {
+                $scope.$root.showMenuItems = true;
+                $scope.$root.showSignUp = false;
+            });
+
+            var onSuccess = function (position) {
                 getCity(position.coords.longitude, position.coords.latitude);
             };
 
@@ -17,11 +39,11 @@
             }
 
             navigator.geolocation.getCurrentPosition(onSuccess, onError);
-            
-            
+
+
             var getCity = function (longitude, latitude) {
                 $http({
-                    method: 'GET',  
+                    method: 'GET',
                     url: 'http://nominatim.openstreetmap.org/reverse?format=json&lat=' + latitude + '&lon=' + longitude
                 }).then(function successCallback(response) {
                     $scope.cityName = response.data.address.city + ", " + response.data.address.country;
@@ -33,15 +55,24 @@
         }])
 
         .controller("calendarMainPageCtrl", ["$scope", "$state", function ($scope, $state) {
-            var x = 2;
+            $scope.$on('$ionicView.beforeEnter', function (e, data) {
+                $scope.$root.showMenuItems = true;
+                $scope.$root.showSignUp = false;
+            });
         }])
 
         .controller("newsMainPageCtrl", ["$scope", "$state", function ($scope, $state) {
-
+            $scope.$on('$ionicView.beforeEnter', function (e, data) {
+                $scope.$root.showMenuItems = true;
+                $scope.$root.showSignUp = false;
+            });
         }])
 
         .controller("financialManagerCtrl", ["$scope", "$state", function ($scope, $state) {
-
+            $scope.$on('$ionicView.beforeEnter', function (e, data) {
+                $scope.$root.showMenuItems = true;
+                $scope.$root.showSignUp = false;
+            });
         }])
 
     //errorCtrl managed the display of error messages bubbled up from other controllers, directives, myappService

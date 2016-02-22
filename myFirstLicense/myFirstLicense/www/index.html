@@ -29,20 +29,29 @@
             </header>
             <ion-content class="has-header">
                 <ion-list>
-                    <ion-item menu-close href="#/weather">
+                    <ion-item ng-hide="$root.showMenuItems || $root.showSignUp" menu-close href="#/signIn">
+                        Sign In
+                    </ion-item>
+                    <ion-item ng-show="$root.showSignUp" menu-close href="#/signUp">
+                        Sign up
+                    </ion-item>
+                    <ion-item ng-show="$root.showMenuItems" menu-close href="#/weather">
                         Weather
                     </ion-item>
-                    <ion-item menu-close href="#/calendar">
+                    <ion-item ng-show="$root.showMenuItems" menu-close href="#/calendar">
                         Calendar
                     </ion-item>
-                    <ion-item menu-close href="#/news">
+                    <ion-item ng-show="$root.showMenuItems" menu-close href="#/news">
                         News
                     </ion-item>
-                     <ion-item menu-close href="#/financialManager">
+                    <ion-item ng-show="$root.showMenuItems" menu-close href="#/financialManager">
                         Financial Manager
                     </ion-item>
-                    <ion-item menu-close href="#/app">
+                    <ion-item ng-show="$root.showMenuItems" menu-close href="#/app">
                         Menu
+                    </ion-item>
+                    <ion-item ng-show="$root.showMenuItems" menu-close href="#/signIn">
+                        Sign Out
                     </ion-item>
                 </ion-list>
             </ion-content>

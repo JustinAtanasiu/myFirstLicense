@@ -19,7 +19,19 @@
                 url: "/app",      
                 templateUrl: "app/menu/menuPage.html",
                 controller: "appCtrl"
-            })            
+            })   
+            .state("signIn", {
+                url: "/signIn",
+                cache: false,
+                templateUrl: "app/signIn/signIn.html",
+                controller: "signInCtrl"
+            })    
+            .state("signUp", {
+                url: "/signUp",
+                cache: false,
+                templateUrl: "app/signUp/signUp.html",
+                controller: "signUpCtrl"
+            })       
             .state("weather", {
                 url: "/weather",
                 cache: false,
@@ -44,6 +56,6 @@
                 templateUrl: "app/financialManager/financialManagerPage.html",
                 controller: "financialManagerCtrl"
             })
-            $urlRouterProvider.otherwise("app");
+            $urlRouterProvider.otherwise("signIn");
         });
 })();
