@@ -10,11 +10,25 @@
             });
         }])
 
-        .controller("signInCtrl", ["$scope", "$state", function ($scope, $state) {
+        .controller("signInCtrl", ["$scope", "$state", "LoginService", "$ionicPopup", function ($scope, $state, LoginService, $ionicPopup) {
             $scope.$on('$ionicView.beforeEnter', function (e, data) {
                 $scope.$root.showMenuItems = false;
                 $scope.$root.showSignUp = true;
             });
+
+            $scope.data = {};
+
+            $scope.login = function () {
+                LoginService.loginUser($scope.data.username, $scope.data.password).success(function (data) {
+                    $state.go('app');
+                }).error(function (data) {
+                    var alertPopup = $ionicPopup.alert({
+                        title: 'Login failed!',
+                        template: 'Please check your credentials!'
+                    });
+                });
+            }
+
         }])
 
         .controller("signUpCtrl", ["$scope", "$state", function ($scope, $state) {
