@@ -24,7 +24,7 @@
             if (name == 'user' && pw == 'secret') {
                 deferred.resolve('Welcome ' + name + '!');
             } else {
-                deferred.reject('Wrong credentials.');
+                deferred.reject('Wrong credentials.');                                                                                                              //Property of Justin Atanasiu
             }
             promise.success = function(fn) {
                 promise.then(fn);

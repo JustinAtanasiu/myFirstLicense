@@ -1,6 +1,5 @@
 ﻿(function () {
     "use strict";
-
     angular.module("myapp.controllers", [])
 
         .controller("appCtrl", ["$scope", "$ionicPopover", function ($scope, $ionicPopover, $ionicSideMenuDelegate) {
@@ -10,13 +9,16 @@
             });
         }])
 
-        .controller("signInCtrl", ["$scope", "$state", "LoginService", "$ionicPopup", function ($scope, $state, LoginService, $ionicPopup) {
+        .controller("signInCtrl", ["$scope", "$state", "LoginService", "$ionicPopup",  function ($scope, $state, LoginService, $ionicPopup) {
             $scope.$on('$ionicView.beforeEnter', function (e, data) {
                 $scope.$root.showMenuItems = false;
                 $scope.$root.showSignUp = true;
+
+
             });
 
             $scope.data = {};
+
 
             $scope.login = function () {
                 LoginService.loginUser($scope.data.username, $scope.data.password).success(function (data) {
@@ -31,11 +33,30 @@
 
         }])
 
-        .controller("signUpCtrl", ["$scope", "$state", function ($scope, $state) {
+        .controller("signUpCtrl", ["$scope", "$state", "$ionicPopup", function ($scope, $state, $ionicPopup) {
             $scope.$on('$ionicView.beforeEnter', function (e, data) {
                 $scope.$root.showMenuItems = false;
                 $scope.$root.showSignUp = false;
             });
+
+            $scope.users = [];
+
+            $scope.create = function () {
+                $ionicPopup.prompt({
+                    title: 'Enter a new User item',
+                    inputType: 'text'
+                })
+                    .then(function (result) {
+                        if (result !== "") {
+                            if ($scope.hasOwnProperty("users") !== true) {
+                                $scope.users = [];
+                            }
+                            localDB.post({ username: result });
+                        } else {
+                            console.log("Action not completed");
+                        }
+                    });
+            }
         }])
 
         .controller("weatherMainPageCtrl", ["$scope", "$state", "$http", function ($scope, $state, $http) {

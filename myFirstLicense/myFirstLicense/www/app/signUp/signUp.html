@@ -1,5 +1,11 @@
- <ion-view view-title="Sign Up">
-        <ion-content class="padding">
-          <p>Sign Up</p>
-        </ion-content>
-</ion-view>
+<ion-pane>
+    <ion-content>
+        
+        <button class="right button button-icon icon ion-plus" ng-click="create()"></button>
+        <ion-list>
+            <ion-item ng-repeat="todo in todos">
+                {{todo.title}}
+            </ion-item>
+        </ion-list>
+    </ion-content>
+</ion-pane>
