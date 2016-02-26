@@ -1,11 +1,16 @@
-<ion-pane>
-    <ion-content>
-        
-        <button class="right button button-icon icon ion-plus" ng-click="create()"></button>
-        <ion-list>
-            <ion-item ng-repeat="todo in todos">
-                {{todo.title}}
-            </ion-item>
-        </ion-list>
+<ion-view view-title="Sign In">
+    <ion-content class="padding">
+        <div class="list list-inset">
+          <label class="item item-input">
+              <input type="text" placeholder="Username" ng-model="data.username">
+          </label>
+          <label class="item item-input">
+              <input type="password" placeholder="Password" ng-model="data.password">
+          </label>
+          <label class="item item-input">
+              <input type="password" placeholder="Retype Password" ng-model="data.retypePassword">
+          </label>
+      </div>
+      <button class="button button-block button-calm" ng-click="create(data)">Sign up now!</button>
     </ion-content>
-</ion-pane>
+</ion-view>

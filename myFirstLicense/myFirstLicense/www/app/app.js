@@ -13,49 +13,50 @@
             });
         })
         .config(function ($stateProvider, $urlRouterProvider) {
-            $stateProvider      
-            
-            .state("app", {
-                url: "/app",      
-                templateUrl: "app/menu/menuPage.html",
-                controller: "appCtrl"
-            })   
-            .state("signIn", {
-                url: "/signIn",
-                cache: false,
-                templateUrl: "app/signIn/signIn.html",
-                controller: "signInCtrl"
-            })    
-            .state("signUp", {
-                url: "/signUp",
-                cache: false,
-                templateUrl: "app/signUp/signUp.html",
-                controller: "signUpCtrl"
-            })       
-            .state("weather", {
-                url: "/weather",
-                cache: false,
-                templateUrl: "app/weather/weatherMainPage.html",
-                controller: "weatherMainPageCtrl"
-            })
-            .state("calendar", {
-                url: "/calendar",
-                cache: false,
-                templateUrl: "app/calendar/calendarMainPage.html",
-                controller: "calendarMainPageCtrl"
-            })
-            .state("news", {
-                url: "/news",
-                cache: false,
-                templateUrl: "app/news/newsMainPage.html",
-                controller: "newsMainPageCtrl"
-            })
-            .state("financialManager", {
-                url: "/financialManager",
-                cache: false,
-                templateUrl: "app/financialManager/financialManagerPage.html",
-                controller: "financialManagerCtrl"
-            })
+            $stateProvider
+
+                .state("app", {
+                    url: "/app",
+                    templateUrl: "app/menu/menuPage.html",
+                    controller: "appCtrl",
+                    params: { user:null }
+                })
+                .state("signIn", {
+                    url: "/signIn",
+                    cache: false,
+                    templateUrl: "app/signIn/signIn.html",
+                    controller: "signInCtrl"
+                })
+                .state("signUp", {
+                    url: "/signUp",
+                    cache: false,
+                    templateUrl: "app/signUp/signUp.html",
+                    controller: "signUpCtrl"
+                })
+                .state("weather", {
+                    url: "/weather",
+                    cache: false,
+                    templateUrl: "app/weather/weatherMainPage.html",
+                    controller: "weatherMainPageCtrl"
+                })
+                .state("calendar", {
+                    url: "/calendar",
+                    cache: false,
+                    templateUrl: "app/calendar/calendarMainPage.html",
+                    controller: "calendarMainPageCtrl"
+                })
+                .state("news", {
+                    url: "/news",
+                    cache: false,
+                    templateUrl: "app/news/newsMainPage.html",
+                    controller: "newsMainPageCtrl"
+                })
+                .state("financialManager", {
+                    url: "/financialManager",
+                    cache: false,
+                    templateUrl: "app/financialManager/financialManagerPage.html",
+                    controller: "financialManagerCtrl"
+                })
             $urlRouterProvider.otherwise("signIn");
         });
 })();

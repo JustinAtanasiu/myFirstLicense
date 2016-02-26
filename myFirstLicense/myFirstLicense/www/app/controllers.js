@@ -2,14 +2,15 @@
     "use strict";
     angular.module("myapp.controllers", [])
 
-        .controller("appCtrl", ["$scope", "$ionicPopover", function ($scope, $ionicPopover, $ionicSideMenuDelegate) {
+        .controller("appCtrl", ["$scope", "$ionicPopover", "$stateParams", function ($scope, $ionicPopover, $stateParams, $ionicSideMenuDelegate) {
             $scope.$on('$ionicView.beforeEnter', function (e, data) {
                 $scope.$root.showMenuItems = true;
                 $scope.$root.showSignUp = false;
             });
+            debugger;
         }])
 
-        .controller("signInCtrl", ["$scope", "$state", "LoginService", "$ionicPopup",  function ($scope, $state, LoginService, $ionicPopup) {
+        .controller("signInCtrl", ["$scope", "$state", "LoginService", "$ionicPopup", '$q', function ($scope, $state, LoginService, $ionicPopup, $q) {
             $scope.$on('$ionicView.beforeEnter', function (e, data) {
                 $scope.$root.showMenuItems = false;
                 $scope.$root.showSignUp = true;
@@ -18,18 +19,45 @@
             });
 
             $scope.data = {};
+            
+            $scope.login = function (username, password) {
+                var map = function (doc) {
+                    if (doc.username) {
+                        emit(doc._id, { username: doc.username, password: doc.password });
+                    }
+                }
 
-
-            $scope.login = function () {
-                LoginService.loginUser($scope.data.username, $scope.data.password).success(function (data) {
-                    $state.go('app');
-                }).error(function (data) {
-                    var alertPopup = $ionicPopup.alert({
-                        title: 'Login failed!',
-                        template: 'Please check your credentials!'
+                return localDB.query(map, { reduce: false }).then(function (result) {
+                    var userExists = false;
+                    result.rows.forEach(function (user) {
+                        
+                        if (user.value.username === username) {
+                            userExists = true;
+                            if (user.value.password !== password) {
+                                var alertPopup = $ionicPopup.alert({
+                                    title: 'Sign in failed!',
+                                    template: 'Wrong Password'
+                                });
+                                return;
+                            }
+                            else {
+                                $state.go('app', {user: username});
+                            }
+                        }                        
                     });
+                    if (!userExists) {
+                            var alertPopup = $ionicPopup.alert({
+                                title: 'Sign in failed!',
+                                template: 'Username does not exist'
+                            });
+                            return;
+                        }
+                    // handle result
+                }).catch(function (err) {
                 });
             }
+
+
 
         }])
 
@@ -41,21 +69,42 @@
 
             $scope.users = [];
 
-            $scope.create = function () {
-                $ionicPopup.prompt({
-                    title: 'Enter a new User item',
-                    inputType: 'text'
-                })
-                    .then(function (result) {
-                        if (result !== "") {
-                            if ($scope.hasOwnProperty("users") !== true) {
-                                $scope.users = [];
-                            }
-                            localDB.post({ username: result });
-                        } else {
-                            console.log("Action not completed");
-                        }
+            $scope.create = function (user) {
+                if (user && user.username && user.password) {
+                    if (user && user.username && user.password && user.username.length < 6 || user.password.length < 6) {
+                        var text;
+                        if (user.username.length < 6)
+                            text = 'Please enter a username longer than 6 characters!';
+                        else
+                            text = 'Please enter a password longer than 6 characters!'
+                        var alertPopup = $ionicPopup.alert({
+                            title: 'Sign up failed!',
+                            template: text
+                        });
+                        return;
+                    }
+                    else if (user.password !== user.retypePassword) {
+                        var alertPopup = $ionicPopup.alert({
+                            title: 'Sign up failed!',
+                            template: 'Please enter the same password!'
+                        });
+                        return;
+                    }
+                }
+                else
+                    var alertPopup = $ionicPopup.alert({
+                        title: 'Sign up failed!',
+                        template: 'Please enter data into the fields!'
                     });
+                if (user !== undefined) {
+                    if ($scope.hasOwnProperty("users") !== true) {
+                        $scope.users = [];
+                    }
+                    localDB.post({ username: user.username,
+                                   password: user.password });
+                } else {
+                    console.log("Action not completed");
+                }
             }
         }])
 
