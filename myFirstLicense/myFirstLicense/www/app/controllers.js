@@ -151,9 +151,12 @@
                 $scope.$root.showMenuItems = true;
                 $scope.$root.showSignUp = false;
             });
-
+            
+            $scope.data={};
+                
             var onSuccess = function (position) {
                 getCity(position.coords.longitude, position.coords.latitude);
+                getWeather(position.coords.longitude, position.coords.latitude);
             };
 
             function onError(error) {
@@ -166,14 +169,35 @@
             var getCity = function (longitude, latitude) {
                 $http({
                     method: 'GET',
-                    url: 'http://nominatim.openstreetmap.org/reverse?format=json&lat=' + latitude + '&lon=' + longitude
+                    url: 'http://nominatim.openstreetmap.org/reverse?email=justin.atanasiu@gmail.com&format=json&lat=' + latitude + '&lon=' + longitude
                 }).then(function successCallback(response) {
-                    $scope.cityName = response.data.address.city + ", " + response.data.address.country;
+                    $scope.data.cityName = response.data.address.city + ", " + response.data.address.country;
                 }, function errorCallback(response) {
                     // called asynchronously if an error occurs
                     // or server returns response with an error status.
                 });
             }
+            
+            var getWeather = function(longitude, latitude){
+                $http({
+                    method: 'GET',
+                    url: 'https://api.forecast.io/forecast/2d4d24f3d98fd833669ca7ccd52a18bd/' + latitude + ',' + longitude + '?units=si'
+                }).then(function successCallback(response) {
+                    $scope.data.weather = Math.round(response.data.currently.temperature) + '\xB0' + 'C';
+                    response.data.hourly.data.splice(12);
+                    (response.data.hourly.data).forEach(function(element) {
+                       element.temperature = Math.round(element.temperature) + '\xB0' + 'C';
+                       element.time = element.time * 1000;
+                        var time = new Date(element.time);
+                       element.time = time.getHours() + ":00";
+                    }, this);                    
+                    $scope.data.weatherInHours = response.data.hourly.data;    
+                }, function errorCallback(response) {
+                    // called asynchronously if an error occurs
+                    // or server returns response with an error status.
+                });
+            }
+            
         }])
 
         .controller("calendarMainPageCtrl", ["$scope", "$state", function ($scope, $state) {

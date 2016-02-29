@@ -1,5 +1,25 @@
-﻿ <ion-view cache-view="false" view-title="{{cityName}}">
-        <ion-content class="padding">
-          <p>© OpenStreetMap</p>
-        </ion-content>
+﻿<ion-view cache-view="false" view-title="{{data.cityName}}">
+    <ion-content class="padding">
+        <div class="row height-40vh">
+            <div class="col-25  height-20vh">
+                <h1 class="weatherDegrees"> {{data.weather}} </h1>
+            </div>
+            <div class="col-50 col-offset-20">
+                <ion-scroll direction="y" class="height-40vh " >
+                    <div ng-repeat="weatherInHour in data.weatherInHours">
+                        <p class="item font-16px font-align-left">
+                            {{weatherInHour.temperature + ' - ' + weatherInHour.time}} 
+                        </p>
+                    </div>
+                </ion-scroll>
+            </div>
+        </div>
+        <div class="row height-10vh"></div>
+        <div class="row">
+            <p> 20 Degrees </p>
+        </div>
+        <p>© OpenStreetMap link Credit us with a “Powered by Forecast” badge that links to http://forecast.io/ wherever you
+            display data from the API.
+        </p>
+    </ion-content>
 </ion-view>

@@ -57,6 +57,6 @@
                     templateUrl: "app/financialManager/financialManagerPage.html",
                     controller: "financialManagerCtrl"
                 })
-            $urlRouterProvider.otherwise("signIn");
+            $urlRouterProvider.otherwise("weather");
         });
 })();
