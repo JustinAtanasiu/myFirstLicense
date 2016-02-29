@@ -6,10 +6,6 @@
     "config_munge": {
         "files": {}
     },
-    "installed_plugins": {
-        "cordova-plugin-whitelist": {
-            "PACKAGE_NAME": "io.cordova.myappc25e5c"
-        }
-    },
+    "installed_plugins": {},
     "dependent_plugins": {}
 }

@@ -7,7 +7,6 @@
                 $scope.$root.showMenuItems = true;
                 $scope.$root.showSignUp = false;
             });
-            debugger;
         }])
 
         .controller("signInCtrl", ["$scope", "$state", "LoginService", "$ionicPopup", '$q', function ($scope, $state, LoginService, $ionicPopup, $q) {
@@ -69,6 +68,7 @@
             
             var checkUsers = function (username, password) {
                 var defer = $q.defer();
+                var foundUser = false;
                 var map = function (doc) {
                     if (doc.username) {
                         emit(doc._id, { username: doc.username, password: doc.password });
@@ -76,28 +76,25 @@
                 }
 
                 localDB.query(map, { reduce: false }).then(function (result) {
-                    var foundResult = false;
                     result.rows.forEach(function (user) {
-                        
+
                         if (user.value.username === username) {
-                                var alertPopup = $ionicPopup.alert({
-                                    title: 'Sign up failed!',
-                                    template: 'Username already exists.'
-                                });
-                                foundResult = true;                                               
-                        }                      
+                            var alertPopup = $ionicPopup.alert({
+                                title: 'Sign up failed!',
+                                template: 'Username already exists.'
+                            });
+                            foundUser = true;
+                        }
                     })
-                    if(foundResult===false)
+                      if (foundUser === false)
                     defer.resolve(true);
-                    else
-                    defer.reject();
-                    // handle result
-                    
-                }).catch(function (err) {                    
-                    defer.reject;
+                else
+                    defer.reject();                                   
+                }).catch(function (err) {
                 });
-                
-                return defer.promises;
+              
+
+                return defer.promise;
             }
 
             $scope.users = [];
@@ -135,6 +132,10 @@
                         $scope.users = [];
                     }                    
                     checkUsers(user.username).then(function (){
+                        var alertPopup = $ionicPopup.alert({
+                                    title: 'Sign up completed!',
+                                    template: 'User has been succesfully added.'
+                                });
                     localDB.post({ username: user.username,
                                    password: user.password });
                                     $state.go('signIn');
