@@ -61,11 +61,44 @@
 
         }])
 
-        .controller("signUpCtrl", ["$scope", "$state", "$ionicPopup", function ($scope, $state, $ionicPopup) {
+        .controller("signUpCtrl", ["$scope", "$state", "$ionicPopup", "$q", function ($scope, $state, $ionicPopup,$q) {
             $scope.$on('$ionicView.beforeEnter', function (e, data) {
                 $scope.$root.showMenuItems = false;
                 $scope.$root.showSignUp = false;
             });
+            
+            var checkUsers = function (username, password) {
+                var defer = $q.defer();
+                var map = function (doc) {
+                    if (doc.username) {
+                        emit(doc._id, { username: doc.username, password: doc.password });
+                    }
+                }
+
+                localDB.query(map, { reduce: false }).then(function (result) {
+                    var foundResult = false;
+                    result.rows.forEach(function (user) {
+                        
+                        if (user.value.username === username) {
+                                var alertPopup = $ionicPopup.alert({
+                                    title: 'Sign up failed!',
+                                    template: 'Username already exists.'
+                                });
+                                foundResult = true;                                               
+                        }                      
+                    })
+                    if(foundResult===false)
+                    defer.resolve(true);
+                    else
+                    defer.reject();
+                    // handle result
+                    
+                }).catch(function (err) {                    
+                    defer.reject;
+                });
+                
+                return defer.promises;
+            }
 
             $scope.users = [];
 
@@ -97,11 +130,15 @@
                         template: 'Please enter data into the fields!'
                     });
                 if (user !== undefined) {
+                    
                     if ($scope.hasOwnProperty("users") !== true) {
                         $scope.users = [];
-                    }
+                    }                    
+                    checkUsers(user.username).then(function (){
                     localDB.post({ username: user.username,
                                    password: user.password });
+                                    $state.go('signIn');
+                                    });
                 } else {
                     console.log("Action not completed");
                 }
