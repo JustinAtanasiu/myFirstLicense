@@ -1,25 +1,92 @@
 ﻿<ion-view cache-view="false" view-title="{{data.cityName}}">
-    <ion-content class="padding">
+    <ion-content class="padding" overflow-scroll="true">
         <div class="row height-40vh">
-            <div class="col-25  height-20vh">
-                <h1 class="weatherDegrees"> {{data.weather}} </h1>
+            <div class="col-50  height-20vh">
+                <div class="row weatherDegrees">
+                    <h2> {{data.weather}} </h2>
+                </div>
+                <div class="weatherWeatherMinMax">
+                    <p>Min: {{data.weatherMin}}</p>
+                    </p>Max: {{data.weatherMax}}</p>
+                </div>
             </div>
-            <div class="col-50 col-offset-20">
-                <ion-scroll direction="y" class="height-40vh " >
-                    <div ng-repeat="weatherInHour in data.weatherInHours">
-                        <p class="item font-16px font-align-left">
-                            {{weatherInHour.temperature + ' - ' + weatherInHour.time}} 
-                        </p>
+            <div class="col-50">
+                <ion-scroll direction="y" class="height-40vh ">
+                    <div collection-repeat="weatherInHour in data.weatherInHours">
+                        <h1 class="item font-16px font-align-left">
+                            {{weatherInHour.temperature + ' - ' + weatherInHour.time}}
+                        </h1>
                     </div>
                 </ion-scroll>
             </div>
         </div>
         <div class="row height-10vh"></div>
-        <div class="row">
-            <p> 20 Degrees </p>
+        <div class="row height-20vh">
+            <ion-scroll id="ionScrollRegion" direction="x" class="wide-as-needed">
+                <div id="overflowingContent">
+                    <ul>
+                        <li class="item" style="display: inline-block;">
+                            <div>
+                                <p align="center">{{data.weatherInDays[1].time}}</p>
+                                <p>{{data.weatherInDays[1].temperatureMin + ' : ' + data.weatherInDays[1].temperatureMax}}</p>
+                            </div>
+                        </li>
+                        <li class="item" style="display: inline-block;">
+                            <div>
+                                <p align="center">{{data.weatherInDays[2].time}}</p>
+                                <p>{{data.weatherInDays[2].temperatureMin + ' : ' + data.weatherInDays[2].temperatureMax}}</p>
+                            </div>
+                        </li>
+                        <li class="item" style="display: inline-block;">
+                            <div>
+                                <p align="center">{{data.weatherInDays[3].time}}</p>
+                                <p>{{data.weatherInDays[3].temperatureMin + ' : ' + data.weatherInDays[3].temperatureMax}}</p>
+                            </div>
+                        </li>
+                        <li class="item" style="display: inline-block;">
+                            <div>
+                                <p align="center">{{data.weatherInDays[4].time}}</p>
+                                <p>{{data.weatherInDays[4].temperatureMin + ' : ' + data.weatherInDays[4].temperatureMax}}</p>
+                            </div>
+                        </li>
+                        <li class="item" style="display: inline-block;">
+                            <div>
+                                <p align="center">{{data.weatherInDays[5].time}}</p>
+                                <p>{{data.weatherInDays[5].temperatureMin + ' : ' + data.weatherInDays[5].temperatureMax}}</p>
+                            </div>
+                        </li>
+                        <li class="item" style="display: inline-block;">
+                            <div>
+                                <p align="center">{{data.weatherInDays[6].time}}</p>
+                                <p>{{data.weatherInDays[6].temperatureMin + ' : ' + data.weatherInDays[6].temperatureMax}}</p>
+                            </div>
+                        </li>
+                        <li class="item" style="display: inline-block;">
+                            <div>
+                                <p align="center">{{data.weatherInDays[7].time}}</p>
+                                <p>{{data.weatherInDays[7].temperatureMin + ' : ' + data.weatherInDays[7].temperatureMax}}</p>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </ion-scroll>
         </div>
-        <p>© OpenStreetMap link Credit us with a “Powered by Forecast” badge that links to http://forecast.io/ wherever you
-            display data from the API.
+        <div class="row  height-15vh">
+            <div class="col-50  height-15vh">
+                <p class="font-14px">Sunrise: {{data.sunriseTime}}</p>
+                <p class="font-14px">Sunset: {{data.sunsetTime}}</p>
+            </div>
+            <div class="col-50 height-15vh">
+                <p class="font-14px">Wind Speed: {{data.windSpeed}}</p>
+                <p class="font-14px">Humidity: {{data.humidity}}</p>
+            </div>
+        </div>
+        <div class="row height-10vh">
+            <p align="center" class="font-16px">Apparent Temperature: {{data.apTemp}} </p>
+        </div>
+        <p>©OpenStreetMap   <a href="http://forecast.io/">
+               ©Powered by Forecast
+        </a>
         </p>
     </ion-content>
 </ion-view>

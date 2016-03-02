@@ -153,7 +153,8 @@
             });
             
             $scope.data={};
-                
+            var days = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+
             var onSuccess = function (position) {
                 getCity(position.coords.longitude, position.coords.latitude);
                 getWeather(position.coords.longitude, position.coords.latitude);
@@ -184,6 +185,8 @@
                     url: 'https://api.forecast.io/forecast/2d4d24f3d98fd833669ca7ccd52a18bd/' + latitude + ',' + longitude + '?units=si'
                 }).then(function successCallback(response) {
                     $scope.data.weather = Math.round(response.data.currently.temperature) + '\xB0' + 'C';
+                    $scope.data.weatherMin = Math.round(response.data.daily.data[0].temperatureMin) + '\xB0' + 'C';
+                    $scope.data.weatherMax = Math.round(response.data.daily.data[0].temperatureMax) + '\xB0' + 'C';
                     response.data.hourly.data.splice(12);
                     (response.data.hourly.data).forEach(function(element) {
                        element.temperature = Math.round(element.temperature) + '\xB0' + 'C';
@@ -191,11 +194,33 @@
                         var time = new Date(element.time);
                        element.time = time.getHours() + ":00";
                     }, this);                    
-                    $scope.data.weatherInHours = response.data.hourly.data;    
+                    $scope.data.weatherInHours = response.data.hourly.data;
+                    (response.data.daily.data).forEach(function(element) {
+                       element.temperatureMax = Math.round(element.temperatureMax) + '\xB0' + 'C';
+                       element.temperatureMin = Math.round(element.temperatureMin) + '\xB0' + 'C';
+                       element.time = element.time * 1000;
+                       var time = new Date(element.time);                       
+                       element.time = days[time.getDay() ];
+                    }, this);  
+                    $scope.data.weatherInDays = response.data.daily.data; 
+                    var sunriseTime = new Date(response.data.daily.data[0].sunriseTime*1000);   
+                    $scope.data.sunriseTime = sunriseTime.getHours() + ':' + sunriseTime.getMinutes();
+                    var sunsetTime = new Date(response.data.daily.data[0].sunsetTime*1000);
+                    $scope.data.sunsetTime =  sunsetTime.getHours() + ':' + sunsetTime.getMinutes();
+                    $scope.data.windSpeed = response.data.currently.windSpeed + ' m/s';
+                    $scope.data.humidity = response.data.currently.humidity * 100 + '%';
+                    $scope.data.apTemp = response.data.currently.apparentTemperature + '\xB0' + 'C';;
                 }, function errorCallback(response) {
-                    // called asynchronously if an error occurs
-                    // or server returns response with an error status.
+                     var alertPopup = $ionicPopup.alert({
+                                    title: 'Fetching data failed!',
+                                    template: 'We are sorry, but we could not reach you'
+                                });
+                                return;
                 });
+                    // $scope.data.weather = '-12' + '\xB0' + 'C';
+                    // $scope.data.weatherMin = '-15\xB0' + 'C';
+                    // $scope.data.weatherMax = '-10\xB0' + 'C';
+                    // $scope.data.weatherInHours = [{temperature: 50}, {temperature: -10}, {temperature: -20}, {temperature: 50}, {temperature: -10}, {temperature: -20}, {temperature: 50}, {temperature: -10}, {temperature: -20}];
             }
             
         }])
