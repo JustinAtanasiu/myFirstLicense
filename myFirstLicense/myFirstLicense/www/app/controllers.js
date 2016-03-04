@@ -158,7 +158,23 @@
                 $scope.$root.showMenuItems = true;
                 $scope.$root.showSignUp = false;
                 $scope.$root.id = $stateParams.id;
+                $scope.isLandscape = false;
             });
+            
+            window.addEventListener("orientationchange", function () {
+                // Announce the new orientation number
+                switch (window.orientation) {
+                    case -90:
+                    case 90:
+                        $scope.isLandscape = true;
+                        $scope.$apply(); // <--
+                        break;
+                    default:
+                        $scope.isLandscape = false;
+                        $scope.$apply(); // <--
+                        break;
+                }
+            }, false);
             
             $scope.data={};
             var days = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];

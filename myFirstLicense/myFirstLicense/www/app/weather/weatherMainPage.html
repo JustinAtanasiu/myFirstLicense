@@ -20,7 +20,8 @@
                 </ion-scroll>
             </div>
         </div>
-        <div class="row height-10vh"></div>
+        <div class="row height-15vh" ng-show="isLandscape"></div>
+        <div class="row height-10vh" ng-show="!isLandscape"></div>
         <div class="row height-20vh">
             <ion-scroll id="ionScrollRegion" direction="x" class="wide-as-needed">
                 <div id="overflowingContent">
@@ -71,6 +72,7 @@
                 </div>
             </ion-scroll>
         </div>
+        <div class="height-5vh" ng-show="isLandscape"></div>
         <div class="row longText">
             <div class="col-50  longText">
                 <p class="font-14px">Sunrise: {{data.sunriseTime}}</p>
