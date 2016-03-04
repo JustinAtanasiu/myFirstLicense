@@ -13,9 +13,12 @@
             <div class="col-50">
                 <ion-scroll direction="y" class="height-40vh ">
                     <div collection-repeat="weatherInHour in data.weatherInHours">
-                        <h1 class="item font-16px font-align-center">
+                        <div class="item" >
+                        <p class="marginRight-20px font-14px" style="display: inline;">
                             {{weatherInHour.temperature + ' - ' + weatherInHour.time}}
-                        </h1>
+                        </p>
+                        <div class="ion-android-happy"  style="display: inline;"></div>
+                        </div>
                     </div>
                 </ion-scroll>
             </div>

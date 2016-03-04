@@ -233,8 +233,9 @@
                     (response.data.hourly.data).forEach(function(element) {
                        element.temperature = Math.round(element.temperature) + '\xB0' + 'C';
                        element.time = element.time * 1000;
-                        var time = new Date(element.time);
-                       element.time = time.getHours() + ":00";
+                       var time = new Date(element.time);
+                       var timeHours = (time.getHours() > 9) ? time.getHours() : ('0' + time.getHours());
+                       element.time = timeHours + ":00";
                     }, this);                    
                     $scope.data.weatherInHours = response.data.hourly.data;
                     (response.data.daily.data).forEach(function(element) {
