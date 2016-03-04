@@ -17,10 +17,24 @@
         .controller("signInCtrl", ["$scope", "$state", "LoginService", "$ionicPopup", '$q', function ($scope, $state, LoginService, $ionicPopup, $q) {
             $scope.$on('$ionicView.beforeEnter', function (e, data) {
                 $scope.$root.showMenuItems = false;
-                $scope.$root.showSignUp = true;
-                
-
+                $scope.$root.showSignUp = true;             
+                $scope.isLandscape = false;
             });
+            
+            window.addEventListener("orientationchange", function () {
+                // Announce the new orientation number
+                switch (window.orientation) {
+                    case -90:
+                    case 90:
+                        $scope.isLandscape = true;
+                        $scope.$apply(); // <--
+                        break;
+                    default:
+                        $scope.isLandscape = false;
+                        $scope.$apply(); // <--
+                        break;
+                }
+            }, false);
 
             $scope.data = {};
             
@@ -69,7 +83,23 @@
             $scope.$on('$ionicView.beforeEnter', function (e, data) {
                 $scope.$root.showMenuItems = false;
                 $scope.$root.showSignUp = false;
+                $scope.isLandscape = false;
             });
+            
+            window.addEventListener("orientationchange", function () {
+                // Announce the new orientation number
+                switch (window.orientation) {
+                    case -90:
+                    case 90:
+                        $scope.isLandscape = true;
+                        $scope.$apply(); // <--
+                        break;
+                    default:
+                        $scope.isLandscape = false;
+                        $scope.$apply(); // <--
+                        break;
+                }
+            }, false);
             
             var checkUsers = function (username, password) {
                 var defer = $q.defer();
