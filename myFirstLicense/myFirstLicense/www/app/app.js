@@ -19,7 +19,7 @@
                     url: "/app",
                     templateUrl: "app/menu/menuPage.html",
                     controller: "appCtrl",
-                    params: { user:null }
+                    params: { id:null }
                 })
                 .state("signIn", {
                     url: "/signIn",
@@ -37,26 +37,30 @@
                     url: "/weather",
                     cache: false,
                     templateUrl: "app/weather/weatherMainPage.html",
-                    controller: "weatherMainPageCtrl"
+                    controller: "weatherMainPageCtrl",
+                    params: { id:null }
                 })
                 .state("calendar", {
                     url: "/calendar",
                     cache: false,
                     templateUrl: "app/calendar/calendarMainPage.html",
-                    controller: "calendarMainPageCtrl"
+                    controller: "calendarMainPageCtrl",
+                    params: { id:null }
                 })
                 .state("news", {
                     url: "/news",
                     cache: false,
                     templateUrl: "app/news/newsMainPage.html",
-                    controller: "newsMainPageCtrl"
+                    controller: "newsMainPageCtrl",
+                    params: { id:null }
                 })
                 .state("financialManager", {
                     url: "/financialManager",
                     cache: false,
                     templateUrl: "app/financialManager/financialManagerPage.html",
-                    controller: "financialManagerCtrl"
+                    controller: "financialManagerCtrl",
+                    params: { id:null }
                 })
-            $urlRouterProvider.otherwise("weather");
+            $urlRouterProvider.otherwise("signIn");
         });
 })();

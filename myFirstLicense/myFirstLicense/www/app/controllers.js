@@ -5,15 +5,19 @@
         .controller("appCtrl", ["$scope", "$ionicPopover", "$stateParams", function ($scope, $ionicPopover, $stateParams, $ionicSideMenuDelegate) {
             $scope.$on('$ionicView.beforeEnter', function (e, data) {
                 $scope.$root.showMenuItems = true;
-                $scope.$root.showSignUp = false;
-            });
+                $scope.$root.showSignUp = false;            
+                $scope.$root.id = $stateParams.id;
+            });            
+            $scope.data = {};          
+            
+
         }])
 
         .controller("signInCtrl", ["$scope", "$state", "LoginService", "$ionicPopup", '$q', function ($scope, $state, LoginService, $ionicPopup, $q) {
             $scope.$on('$ionicView.beforeEnter', function (e, data) {
                 $scope.$root.showMenuItems = false;
                 $scope.$root.showSignUp = true;
-
+                
 
             });
 
@@ -40,7 +44,7 @@
                                 return;
                             }
                             else {
-                                $state.go('app', {user: username});
+                                $state.go('app', {id: user.id});
                             }
                         }                        
                     });
@@ -146,15 +150,19 @@
             }
         }])
 
-        .controller("weatherMainPageCtrl", ["$scope", "$state", "$http", function ($scope, $state, $http) {
+        .controller("weatherMainPageCtrl", ["$scope", "$state", "$http", '$stateParams', function ($scope, $state, $http,$stateParams) {
             $scope.$on('$ionicView.beforeEnter', function (e, data) {
                 $scope.$root.showMenuItems = true;
                 $scope.$root.showSignUp = false;
+                $scope.$root.id = $stateParams.id;
             });
             
             $scope.data={};
             var days = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
-
+            $scope.tableHidden = true;
+            $scope.data.searchBoxResponse = []; 
+            $scope.data.cities = [];
+            
             var onSuccess = function (position) {
                 getCity(position.coords.longitude, position.coords.latitude);
                 getWeather(position.coords.longitude, position.coords.latitude);
@@ -173,6 +181,7 @@
                     url: 'http://nominatim.openstreetmap.org/reverse?email=justin.atanasiu@gmail.com&format=json&lat=' + latitude + '&lon=' + longitude
                 }).then(function successCallback(response) {
                     $scope.data.cityName = response.data.address.city + ", " + response.data.address.country;
+                    $scope.data.cities.push(response.data.address.city + ", " + response.data.address.country)
                 }, function errorCallback(response) {
                     // called asynchronously if an error occurs
                     // or server returns response with an error status.
@@ -209,7 +218,10 @@
                     $scope.data.sunsetTime =  sunsetTime.getHours() + ':' + sunsetTime.getMinutes();
                     $scope.data.windSpeed = response.data.currently.windSpeed + ' m/s';
                     $scope.data.humidity = response.data.currently.humidity * 100 + '%';
-                    $scope.data.apTemp = response.data.currently.apparentTemperature + '\xB0' + 'C';;
+                    $scope.data.apTemp = response.data.currently.apparentTemperature + '\xB0' + 'C';
+                    $scope.data.hourDescr = response.data.minutely.summary;
+                    $scope.data.dayDescr = response.data.hourly.summary;
+                    $scope.data.weekDescr = response.data.daily.summary;
                 }, function errorCallback(response) {
                      var alertPopup = $ionicPopup.alert({
                                     title: 'Fetching data failed!',
@@ -221,28 +233,57 @@
                     // $scope.data.weatherMin = '-15\xB0' + 'C';
                     // $scope.data.weatherMax = '-10\xB0' + 'C';
                     // $scope.data.weatherInHours = [{temperature: 50}, {temperature: -10}, {temperature: -20}, {temperature: 50}, {temperature: -10}, {temperature: -20}, {temperature: 50}, {temperature: -10}, {temperature: -20}];
+                    var showTable = function(){
+                        $scope.tableHidden = !$scope.tableHidden;
+                    }
+                    
+                    $scope.showTable = showTable;
+
+                    var selectCity = function(city){
+                        $scope.data.searchBox = '';
+                        $scope.data.cities.push(city.text);
+                        
+                    }
+                    
+                    $scope.selectCity = selectCity;
+                    
+                    var searchList = function(searchBox){
+                         $http({
+                                method: 'GET',
+                                url: 'http://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/suggest?text=' + searchBox + '&category=City&f=pjson'
+                            }).then(function successCallback(response) {
+                               $scope.data.searchBoxResponse = response.data.suggestions;
+                            }, function errorCallback(response) {
+
+                            });
+                    }
+                    
+                    $scope.searchList = searchList;
             }
             
         }])
 
-        .controller("calendarMainPageCtrl", ["$scope", "$state", function ($scope, $state) {
+        .controller("calendarMainPageCtrl", ["$scope", "$state", "$stateParams", function ($scope, $state, $stateParams) {
             $scope.$on('$ionicView.beforeEnter', function (e, data) {
                 $scope.$root.showMenuItems = true;
                 $scope.$root.showSignUp = false;
+                $scope.$root.id = $stateParams.id;
             });
         }])
 
-        .controller("newsMainPageCtrl", ["$scope", "$state", function ($scope, $state) {
+        .controller("newsMainPageCtrl", ["$scope", "$state", "$stateParams", function ($scope, $statem, $stateParams) {
             $scope.$on('$ionicView.beforeEnter', function (e, data) {
                 $scope.$root.showMenuItems = true;
                 $scope.$root.showSignUp = false;
+                $scope.$root.id = $stateParams.id;
             });
         }])
 
-        .controller("financialManagerCtrl", ["$scope", "$state", function ($scope, $state) {
+        .controller("financialManagerCtrl", ["$scope", "$state", "$stateParams", function ($scope, $state, $stateParams) {
             $scope.$on('$ionicView.beforeEnter', function (e, data) {
                 $scope.$root.showMenuItems = true;
                 $scope.$root.showSignUp = false;
+                $scope.$root.id = $stateParams.id;
             });
         }])
 

@@ -39,19 +39,19 @@
                     <ion-item ng-show="$root.showSignUp" menu-close href="#/signUp">
                         Sign up
                     </ion-item>
-                    <ion-item ng-show="$root.showMenuItems" menu-close href="#/weather">
+                    <ion-item ng-show="$root.showMenuItems" menu-close  ui-sref="weather({id: $root.id})">
                         Weather
                     </ion-item>
-                    <ion-item ng-show="$root.showMenuItems" menu-close href="#/calendar">
+                    <ion-item ng-show="$root.showMenuItems" menu-close ui-sref="calendar({id: $root.id})">
                         Calendar
                     </ion-item>
-                    <ion-item ng-show="$root.showMenuItems" menu-close href="#/news">
+                    <ion-item ng-show="$root.showMenuItems" menu-close ui-sref="news({id: $root.id})">
                         News
                     </ion-item>
-                    <ion-item ng-show="$root.showMenuItems" menu-close href="#/financialManager">
+                    <ion-item ng-show="$root.showMenuItems" menu-close ui-sref="financialManager({id: $root.id})">
                         Financial Manager
                     </ion-item>
-                    <ion-item ng-show="$root.showMenuItems" menu-close href="#/app">
+                    <ion-item ng-show="$root.showMenuItems" menu-close ui-sref="app({id: $root.id})">
                         Menu
                     </ion-item>
                     <ion-item ng-show="$root.showMenuItems" menu-close href="#/signIn">

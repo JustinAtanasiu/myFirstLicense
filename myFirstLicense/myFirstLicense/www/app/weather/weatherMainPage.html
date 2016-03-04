@@ -71,22 +71,53 @@
                 </div>
             </ion-scroll>
         </div>
-        <div class="row  height-15vh">
-            <div class="col-50  height-15vh">
+        <div class="row longText">
+            <div class="col-50  longText">
                 <p class="font-14px">Sunrise: {{data.sunriseTime}}</p>
                 <p class="font-14px">Sunset: {{data.sunsetTime}}</p>
             </div>
-            <div class="col-50 height-15vh">
+            <div class="col-50 longText">
                 <p class="font-14px">Wind Speed: {{data.windSpeed}}</p>
                 <p class="font-14px">Humidity: {{data.humidity}}</p>
             </div>
         </div>
-        <div class="row height-10vh">
+        <div class="row longText">
             <p align="center" class="font-16px">Apparent Temperature: {{data.apTemp}} </p>
         </div>
-        <p>©OpenStreetMap   <a href="http://forecast.io/">
+        <div class="row longText">
+            <p class="font-14px">{{data.hourDescr}} {{data.dayDescr}} {{data.weekDescr}}</p>
+        </div>
+        <div class="row height-5vh">
+            <button ng-show="tableHidden" class="floatRight button button-icon ion-plus" ng-click="showTable()"></button>
+            <button ng-show="!tableHidden" class="floatRight button button-icon ion-minus" ng-click="showTable()">
+                </buttton>
+        </div>
+        <div class="longText" type="search" ng-show="!tableHidden">
+            <form>
+                <input class="widthMax" placeholder="Search for city" ng-model="data.searchBox" ng-keyup="searchList(data.searchBox)" type="text">
+                <ion-list  ng-show="data.searchBox.length>1">
+                    <div ng-repeat="city in data.searchBoxResponse">
+                        <div class="marginTop-10px" ng-click="selectCity(city)">
+                        {{city.text}}
+                        </div>
+                    </div>                    
+                </ion-list>
+            </form>
+            <div class="row">
+                <ion-scroll direction="y" class="widthMax" >
+                    <div ng-repeat="city in data.cities">
+                        <h4 class="item font-16px font-align-left" ng-click="showTable()">
+                            {{city}}
+                        </h4>
+                    </div>
+                </ion-scroll>
+            </div>
+        </div>
+        <div class="row longText">
+            <p>©OpenStreetMap <a href="http://forecast.io/">
                ©Powered by Forecast
         </a>
-        </p>
+            </p>
+        </div>
     </ion-content>
 </ion-view>
