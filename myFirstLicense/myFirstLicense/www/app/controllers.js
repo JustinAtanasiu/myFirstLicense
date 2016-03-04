@@ -1,4 +1,5 @@
-﻿(function () {
+﻿/*global _*/
+(function () {
     "use strict";
     angular.module("myapp.controllers", [])
 
@@ -141,7 +142,8 @@
                                     template: 'User has been succesfully added.'
                                 });
                     localDB.post({ username: user.username,
-                                   password: user.password });
+                                   password: user.password,
+                                   weatherLocations: [] });
                                     $state.go('signIn');
                                     });
                 } else {
@@ -150,7 +152,8 @@
             }
         }])
 
-        .controller("weatherMainPageCtrl", ["$scope", "$state", "$http", '$stateParams', function ($scope, $state, $http,$stateParams) {
+        .controller("weatherMainPageCtrl", ["$scope", "$state", "$http", '$stateParams', '$ionicPopup', '$ionicScrollDelegate', 
+        function ($scope, $state, $http,$stateParams, $ionicPopup, $ionicScrollDelegate) {
             $scope.$on('$ionicView.beforeEnter', function (e, data) {
                 $scope.$root.showMenuItems = true;
                 $scope.$root.showSignUp = false;
@@ -181,14 +184,28 @@
                     url: 'http://nominatim.openstreetmap.org/reverse?email=justin.atanasiu@gmail.com&format=json&lat=' + latitude + '&lon=' + longitude
                 }).then(function successCallback(response) {
                     $scope.data.cityName = response.data.address.city + ", " + response.data.address.country;
-                    $scope.data.cities.push(response.data.address.city + ", " + response.data.address.country)
+                    $scope.data.cities.push({cityName: response.data.address.city + ", " + response.data.address.country,
+                                             latitude: latitude,
+                                             longitude: longitude})
+                    localDB.get($scope.$root.id).then(function(result){
+                        result.weatherLocations.forEach(function(location) {
+                            $scope.data.cities.push(location);
+                        }, this);
+                    });
                 }, function errorCallback(response) {
                     // called asynchronously if an error occurs
                     // or server returns response with an error status.
                 });
             }
             
-            var getWeather = function(longitude, latitude){
+            var getWeather = function(longitude, latitude, cityName){
+                if(cityName)
+                {   
+                    $ionicScrollDelegate.scrollTop();
+                    if(!$scope.tableHidden)
+                        $scope.tableHidden = !$scope.tableHidden;
+                    $scope.data.cityName = cityName;
+                }
                 $http({
                     method: 'GET',
                     url: 'https://api.forecast.io/forecast/2d4d24f3d98fd833669ca7ccd52a18bd/' + latitude + ',' + longitude + '?units=si'
@@ -212,16 +229,23 @@
                        element.time = days[time.getDay() ];
                     }, this);  
                     $scope.data.weatherInDays = response.data.daily.data; 
-                    var sunriseTime = new Date(response.data.daily.data[0].sunriseTime*1000);   
-                    $scope.data.sunriseTime = sunriseTime.getHours() + ':' + sunriseTime.getMinutes();
+                    var sunriseTime = new Date(response.data.daily.data[0].sunriseTime*1000);
+                    var sunriseHours =  (sunriseTime.getHours() > 9) ? sunriseTime.getHours() : ('0'+sunriseTime.getHours());
+                    var sunriseMinutes = (sunriseTime.getMinutes() > 9) ? sunriseTime.getMinutes() : ('0'+sunriseTime.getMinutes());
+                    $scope.data.sunriseTime = sunriseHours + ':' + sunriseMinutes;
                     var sunsetTime = new Date(response.data.daily.data[0].sunsetTime*1000);
-                    $scope.data.sunsetTime =  sunsetTime.getHours() + ':' + sunsetTime.getMinutes();
+                    var sunsetHours = (sunsetTime.getHours() > 9) ? sunsetTime.getHours() : ('0'+sunsetTime.getHours());
+                    var sunsetMinutes = (sunsetTime.getMinutes() > 9) ? sunsetTime.getMinutes() : ('0'+sunsetTime.getMinutes());
+                    $scope.data.sunsetTime = sunsetHours  + ':' + sunsetMinutes;
                     $scope.data.windSpeed = response.data.currently.windSpeed + ' m/s';
                     $scope.data.humidity = response.data.currently.humidity * 100 + '%';
                     $scope.data.apTemp = response.data.currently.apparentTemperature + '\xB0' + 'C';
-                    $scope.data.hourDescr = response.data.minutely.summary;
-                    $scope.data.dayDescr = response.data.hourly.summary;
-                    $scope.data.weekDescr = response.data.daily.summary;
+                    if (response.data.minutely)
+                        $scope.data.hourDescr = response.data.minutely.summary;
+                    if (response.data.hourly)
+                        $scope.data.dayDescr = response.data.hourly.summary;
+                    if (response.data.daily)
+                        $scope.data.weekDescr = response.data.daily.summary;
                 }, function errorCallback(response) {
                      var alertPopup = $ionicPopup.alert({
                                     title: 'Fetching data failed!',
@@ -229,37 +253,66 @@
                                 });
                                 return;
                 });
-                    // $scope.data.weather = '-12' + '\xB0' + 'C';
-                    // $scope.data.weatherMin = '-15\xB0' + 'C';
-                    // $scope.data.weatherMax = '-10\xB0' + 'C';
-                    // $scope.data.weatherInHours = [{temperature: 50}, {temperature: -10}, {temperature: -20}, {temperature: 50}, {temperature: -10}, {temperature: -20}, {temperature: 50}, {temperature: -10}, {temperature: -20}];
-                    var showTable = function(){
-                        $scope.tableHidden = !$scope.tableHidden;
-                    }
-                    
-                    $scope.showTable = showTable;
-
-                    var selectCity = function(city){
-                        $scope.data.searchBox = '';
-                        $scope.data.cities.push(city.text);
-                        
-                    }
-                    
-                    $scope.selectCity = selectCity;
-                    
-                    var searchList = function(searchBox){
-                         $http({
-                                method: 'GET',
-                                url: 'http://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/suggest?text=' + searchBox + '&category=City&f=pjson'
-                            }).then(function successCallback(response) {
-                               $scope.data.searchBoxResponse = response.data.suggestions;
-                            }, function errorCallback(response) {
-
-                            });
-                    }
-                    
-                    $scope.searchList = searchList;
             }
+            
+            $scope.getWeather = getWeather;
+            // $scope.data.weather = '-12' + '\xB0' + 'C';
+            // $scope.data.weatherMin = '-15\xB0' + 'C';
+            // $scope.data.weatherMax = '-10\xB0' + 'C';
+            // $scope.data.weatherInHours = [{temperature: 50}, {temperature: -10}, {temperature: -20}, {temperature: 50}, {temperature: -10}, {temperature: -20}, {temperature: 50}, {temperature: -10}, {temperature: -20}];
+            var showTable = function () {
+                $scope.tableHidden = !$scope.tableHidden;
+            }
+
+            $scope.showTable = showTable;
+                    
+            var selectCity = function (city) {
+                $scope.data.searchBox = '';
+                $scope.data.cities.push({cityName: city.matching_full_name, latitude: city._embedded['city:item'].location.latlon.latitude, longitude: city._embedded['city:item'].location.latlon.longitude});
+                localDB.get($scope.$root.id).then(function (result) {
+                    var myObj = { cityName: city.matching_full_name, latitude: city._embedded['city:item'].location.latlon.latitude, longitude: city._embedded['city:item'].location.latlon.longitude}
+                    result.weatherLocations.push(myObj);
+                    return localDB.put(result, $scope.$root.id, result._rev);
+                }).then(function (response) {
+                    // handle response
+                }).catch(function (err) {
+                    console.log(err);
+                });
+
+            }
+
+            $scope.selectCity = selectCity;
+                    
+            var searchList = function (searchBox) {
+                $http({
+                    method: 'GET',
+                    url: 'https://api.teleport.org/api/cities/?search=' + searchBox + '&embed=city%3Asearch-results%2Fcity%3Aitem'
+                }).then(function successCallback(response) {
+                    response.data._embedded['city:search-results'].splice(5);
+                    $scope.data.searchBoxResponse = response.data._embedded['city:search-results'];
+                }, function errorCallback(response) {
+
+                });
+            }
+                    
+            $scope.searchList = searchList;
+
+            var removeLocation = function ($index) {
+                $scope.data.cities.splice($index, 1);
+                localDB.get($scope.$root.id).then(function (result) {
+
+                    result.weatherLocations.splice($index - 1, 1);
+
+                    return localDB.put(result, $scope.$root.id, result._rev);
+                }).then(function (response) {
+                    // handle response
+                }).catch(function (err) {
+                    console.log(err);
+                });
+            }
+
+            $scope.removeLocation = removeLocation;
+            
             
         }])
 

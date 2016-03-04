@@ -13,7 +13,7 @@
             <div class="col-50">
                 <ion-scroll direction="y" class="height-40vh ">
                     <div collection-repeat="weatherInHour in data.weatherInHours">
-                        <h1 class="item font-16px font-align-left">
+                        <h1 class="item font-16px font-align-center">
                             {{weatherInHour.temperature + ' - ' + weatherInHour.time}}
                         </h1>
                     </div>
@@ -95,23 +95,31 @@
         <div class="longText" type="search" ng-show="!tableHidden">
             <form>
                 <input class="widthMax" placeholder="Search for city" ng-model="data.searchBox" ng-keyup="searchList(data.searchBox)" type="text">
-                <ion-list  ng-show="data.searchBox.length>1">
+                <ion-list ng-show="data.searchBox.length>1">
                     <div ng-repeat="city in data.searchBoxResponse">
                         <div class="marginTop-10px" ng-click="selectCity(city)">
-                        {{city.text}}
+                            {{city.matching_full_name}}
                         </div>
-                    </div>                    
+                    </div>
                 </ion-list>
             </form>
             <div class="row">
-                <ion-scroll direction="y" class="widthMax" >
-                    <div ng-repeat="city in data.cities">
-                        <h4 class="item font-16px font-align-left" ng-click="showTable()">
-                            {{city}}
-                        </h4>
+                <ion-scroll direction="y" class="widthMax">
+                    <div ng-repeat="city in data.cities track by $index">
+                        <div class="row">
+                            <div class="col-75" ng-click="getWeather(city.longitude, city.latitude, city.cityName)">
+                                <h4 class="ion-item font-14px" >
+                                    {{city.cityName}}
+                                </h4>
+                            </div>
+                            <div class="col-25">
+                                <button ng-show="$index>0" style="vertical-align: top" class="floatLeft  button button-icon ion-minus" ng-click="removeLocation($index)">
+                            </div>
+                        </div>
                     </div>
-                </ion-scroll>
             </div>
+            </ion-scroll>
+        </div>
         </div>
         <div class="row longText">
             <p>©OpenStreetMap <a href="http://forecast.io/">

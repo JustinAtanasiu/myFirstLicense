@@ -83,8 +83,10 @@
     font-size: 14px;
 }
 .font-align-left{
-    text-align:center;
-    
+    text-align:left;    
+}
+.font-align-center{
+    text-align:center;    
 }
 .wide-as-needed {
   white-space: nowrap;  
@@ -101,6 +103,15 @@
 .floatRight {
     position: absolute;
     right: 0;
+}
+
+.floatLeft{
+    position: relative;
+    left: 0;
+}
+
+#centerParagraph{
+    margin: auto;
 }
 
 .marginTop-10px{
