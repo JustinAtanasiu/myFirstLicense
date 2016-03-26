@@ -377,6 +377,10 @@
                 $scope.$root.showSignUp = false;
                 $scope.$root.id = $stateParams.id;
             });
+            
+            $scope.data = {}    
+            $scope.data.newsSites = [];
+            $scope.data.newsSites.push({url: 'http://www.bloomberg.com'});
         }])
 
         .controller("financialManagerCtrl", ["$scope", "$state", "$stateParams", function ($scope, $state, $stateParams) {

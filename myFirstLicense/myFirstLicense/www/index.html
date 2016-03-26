@@ -9,7 +9,7 @@
     <link href="css/app.css" rel="stylesheet">
     <script src="scripts/pouchdb-5.2.1.min.js"></script>    
     <script type='text/javascript'>
-        var localDB = new PouchDB('http://86.126.10.46:5984/personalassistant');
+        var localDB = new PouchDB('http://localhost:5984/personalassistant');
     </script>
 </head>
 
@@ -39,23 +39,23 @@
                     <ion-item ng-show="$root.showSignUp" menu-close href="#/signUp">
                         Sign up
                     </ion-item>
-                    <ion-item ng-show="$root.showMenuItems" menu-close  ui-sref="weather({id: $root.id})">
-                        Weather
+                    <ion-item ng-show="$root.showMenuItems" menu-close class="item-icon-left"  ui-sref="weather({id: $root.id})">
+                        <i class="icon ion-ios-cloud-outline"></i>Weather
                     </ion-item>
-                    <ion-item ng-show="$root.showMenuItems" menu-close ui-sref="calendar({id: $root.id})">
-                        Calendar
+                    <ion-item ng-show="$root.showMenuItems" class="item-icon-left" menu-close ui-sref="calendar({id: $root.id})">
+                        <i class="icon ion-calendar"></i>Calendar
                     </ion-item>
-                    <ion-item ng-show="$root.showMenuItems" menu-close ui-sref="news({id: $root.id})">
-                        News
+                    <ion-item ng-show="$root.showMenuItems" class="item-icon-left" menu-close ui-sref="news({id: $root.id})">
+                        <i class="icon ion-social-rss-outline"></i>News
                     </ion-item>
-                    <ion-item ng-show="$root.showMenuItems" menu-close ui-sref="financialManager({id: $root.id})">
-                        Financial Manager
+                    <ion-item ng-show="$root.showMenuItems" class="item-icon-left" menu-close ui-sref="financialManager({id: $root.id})">
+                        <i class="icon ion-social-usd-outline"></i>Financial Manager
                     </ion-item>
-                    <ion-item ng-show="$root.showMenuItems" menu-close ui-sref="app({id: $root.id})">
-                        Menu
+                    <ion-item ng-show="$root.showMenuItems" class="item-icon-left" menu-close ui-sref="app({id: $root.id})">
+                        <i class="icon ion-clipboard"></i>Menu
                     </ion-item>
-                    <ion-item ng-show="$root.showMenuItems" menu-close href="#/signIn">
-                        Sign Out
+                    <ion-item ng-show="$root.showMenuItems" class="item-icon-left" menu-close href="#/signIn">
+                        <i class="icon ion-ios-close-outline"></i>Sign Out
                     </ion-item>
                 </ion-list>
             </ion-content>
