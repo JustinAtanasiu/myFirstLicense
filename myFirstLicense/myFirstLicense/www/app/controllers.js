@@ -371,18 +371,57 @@
             });
         }])
 
-        .controller("newsMainPageCtrl", ["$scope", "$state", "$stateParams", function ($scope, $statem, $stateParams) {
+        .controller("newsMainPageCtrl", ["$scope", "$state", "$stateParams", '$http', 'xmlParser', function ($scope, $statem, $stateParams, $http, xmlParser) {
             $scope.$on('$ionicView.beforeEnter', function (e, data) {
                 $scope.$root.showMenuItems = true;
                 $scope.$root.showSignUp = false;
                 $scope.$root.id = $stateParams.id;
             });
-            
-            $scope.data = {}    
+            $scope.data = {}
             $scope.data.newsSites = [];
-            $scope.data.newsSites.push({url: 'http://www.bloomberg.com'});
+            $scope.data.newsSites.push({ url: 'http://www.bloomberg.com' });
+            $scope.data.feeds = [];
+            $scope.feedSrc = 'http://rss.cnn.com/rss/cnn_topstories.rss'   
+            var loadFeed = function (e) {
+                $http({
+                    method: 'GET',
+                    url: 'http://rss.cnn.com/rss/cnn_topstories.rss'
+                }).then(function (res) {
+                    var jsonFromXMLRSS = convertXML(res.data, false);
+                    $scope.data.feeds = jsonFromXMLRSS.rss.channel.item; 
+                }).catch(function (err) {
+                    console.log(err);
+                });
+            }
+            
+            loadFeed();
+            
+            var convertXML = function (data, _withOutBind) {
+
+                if (_withOutBind === true) {
+                    try {
+                        return xmlParser.xml_str2json_withOutBind(data);
+                    } catch (EE) {
+                    }
+
+                } else {
+                    return xmlParser.xml_str2json(data);
+                }
+            }
         }])
 
+        .factory('xmlParser', function () {
+            var x2js = new X2JS();
+            return {
+                xml2json: x2js.xml2json,
+                xml_str2json_withOutBind: x2js.xml_str2json,
+                xml_str2json: function (args) {
+                    return angular.bind(x2js, x2js.xml_str2json, args)();
+                },
+                json2xml: x2js.json2xml_str
+            }
+        })
+        
         .controller("financialManagerCtrl", ["$scope", "$state", "$stateParams", function ($scope, $state, $stateParams) {
             $scope.$on('$ionicView.beforeEnter', function (e, data) {
                 $scope.$root.showMenuItems = true;

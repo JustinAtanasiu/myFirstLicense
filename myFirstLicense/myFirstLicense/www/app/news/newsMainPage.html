@@ -1,11 +1,11 @@
 <ion-view view-title="News">
     <ion-content class="padding">
         <div class="row height-60vh">
-            <ion-scroll id="ionScrollRegion" direction="y" class="widthMax">
-                <div id="overflowingContent" ng-repeat="news in data.newsSites">
+            <ion-scroll direction="y" class="widthMax">
+                <div ng-repeat="news in data.feeds">
                     <div class="item">
                         <div>
-                            <p>{{news.url}}</p>
+                            <p>{{news.title}}</p>
                         </div>
                     </div>
                 </div>
