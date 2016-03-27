@@ -3,18 +3,7 @@
     "use strict";
     angular.module("myapp.controllers", [])
 
-        .controller("appCtrl", ["$scope", "$ionicPopover", "$stateParams", function ($scope, $ionicPopover, $stateParams, $ionicSideMenuDelegate) {
-            $scope.$on('$ionicView.beforeEnter', function (e, data) {
-                $scope.$root.showMenuItems = true;
-                $scope.$root.showSignUp = false;            
-                $scope.$root.id = $stateParams.id;
-            });            
-            $scope.data = {};          
-            
-
-        }])
-
-        .controller("signInCtrl", ["$scope", "$state", "LoginService", "$ionicPopup", '$q', function ($scope, $state, LoginService, $ionicPopup, $q) {
+        .controller("signInCtrl", ["$scope", "$state", "$ionicPopup", '$q', function ($scope, $state, $ionicPopup, $q) {
             $scope.$on('$ionicView.beforeEnter', function (e, data) {
                 $scope.$root.showMenuItems = false;
                 $scope.$root.showSignUp = true;             
@@ -59,7 +48,7 @@
                                 return;
                             }
                             else {
-                                $state.go('app', {id: user.id});
+                                $state.go('news', {id: user.id});
                             }
                         }                        
                     });
@@ -385,7 +374,7 @@
             var loadFeed = function (e) {
                 $http({
                     method: 'GET',
-                    url: 'http://rss.cnn.com/rss/cnn_topstories.rss'
+                    url: 'http://news.ycombinator.com/rss'
                 }).then(function (res) {
                     var jsonFromXMLRSS = convertXML(res.data, false);
                     $scope.data.feeds = jsonFromXMLRSS.rss.channel.item; 

@@ -14,13 +14,7 @@
         })
         .config(function ($stateProvider, $urlRouterProvider) {
             $stateProvider
-
-                .state("app", {
-                    url: "/app",
-                    templateUrl: "app/menu/menuPage.html",
-                    controller: "appCtrl",
-                    params: { id:null }
-                })
+            
                 .state("signIn", {
                     url: "/signIn",
                     cache: false,
