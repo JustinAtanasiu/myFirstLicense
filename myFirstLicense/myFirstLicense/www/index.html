@@ -38,15 +38,15 @@
                     </ion-item>
                     <ion-item ng-show="$root.showSignUp" menu-close href="#/signUp">
                         Sign up
-                    </ion-item>
-                    <ion-item ng-show="$root.showMenuItems" menu-close class="item-icon-left"  ui-sref="weather({id: $root.id})">
-                        <i class="icon ion-ios-cloud-outline"></i>Weather
+                    </ion-item>                    
+                    <ion-item ng-show="$root.showMenuItems" class="item-icon-left" menu-close ui-sref="news({id: $root.id})">
+                        <i class="icon ion-social-rss-outline"></i>News
                     </ion-item>
                     <ion-item ng-show="$root.showMenuItems" class="item-icon-left" menu-close ui-sref="calendar({id: $root.id})">
                         <i class="icon ion-calendar"></i>Calendar
-                    </ion-item>
-                    <ion-item ng-show="$root.showMenuItems" class="item-icon-left" menu-close ui-sref="news({id: $root.id})">
-                        <i class="icon ion-social-rss-outline"></i>News
+                    </ion-item>                    
+                    <ion-item ng-show="$root.showMenuItems" menu-close class="item-icon-left"  ui-sref="weather({id: $root.id})">
+                        <i class="icon ion-ios-cloud-outline"></i>Weather
                     </ion-item>
                     <ion-item ng-show="$root.showMenuItems" class="item-icon-left" menu-close ui-sref="financialManager({id: $root.id})">
                         <i class="icon ion-social-usd-outline"></i>Financial Manager

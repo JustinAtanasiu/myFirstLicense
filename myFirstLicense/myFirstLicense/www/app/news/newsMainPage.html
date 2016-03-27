@@ -3,9 +3,9 @@
         <div class="row height-60vh">
             <ion-scroll direction="y" class="widthMax">
                 <div ng-repeat="news in data.feeds">
-                    <div class="item" ng-click="browse(news.link)">
+                    <div class="item item-icon-left" ng-click="browse(news.link)">                        
                         <div>
-                            <p>{{news.title}}</p>
+                            <img ng-src="news.thumbnail._url"><p>{{news.title}}</p>
                         </div>
                     </div>
                 </div>
