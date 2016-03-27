@@ -3,7 +3,7 @@
         <div class="row height-60vh">
             <ion-scroll direction="y" class="widthMax">
                 <div ng-repeat="news in data.feeds">
-                    <div class="item">
+                    <div class="item" ng-click="browse(news.link)">
                         <div>
                             <p>{{news.title}}</p>
                         </div>

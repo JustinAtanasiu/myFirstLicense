@@ -104,4 +104,5 @@
   <platform name="wp8">
     <splash src="res/screens/wp8/SplashScreenImage.jpg" width="480" height="800" />
   </platform>
+  <plugin name="cordova-plugin-inappbrowser" version="1.3.1-dev" src="https://git-wip-us.apache.org/repos/asf/cordova-plugin-inappbrowser.git" />
 </widget>

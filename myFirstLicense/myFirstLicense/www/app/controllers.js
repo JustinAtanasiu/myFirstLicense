@@ -374,10 +374,11 @@
             var loadFeed = function (e) {
                 $http({
                     method: 'GET',
-                    url: 'http://news.ycombinator.com/rss'
+                    url: 'http://rss.cnn.com/rss/cnn_topstories.rss'
                 }).then(function (res) {
                     var jsonFromXMLRSS = convertXML(res.data, false);
                     $scope.data.feeds = jsonFromXMLRSS.rss.channel.item; 
+                    window.localStorage["nodes"] = JSON.stringify($scope.data.feeds);
                 }).catch(function (err) {
                     console.log(err);
                 });
@@ -396,6 +397,10 @@
                 } else {
                     return xmlParser.xml_str2json(data);
                 }
+            }
+
+            $scope.browse = function (v) {
+                window.open(v, "_system", "location=yes");
             }
         }])
 
