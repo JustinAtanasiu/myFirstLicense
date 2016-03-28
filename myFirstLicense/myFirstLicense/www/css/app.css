@@ -34,10 +34,6 @@
     stroke: #b59751;
 }
 
-.menuBackground {
-    background: url('../img/menuBackground.jpg') no-repeat center center fixed;;
-}
-
     .bar.bar-light {
   background-color: rgba(255,255,255,.100) !important; /* or transparent, or background:none */
 }
@@ -67,6 +63,9 @@
 .height-60vh {
     height: 60vh;
 }
+.height-80vh {
+    height: 80vh;
+}
 .height-20vh {
     height: 20vh;
 }
@@ -79,11 +78,18 @@
 .font-20px{
     font-size: 20px;
 }
+.font-22px-bold{
+    font-size: 22px;
+    font-weight: bold;
+}
 .font-16px{
     font-size: 16px;
 }
 .font-14px{
     font-size: 14px;
+}
+.font-12px{
+    font-size: 12px;
 }
 .font-align-left{
     text-align:left;    
@@ -93,6 +99,10 @@
 }
 .wide-as-needed {
   white-space: nowrap;  
+}
+
+.high-as-needed {
+  white-space: ;  
 }
 
 .longText {
@@ -126,5 +136,12 @@
  .max-width-70 {
  max-width: 70%;
 }
-
+.newsItemBackground {
+    background: transparent;
+}
+.newsBackground {
+}
+.no-border {
+    border: 0px;
+}
 

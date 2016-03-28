@@ -367,24 +367,22 @@
                 $scope.$root.id = $stateParams.id;
             });
             $scope.data = {}
-            $scope.data.newsSites = [];
-            $scope.data.newsSites.push({ url: 'http://www.bloomberg.com' });
+            $scope.data.filter = "Top News";
             $scope.data.feeds = [];
-            $scope.feedSrc = 'http://rss.cnn.com/rss/cnn_topstories.rss'   
+            $scope.feedSrc = [];
+             
             var loadFeed = function (e) {
                 $http({
                     method: 'GET',
-                    url: 'http://rss.cnn.com/rss/cnn_topstories.rss'
+                    url: e
                 }).then(function (res) {
                     var jsonFromXMLRSS = convertXML(res.data, false);
                     $scope.data.feeds = jsonFromXMLRSS.rss.channel.item; 
-                    window.localStorage["nodes"] = JSON.stringify($scope.data.feeds);
                 }).catch(function (err) {
                     console.log(err);
                 });
             }
             
-            loadFeed();
             
             var convertXML = function (data, _withOutBind) {
 
@@ -402,6 +400,21 @@
             $scope.browse = function (v) {
                 window.open(v, "_system", "location=yes");
             }
+            
+            $scope.$watch("data.filter", function(value){
+                if(value==="Top News"){
+                    $scope.feedSrc = [];
+                    $scope.feedSrc.push("http://feeds.bbci.co.uk/news/rss.xml?edition=int");
+                }
+                else{
+                     $scope.feedSrc = [];
+                    $scope.feedSrc.push("http://rss.cnn.com/rss/cnn_topstories.rss");
+                }
+                
+            $scope.feedSrc.forEach(function (element) {
+                loadFeed(element);
+            }, this);
+            });
         }])
 
         .factory('xmlParser', function () {

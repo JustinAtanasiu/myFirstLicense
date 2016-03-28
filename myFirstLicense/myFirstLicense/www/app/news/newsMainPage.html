@@ -1,11 +1,26 @@
-<ion-view view-title="News">
+<ion-view view-title="News" class="newsBackground">
     <ion-content class="padding">
-        <div class="row height-60vh">
+        <select ng-model="data.filter" class="widthMax font-22px-bold no-border" >
+            <option selected>Top News</option>
+            <option>Economy</option>
+            <option>Health</option>
+            <option>Politics</option>
+            <option>Sports</option>
+        </select>
+        <div class="row height-5vh"></div>
+        <div class="row height-80vh">
             <ion-scroll direction="y" class="widthMax">
                 <div ng-repeat="news in data.feeds">
-                    <div class="item item-icon-left" ng-click="browse(news.link)">                        
-                        <div>
-                            <img ng-src="news.thumbnail._url"><p>{{news.title}}</p>
+                    <div class="item newsItemBackground" style="padding: 0px;" ng-click="browse(news.link)">
+                        <div class="row">
+                            <div class="col-25 marginRight-20px">
+                                <img ng-src="{{news.thumbnail._url}}">
+                            </div>
+                            <div class="col-75">
+                                <h3>{{news.title}}</h3>
+                                <p>{{news.description}}</p>
+                                <p>Site</p>
+                            </div>
                         </div>
                     </div>
                 </div>
