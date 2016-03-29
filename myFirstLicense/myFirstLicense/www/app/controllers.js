@@ -376,8 +376,9 @@
                     method: 'GET',
                     url: e
                 }).then(function (res) {
-                    var jsonFromXMLRSS = convertXML(res.data, false);
-                    $scope.data.feeds = jsonFromXMLRSS.rss.channel.item; 
+                    var jsonFromXMLRSS = convertXML(res.data, false);                  
+                    $scope.data.feeds = $scope.data.feeds.concat(jsonFromXMLRSS.rss.channel.item.splice(0, 6));                    
+                    shuffleArray($scope.data.feeds);
                 }).catch(function (err) {
                     console.log(err);
                 });
@@ -401,20 +402,53 @@
                 window.open(v, "_system", "location=yes");
             }
             
-            $scope.$watch("data.filter", function(value){
-                if(value==="Top News"){
+            $scope.$watch("data.filter", function (value) {
+                if (value === "Top News") {
                     $scope.feedSrc = [];
-                    $scope.feedSrc.push("http://feeds.bbci.co.uk/news/rss.xml?edition=int");
+                    $scope.feedSrc.push("http://feeds.bbci.co.uk/news/video_and_audio/news_front_page/rss.xml?edition=uk");
+                    $scope.feedSrc.push("http://www.forbes.com/most-popular/feed/");
+                    $scope.feedSrc.push("http://feeds.skynews.com/feeds/rss/world.xml");
                 }
-                else{
-                     $scope.feedSrc = [];
-                    $scope.feedSrc.push("http://rss.cnn.com/rss/cnn_topstories.rss");
+                else if (value === "Economy") {
+                    $scope.feedSrc = [];
+                    
+                    $scope.feedSrc.push("http://feeds.bbci.co.uk/news/video_and_audio/business/rss.xml");
+                    $scope.feedSrc.push("http://www.forbes.com/business/feed/");
+                    $scope.feedSrc.push("http://feeds.skynews.com/feeds/rss/business.xml");
+                }
+                else if (value === "Politics") {
+                    $scope.feedSrc = [];
+                    $scope.feedSrc.push("http://feeds.bbci.co.uk/news/video_and_audio/politics/rss.xml");
+                    $scope.feedSrc.push("http://feeds.skynews.com/feeds/rss/business.xml");
+                }
+                else if (value === "Science and Environment") {
+                    $scope.feedSrc = [];
+                    $scope.feedSrc.push("http://feeds.bbci.co.uk/news/video_and_audio/science_and_environment/rss.xml");
+                    $scope.feedSrc.push("http://www.forbes.com/technology/feed/");
+                    $scope.feedSrc.push("http://feeds.skynews.com/feeds/rss/technology.xml");
+                    $scope.feedSrc.push("http://www.nasa.gov/rss/dyn/image_of_the_day.rss");
+                    $scope.feedSrc.push("http://www.techlearning.com/RSS");
+                }
+                else if (value === "Sports") {
+                    $scope.feedSrc = [];
+                    
                 }
                 
             $scope.feedSrc.forEach(function (element) {
+                $scope.data.feeds = [];
                 loadFeed(element);
             }, this);
             });
+            
+            function shuffleArray(array) {
+                for (var i = array.length - 1; i > 0; i--) {
+                    var j = Math.floor(Math.random() * (i + 1));
+                    var temp = array[i];
+                    array[i] = array[j];
+                    array[j] = temp;
+                }
+                return array;
+            }
         }])
 
         .factory('xmlParser', function () {
