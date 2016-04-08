@@ -13,11 +13,11 @@
             <div class="col-50">
                 <ion-scroll direction="y" class="height-40vh ">
                     <div collection-repeat="weatherInHour in data.weatherInHours">
-                        <div class="item" >
-                        <p class=" font-14px" style="display: inline;">
-                            {{weatherInHour.temperature + ' - ' + weatherInHour.time}}
-                        </p>
-                        <div class="ion-android-happy marginRight-20px" style="float: right;" style="display: inline;"></div>
+                        <div class="item">
+                            <p class=" font-14px" style="display: inline;">
+                                {{weatherInHour.temperature + ' - ' + weatherInHour.time}}
+                            </p>
+                            <div class="ion-android-happy marginRight-20px" style="float: right;" style="display: inline;"></div>
                         </div>
                     </div>
                 </ion-scroll>
@@ -113,7 +113,7 @@
                     <div ng-repeat="city in data.cities track by $index">
                         <div class="row">
                             <div class="col-75" ng-click="getWeather(city.longitude, city.latitude, city.cityName)">
-                                <h4 class="ion-item font-14px" >
+                                <h4 class="ion-item font-14px">
                                     {{city.cityName}}
                                 </h4>
                             </div>
@@ -122,8 +122,8 @@
                             </div>
                         </div>
                     </div>
+                </ion-scroll>
             </div>
-            </ion-scroll>
         </div>
         </div>
         <div class="row longText">

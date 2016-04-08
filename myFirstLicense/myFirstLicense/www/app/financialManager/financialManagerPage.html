@@ -1,5 +1,67 @@
- <ion-view view-title="Financial Manager">
-        <ion-content class="padding">
-          <p>Financial Manager</p>
-        </ion-content>
+<ion-view view-title="Financial Manager">
+    <ion-content class="padding">
+        <div class="row height-40vh">
+            <div class="col-50  height-40vh">
+                <div>
+                    <h4> Monthly Income </h4>
+                </div>
+                <div>
+                    <input type="number">
+                </div>
+                <div class="marginTop-5vh">
+                    <h4> Daily sum left </h4>
+                </div>
+                <div>
+                    <input type="number">
+                </div>
+            </div>
+            <div class="col-50  height-40vh">
+                <div>
+                    <h4> Monthly Spendings </h4>
+                </div>
+                <div>
+                    <input type="number">
+                </div>
+                <div  class="marginTop-5vh">
+                    <h4> Today Spendings </h4>
+                </div>
+                <div>
+                    <input type="number">
+                </div>
+            </div>
+        </div>
+        <div class="row height-10vh">
+                <input class="widthMax" type="number" placeholder="Day of the month of the salary" />
+       </div>
+        <div class="row height-10vh">
+            <div class="col-75">
+                <input class="border-2px longText widthMax" type="number" placeholder="Income / spending" />
+            </div>
+            <div class="col-25 ">
+                <ion-item class="no-border item-icon-right">
+                    <i class="icon ion-ios-cloud-upload-outline"></i>
+                </ion-item>
+            </div>
+        </div>
+        <div class="row height-5vh">
+            <button ng-show="tableHidden" class="floatRight button button-icon ion-plus"></button>
+              <button ng-show="!tableHidden" class="floatRight button button-icon ion-minus" ng-click="showTable()"></buttton>
+        </div>
+         <div class="row">
+                <ion-scroll direction="y" class="widthMax">
+                    <div ng-repeat="city in data.cities track by $index">
+                        <div class="row">
+                            <div class="col-75" ng-click="getWeather(city.longitude, city.latitude, city.cityName)">
+                                <h4 class="ion-item font-14px">
+                                    {{city.cityName}}
+                                </h4>
+                            </div>
+                            <div class="col-25">
+                                <button ng-show="$index>0" style="vertical-align: top" class="floatLeft  button button-icon ion-minus" ng-click="removeLocation($index)">
+                            </div>
+                        </div>
+                    </div>
+                </ion-scroll>
+            </div>
+    </ion-content>
 </ion-view>

@@ -469,6 +469,7 @@
                 $scope.$root.showSignUp = false;
                 $scope.$root.id = $stateParams.id;
             });
+            $scope.tableHidden = true;
         }])
 
     //errorCtrl managed the display of error messages bubbled up from other controllers, directives, myappService
