@@ -574,17 +574,19 @@
                 myResetMonth = new Date(result.financialInformation.resetMonth);
                 $scope.data.monthlyTransactions = result.financialInformation.monthlyTransactions
 
-                if (((new Date()).getMonth() - myResetMonth.getMonth()) !== 0) {
+                if (new Date() > myResetMonth) {
                     $scope.data.remainingSum = $scope.data.monthlyIncome - $scope.data.monthlySpendings;
                     $scope.data.totalSpendingsMonth = 0;
-                    $scope.data.monthlyTransactions = [];
-                    myResetMonth = (new Date());
+                    if ((new Date()).getMonth() !== 11)
+                        myResetMonth = new Date(myResetMonth.getFullYear(), myResetMonth.getMonth() + 1, $scope.data.dayOfTheMonth + 1);
+                    else
+                        myResetMonth = new Date(myResetMonth.getFullYear() + 1, myResetMonth.getMonth() + 1, $scope.data.dayOfTheMonth + 1);
+
                 }
                 else
                     $scope.data.remainingSum = $scope.data.monthlyIncome - $scope.data.monthlySpendings + $scope.data.totalSpendingsMonth;
 
                 if (((new Date()).getDay() - myResetDay.getDay()) !== 0) {
-                    $scope.data.remainingSum = $scope.data.monthlyIncome - $scope.data.monthlySpendings;
                     $scope.data.todaySpendings = 0;
                     myResetDay = (new Date());
                 }
@@ -633,9 +635,19 @@
                     $scope.data.remainingSum -= newVal - oldVal;
             });
             
-            $scope.$watchCollection("[data.remainingSum, data.dayOfTheMonth]", function(newVal, oldVal){            
-                    
-                if(!$scope.data.dayOfTheMonth)
+            $scope.$watchCollection("[data.remainingSum, data.dayOfTheMonth]", function(newVal, oldVal){     
+
+                if (new Date().getDate() < $scope.data.dayOfTheMonth) {
+                    myResetMonth = new Date((new Date()).getFullYear(), (new Date()).getMonth(), $scope.data.dayOfTheMonth + 1);
+                }
+                else {
+                    if ((new Date()).getMonth() !== 11)
+                        myResetMonth = new Date((new Date()).getFullYear(), (new Date()).getMonth() + 1, $scope.data.dayOfTheMonth + 1);
+                    else
+                        myResetMonth = new Date((new Date()).getFullYear() + 1, (new Date()).getMonth() + 1, $scope.data.dayOfTheMonth + 1);
+                }
+
+                if (!$scope.data.dayOfTheMonth)
                     $scope.data.dailySumLeft = undefined;
                 else {
                     var now = new Date();
@@ -672,9 +684,7 @@
                     });
                     $scope.data.todaySpendings += $scope.data.incomeSpending;
                     $scope.data.remainingSum += $scope.data.incomeSpending;
-                    $scope.data.monthlyTransactions.forEach(function (transaction) {
-                        $scope.data.totalSpendingsMonth += transaction.sum;
-                    }, this);
+                    $scope.data.totalSpendingsMonth += $scope.data.incomeSpending;
                     $scope.data.incomeSpending = undefined;
                     $scope.saveInformation();
                 }
