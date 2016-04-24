@@ -644,21 +644,21 @@
                     
                     if (nowMonths === 1) {
                         if (nowDays >= $scope.data.dayOfTheMonth)
-                            $scope.data.dailySumLeft = ($scope.data.remainingSum) / (29 - nowDays + $scope.data.dayOfTheMonth);
+                            $scope.data.dailySumLeft = (($scope.data.remainingSum) / (29 - nowDays + $scope.data.dayOfTheMonth)).toFixed(2);
                         else
-                            $scope.data.dailySumLeft = ($scope.data.remainingSum) / ($scope.data.dayOfTheMonth - nowDays);
+                            $scope.data.dailySumLeft = (($scope.data.remainingSum) / ($scope.data.dayOfTheMonth - nowDays)).toFixed(2);
                     }
                     else if (nowMonths === 0 || nowMonths === 2 || nowMonths === 4 || nowMonths === 6 || nowMonths === 7 || nowMonths === 9 || nowMonths === 11) {
                         if (nowDays >= $scope.data.dayOfTheMonth)
-                            $scope.data.dailySumLeft = ($scope.data.remainingSum) / (32 - nowDays + $scope.data.dayOfTheMonth);
+                            $scope.data.dailySumLeft = (($scope.data.remainingSum) / (32 - nowDays + $scope.data.dayOfTheMonth)).toFixed(2);
                         else
-                            $scope.data.dailySumLeft = ($scope.data.remainingSum) / ($scope.data.dayOfTheMonth - nowDays);
+                            $scope.data.dailySumLeft = (($scope.data.remainingSum) / ($scope.data.dayOfTheMonth - nowDays)).toFixed(2);
                     }
                     else {
                         if (nowDays >= $scope.data.dayOfTheMonth)
-                            $scope.data.dailySumLeft = ($scope.data.remainingSum) / (31 - nowDays + $scope.data.dayOfTheMonth);
+                            $scope.data.dailySumLeft = (($scope.data.remainingSum) / (31 - nowDays + $scope.data.dayOfTheMonth)).toFixed(2);
                         else
-                            $scope.data.dailySumLeft = ($scope.data.remainingSum) / ($scope.data.dayOfTheMonth - nowDays);
+                            $scope.data.dailySumLeft = (($scope.data.remainingSum) / ($scope.data.dayOfTheMonth - nowDays)).toFixed(2);
                     }
                 }
             });
