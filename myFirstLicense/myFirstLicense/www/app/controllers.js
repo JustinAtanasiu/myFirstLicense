@@ -6,8 +6,17 @@
         .controller("signInCtrl", ["$scope", "$state", "$ionicPopup", '$q', function ($scope, $state, $ionicPopup, $q) {
             $scope.$on('$ionicView.beforeEnter', function (e, data) {
                 $scope.$root.showMenuItems = false;
-                $scope.$root.showSignUp = true;             
-                $scope.isLandscape = false;
+                $scope.$root.showSignUp = true;      
+                switch (window.orientation) {
+                    case -90:
+                    case 90:
+                        $scope.isLandscape = true;
+                        break;
+                    default:
+                        $scope.isLandscape = false;
+                        break;
+                }  
+               
             });
             
             window.addEventListener("orientationchange", function () {
@@ -71,8 +80,16 @@
         .controller("signUpCtrl", ["$scope", "$state", "$ionicPopup", "$q", function ($scope, $state, $ionicPopup,$q) {
             $scope.$on('$ionicView.beforeEnter', function (e, data) {
                 $scope.$root.showMenuItems = false;
-                $scope.$root.showSignUp = false;
-                $scope.isLandscape = false;
+                $scope.$root.showSignUp = false;      
+                switch (window.orientation) {
+                    case -90:
+                    case 90:
+                        $scope.isLandscape = true;
+                        break;
+                    default:
+                        $scope.isLandscape = false;
+                        break;
+                }         
             });
             
             window.addEventListener("orientationchange", function () {
@@ -160,11 +177,23 @@
                                     title: 'Sign up completed!',
                                     template: 'User has been succesfully added.'
                                 });
+                                var resetDay = new Date();
+                                var resetMonth = new Date();
                     localDB.post({ username: user.username,
                                    password: user.password,
-                                   weatherLocations: [] });
-                                    $state.go('signIn');
-                                    });
+                                   weatherLocations: [],
+                                   financialInformation: {monthlyIncome: 0,
+                                       monthlySpendings: 0,
+                                       todaySpendings: 0,
+                                       dayOfTheMonth: 1,
+                                       totalSpendingsMonth: 0,
+                                       resetDay: resetDay,
+                                       resetMonth: resetMonth,
+                                       monthlyTransactions: []
+                                   }
+                        });
+                        $state.go('signIn');
+                    });
                 } else {
                     console.log("Action not completed");
                 }
@@ -176,8 +205,16 @@
             $scope.$on('$ionicView.beforeEnter', function (e, data) {
                 $scope.$root.showMenuItems = true;
                 $scope.$root.showSignUp = false;
-                $scope.$root.id = $stateParams.id;
-                $scope.isLandscape = false;
+                $scope.$root.id = $stateParams.id;    
+                switch (window.orientation) {
+                    case -90:
+                    case 90:
+                        $scope.isLandscape = true;
+                        break;
+                    default:
+                        $scope.isLandscape = false;
+                        break;
+                }           
             });
             
             window.addEventListener("orientationchange", function () {
@@ -364,8 +401,33 @@
             $scope.$on('$ionicView.beforeEnter', function (e, data) {
                 $scope.$root.showMenuItems = true;
                 $scope.$root.showSignUp = false;
-                $scope.$root.id = $stateParams.id;
+                $scope.$root.id = $stateParams.id;     
+                switch (window.orientation) {
+                    case -90:
+                    case 90:
+                        $scope.isLandscape = true;
+                        break;
+                    default:
+                        $scope.isLandscape = false;
+                        break;
+                }         
             });
+            
+            window.addEventListener("orientationchange", function () {
+                // Announce the new orientation number
+                switch (window.orientation) {
+                    case -90:
+                    case 90:
+                        $scope.isLandscape = true;
+                        $scope.$apply(); // <--
+                        break;
+                    default:
+                        $scope.isLandscape = false;
+                        $scope.$apply(); // <--
+                        break;
+                }
+            }, false);
+            
             $scope.data = {}
             $scope.data.filter = "Top News";
             $scope.data.feeds = [];
@@ -467,9 +529,156 @@
             $scope.$on('$ionicView.beforeEnter', function (e, data) {
                 $scope.$root.showMenuItems = true;
                 $scope.$root.showSignUp = false;
-                $scope.$root.id = $stateParams.id;
+                $scope.$root.id = $stateParams.id;     
+                switch (window.orientation) {
+                    case -90:
+                    case 90:
+                        $scope.isLandscape = true;
+                        break;
+                    default:
+                        $scope.isLandscape = false;
+                        break;
+                }
             });
+             
+            
+            window.addEventListener("orientationchange", function () {
+                // Announce the new orientation number
+                switch (window.orientation) {
+                    case -90:
+                    case 90:
+                        $scope.isLandscape = true;
+                        $scope.$apply(); // <--
+                        break;
+                    default:
+                        $scope.isLandscape = false;
+                        $scope.$apply(); // <--
+                        break;
+                }
+            }, false);
             $scope.tableHidden = true;
+            $scope.data = {};
+            $scope.data.monthlyTransactions = [];
+            var myInitialInfo;
+            var myResetDay;
+            var myResetMonth;
+            
+            localDB.get($scope.$root.id).then(function (result) {
+                myInitialInfo = result.financialInformation;
+                $scope.data.monthlyIncome = result.financialInformation.monthlyIncome;
+                $scope.data.monthlySpendings = result.financialInformation.monthlySpendings;
+                $scope.data.todaySpendings = result.financialInformation.todaySpendings;
+                $scope.data.dayOfTheMonth = result.financialInformation.dayOfTheMonth;
+                $scope.data.totalSpendingsMonth = result.financialInformation.totalSpendingsMonth;
+                myResetDay = new Date(result.financialInformation.resetDay);
+                myResetMonth = new Date(result.financialInformation.resetMonth);
+                $scope.data.monthlyTransactions = result.financialInformation.monthlyTransactions
+
+                if (((new Date()).getMonth() - myResetMonth.getMonth()) !== 0) {
+                    $scope.data.remainingSum = $scope.data.monthlyIncome - $scope.data.monthlySpendings;
+                    $scope.data.totalSpendingsMonth = 0;
+                    $scope.data.monthlyTransactions = [];
+                    myResetMonth = (new Date());
+                }
+                else
+                    $scope.data.remainingSum = $scope.data.monthlyIncome - $scope.data.monthlySpendings + $scope.data.totalSpendingsMonth;
+
+                if (((new Date()).getDay() - myResetDay.getDay()) !== 0) {
+                    $scope.data.remainingSum = $scope.data.monthlyIncome - $scope.data.monthlySpendings;
+                    $scope.data.todaySpendings = 0;
+                    myResetDay = (new Date());
+                }
+                    
+            }).then(function (response) {
+                // handle response
+            }).catch(function (err) {
+                console.log(err);
+            });
+           
+          
+            
+            $scope.showTable = function(){
+                $scope.tableHidden = !$scope.tableHidden;
+            };
+            
+            
+            $scope.saveInformation = function(){
+                localDB.get($scope.$root.id).then(function (result) {
+                    var myObj = {  monthlyIncome: $scope.data.monthlyIncome,
+                    monthlySpendings: $scope.data.monthlySpendings,
+                    todaySpendings: $scope.data.todaySpendings,
+                    dayOfTheMonth: $scope.data.dayOfTheMonth,
+                    totalSpendingsMonth: $scope.data.totalSpendingsMonth,
+                    resetDay: myResetDay,
+                    resetMonth: myResetMonth,
+                    monthlyTransactions: $scope.data.monthlyTransactions
+                    }
+                    result.financialInformation = myObj;
+                    return localDB.put(result, $scope.$root.id, result._rev);
+                }).then(function (response) {
+                    // handle response
+                }).catch(function (err) {
+                    console.log(err);
+                });
+                
+            };
+            
+            $scope.$watch('data.monthlyIncome', function (newVal, oldVal) {
+                if (newVal !== undefined && oldVal !== undefined)
+                    $scope.data.remainingSum += newVal - oldVal;
+            });
+
+            $scope.$watch('data.monthlySpendings', function (newVal, oldVal) {
+                if (newVal !== undefined && oldVal !== undefined) 
+                    $scope.data.remainingSum -= newVal - oldVal;
+            });
+            
+            $scope.$watchCollection("[data.remainingSum, data.dayOfTheMonth]", function(newVal, oldVal){            
+                    
+                if(!$scope.data.dayOfTheMonth)
+                    $scope.data.dailySumLeft = undefined;
+                else {
+                    var now = new Date();
+                    var nowDays = now.getDate();
+                    var nowMonths = now.getMonth();
+                    
+                    if (nowMonths === 1) {
+                        if (nowDays >= $scope.data.dayOfTheMonth)
+                            $scope.data.dailySumLeft = ($scope.data.remainingSum) / (29 - nowDays + $scope.data.dayOfTheMonth);
+                        else
+                            $scope.data.dailySumLeft = ($scope.data.remainingSum) / ($scope.data.dayOfTheMonth - nowDays);
+                    }
+                    else if (nowMonths === 0 || nowMonths === 2 || nowMonths === 4 || nowMonths === 6 || nowMonths === 7 || nowMonths === 9 || nowMonths === 11) {
+                        if (nowDays >= $scope.data.dayOfTheMonth)
+                            $scope.data.dailySumLeft = ($scope.data.remainingSum) / (32 - nowDays + $scope.data.dayOfTheMonth);
+                        else
+                            $scope.data.dailySumLeft = ($scope.data.remainingSum) / ($scope.data.dayOfTheMonth - nowDays);
+                    }
+                    else {
+                        if (nowDays >= $scope.data.dayOfTheMonth)
+                            $scope.data.dailySumLeft = ($scope.data.remainingSum) / (31 - nowDays + $scope.data.dayOfTheMonth);
+                        else
+                            $scope.data.dailySumLeft = ($scope.data.remainingSum) / ($scope.data.dayOfTheMonth - nowDays);
+                    }
+                }
+            });
+            
+            $scope.registerIncomeSpending = function(){  
+                if ($scope.data.incomeSpending) {
+                    $scope.data.monthlyTransactions.push({
+                        sum: $scope.data.incomeSpending,
+                        displaySum: $scope.data.incomeSpending > 0 ? '+' + $scope.data.incomeSpending : $scope.data.incomeSpending,
+                        date: (new Date()).toUTCString()
+                    });
+                    $scope.data.todaySpendings += $scope.data.incomeSpending;
+                    $scope.data.remainingSum += $scope.data.incomeSpending;
+                    $scope.data.monthlyTransactions.forEach(function (transaction) {
+                        $scope.data.totalSpendingsMonth += transaction.sum;
+                    }, this);
+                    $scope.data.incomeSpending = undefined;
+                    $scope.saveInformation();
+                }
+            }
         }])
 
     //errorCtrl managed the display of error messages bubbled up from other controllers, directives, myappService

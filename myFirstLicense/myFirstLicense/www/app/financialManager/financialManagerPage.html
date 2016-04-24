@@ -1,67 +1,116 @@
 <ion-view view-title="Financial Manager">
     <ion-content class="padding">
-        <div class="row height-40vh">
-            <div class="col-50  height-40vh">
-                <div>
-                    <h4> Monthly Income </h4>
+        <form name="myForm" submit="saveInformation()">
+            <div class="row height-30vh" ng-show="!isLandscape">
+                <div class="col-50  height-30vh">
+                    <div>
+                        <h4> Monthly Income </h4>
+                    </div>
+                    <div>
+                        <input type="number" ng-model="data.monthlyIncome">
+                    </div>
+                    <div class="marginTop-5vh">
+                        <h4> Daily sum left </h4>
+                    </div>
+                    <div>
+                        <span>{{data.dailySumLeft}}</span>
+                    </div>
                 </div>
-                <div>
-                    <input type="number">
-                </div>
-                <div class="marginTop-5vh">
-                    <h4> Daily sum left </h4>
-                </div>
-                <div>
-                    <input type="number">
+                <div class="col-50  height-30vh">
+                    <div>
+                        <h4> Monthly Spendings </h4>
+                    </div>
+                    <div>
+                        <input type="number" ng-model="data.monthlySpendings">
+                    </div>
+                    <div class="marginTop-5vh">
+                        <h4> Today Spendings </h4>
+                    </div>
+                    <div>
+                        <span>{{data.todaySpendings}}</span>
+                    </div>
                 </div>
             </div>
-            <div class="col-50  height-40vh">
-                <div>
-                    <h4> Monthly Spendings </h4>
+            <div class="row height-40vh" ng-show="isLandscape">
+                <div class="col-50  height-40vh">
+                    <div>
+                        <h4> Monthly Income </h4>
+                    </div>
+                    <div>
+                        <input type="number" ng-model="data.monthlyIncome">
+                    </div>
+                    <div class="marginTop-5vh">
+                        <h4> Daily sum left </h4>
+                    </div>
+                    <div>
+                        <span>{{data.dailySumLeft}}</span>
+                    </div>
                 </div>
-                <div>
-                    <input type="number">
-                </div>
-                <div  class="marginTop-5vh">
-                    <h4> Today Spendings </h4>
-                </div>
-                <div>
-                    <input type="number">
+                <div class="col-50  height-40vh">
+                    <div>
+                        <h4> Monthly Spendings </h4>
+                    </div>
+                    <div>
+                        <input type="number" ng-model="data.monthlySpendings">
+                    </div>
+                    <div class="marginTop-5vh">
+                        <h4> Today Spendings </h4>
+                    </div>
+                    <div>
+                        <span>{{data.todaySpendings}}</span>
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="row height-10vh">
-                <input class="widthMax" type="number" placeholder="Day of the month of the salary" />
-       </div>
-        <div class="row height-10vh">
-            <div class="col-75">
-                <input class="border-2px longText widthMax" type="number" placeholder="Income / spending" />
+            <div class="row height-10vh" ng-show="isLandscape"></div>
+            <div class="row height-10vh">
+                <div class="col-75">
+                    <h4>Remaining sum</h4>
+                </div>
+                <div class="col-25">
+                    <span>{{data.remainingSum}}</span>
+                </div>
             </div>
-            <div class="col-25 ">
-                <ion-item class="no-border item-icon-right">
+            <div class="row height-10vh">
+                <div class="col-75">
+                    <h4>Month day of income</h4>
+                </div>
+                <div class="col-25">
+                    <input class="widthMax" required type="number" placeholder="Month day" ng-model="data.dayOfTheMonth" />
+                </div>
+            </div>
+
+            <div class="row height-10vh">
+                <ion-item class="no-border item-icon-right floatRight" ng-click="saveInformation()">
+                    <span>Save current values</span>
                     <i class="icon ion-ios-cloud-upload-outline"></i>
                 </ion-item>
             </div>
+        </form>
+        <div class="row height-10vh">
+            <div class="col-75">
+                <input class="border-2px widthMax" type="number" placeholder="Income / spending" ng-model="data.incomeSpending" />
+            </div>
+            <button class="button button-icon ion-ios-checkmark-outline floatRight" ng-click="registerIncomeSpending()"></button>
+        </div>
         </div>
         <div class="row height-5vh">
-            <button ng-show="tableHidden" class="floatRight button button-icon ion-plus"></button>
-              <button ng-show="!tableHidden" class="floatRight button button-icon ion-minus" ng-click="showTable()"></buttton>
+            <button ng-show="tableHidden" class="floatRight button button-icon ion-plus" ng-click="showTable()"></button>
+            <button ng-show="!tableHidden" class="floatRight button button-icon ion-minus" ng-click="showTable()">
+                </buttton>
         </div>
-         <div class="row">
-                <ion-scroll direction="y" class="widthMax">
-                    <div ng-repeat="city in data.cities track by $index">
-                        <div class="row">
-                            <div class="col-75" ng-click="getWeather(city.longitude, city.latitude, city.cityName)">
-                                <h4 class="ion-item font-14px">
-                                    {{city.cityName}}
-                                </h4>
-                            </div>
-                            <div class="col-25">
-                                <button ng-show="$index>0" style="vertical-align: top" class="floatLeft  button button-icon ion-minus" ng-click="removeLocation($index)">
-                            </div>
+        <div class="row" ng-show="!tableHidden">
+            <ion-scroll class="widthMax">
+                <div ng-repeat="transaction in data.monthlyTransactions track by $index">
+                    <div class="row">
+                        <div class="col-75">
+                            <span>{{transaction.date}}</span>
+                        </div>
+                        <div class="col-25">
+                            <span>{{transaction.displaySum}}</span>
                         </div>
                     </div>
-                </ion-scroll>
-            </div>
+                </div>
+            </ion-scroll>
+        </div>
     </ion-content>
 </ion-view>
