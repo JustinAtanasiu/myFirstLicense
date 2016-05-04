@@ -3,7 +3,7 @@
     "use strict";
     angular.module("myapp.controllers", [])
 
-        .controller("signInCtrl", ["$scope", "$state", "$ionicPopup", '$q', function ($scope, $state, $ionicPopup, $q) {
+        .controller("signInCtrl", ["$scope", "$state", "$ionicPopup", '$q', 'dbService', function ($scope, $state, $ionicPopup, $q, dbService) {
             $scope.$on('$ionicView.beforeEnter', function (e, data) {
                 $scope.$root.showMenuItems = false;
                 $scope.$root.showSignUp = true;      
@@ -37,47 +37,11 @@
             $scope.data = {};
             
             $scope.login = function (username, password) {
-                var map = function (doc) {
-                    if (doc.username) {
-                        emit(doc._id, { username: doc.username, password: doc.password });
-                    }
-                }
-
-                return localDB.query(map, { reduce: false }).then(function (result) {
-                    var userExists = false;
-                    result.rows.forEach(function (user) {
-                        
-                        if (user.value.username === username) {
-                            userExists = true;
-                            if (user.value.password !== password) {
-                                var alertPopup = $ionicPopup.alert({
-                                    title: 'Sign in failed!',
-                                    template: 'Wrong Password'
-                                });
-                                return;
-                            }
-                            else {
-                                $state.go('news', {id: user.id});
-                            }
-                        }                        
-                    });
-                    if (!userExists) {
-                            var alertPopup = $ionicPopup.alert({
-                                title: 'Sign in failed!',
-                                template: 'Username does not exist'
-                            });
-                            return;
-                        }
-                    // handle result
-                }).catch(function (err) {
-                });
+                dbService.login(username,password);
             }
-
-
-
         }])
 
-        .controller("signUpCtrl", ["$scope", "$state", "$ionicPopup", "$q", function ($scope, $state, $ionicPopup,$q) {
+        .controller("signUpCtrl", ["$scope", "$state", "$ionicPopup", "$q", 'dbService', function ($scope, $state, $ionicPopup, $q, dbService) {
             $scope.$on('$ionicView.beforeEnter', function (e, data) {
                 $scope.$root.showMenuItems = false;
                 $scope.$root.showSignUp = false;      
@@ -105,103 +69,15 @@
                         $scope.$apply(); // <--
                         break;
                 }
-            }, false);
-            
-            var checkUsers = function (username, password) {
-                var defer = $q.defer();
-                var foundUser = false;
-                var map = function (doc) {
-                    if (doc.username) {
-                        emit(doc._id, { username: doc.username, password: doc.password });
-                    }
-                }
-
-                localDB.query(map, { reduce: false }).then(function (result) {
-                    result.rows.forEach(function (user) {
-
-                        if (user.value.username === username) {
-                            var alertPopup = $ionicPopup.alert({
-                                title: 'Sign up failed!',
-                                template: 'Username already exists.'
-                            });
-                            foundUser = true;
-                        }
-                    })
-                      if (foundUser === false)
-                    defer.resolve(true);
-                else
-                    defer.reject();                                   
-                }).catch(function (err) {
-                });
-              
-
-                return defer.promise;
-            }
-
-            $scope.users = [];
+            }, false);           
 
             $scope.create = function (user) {
-                if (user && user.username && user.password) {
-                    if (user && user.username && user.password && user.username.length < 6 || user.password.length < 6) {
-                        var text;
-                        if (user.username.length < 6)
-                            text = 'Please enter a username longer than 6 characters!';
-                        else
-                            text = 'Please enter a password longer than 6 characters!'
-                        var alertPopup = $ionicPopup.alert({
-                            title: 'Sign up failed!',
-                            template: text
-                        });
-                        return;
-                    }
-                    else if (user.password !== user.retypePassword) {
-                        var alertPopup = $ionicPopup.alert({
-                            title: 'Sign up failed!',
-                            template: 'Please enter the same password!'
-                        });
-                        return;
-                    }
-                }
-                else
-                    var alertPopup = $ionicPopup.alert({
-                        title: 'Sign up failed!',
-                        template: 'Please enter data into the fields!'
-                    });
-                if (user !== undefined) {
-                    
-                    if ($scope.hasOwnProperty("users") !== true) {
-                        $scope.users = [];
-                    }                    
-                    checkUsers(user.username).then(function (){
-                        var alertPopup = $ionicPopup.alert({
-                                    title: 'Sign up completed!',
-                                    template: 'User has been succesfully added.'
-                                });
-                                var resetDay = new Date();
-                                var resetMonth = new Date();
-                    localDB.post({ username: user.username,
-                                   password: user.password,
-                                   weatherLocations: [],
-                                   financialInformation: {monthlyIncome: 0,
-                                       monthlySpendings: 0,
-                                       todaySpendings: 0,
-                                       dayOfTheMonth: 1,
-                                       totalSpendingsMonth: 0,
-                                       resetDay: resetDay,
-                                       resetMonth: resetMonth,
-                                       monthlyTransactions: []
-                                   }
-                        });
-                        $state.go('signIn');
-                    });
-                } else {
-                    console.log("Action not completed");
-                }
+                dbService.create(user)
             }
         }])
 
-        .controller("weatherMainPageCtrl", ["$scope", "$state", "$http", '$stateParams', '$ionicPopup', '$ionicScrollDelegate', 
-        function ($scope, $state, $http,$stateParams, $ionicPopup, $ionicScrollDelegate) {
+        .controller("weatherMainPageCtrl", ["$scope", "$state", "$http", '$stateParams', '$ionicPopup', '$ionicScrollDelegate', 'dbService',
+        function ($scope, $state, $http,$stateParams, $ionicPopup, $ionicScrollDelegate, dbService) {
             $scope.$on('$ionicView.beforeEnter', function (e, data) {
                 $scope.$root.showMenuItems = true;
                 $scope.$root.showSignUp = false;
@@ -259,7 +135,7 @@
                     $scope.data.cities.push({cityName: response.data.address.city + ", " + response.data.address.country,
                                              latitude: latitude,
                                              longitude: longitude})
-                    localDB.get($scope.$root.id).then(function(result){
+                    dbService.get($scope.$root.id).then(function(result){
                         result.weatherLocations.forEach(function(location) {
                             $scope.data.cities.push(location);
                         }, this);
@@ -342,10 +218,10 @@
             var selectCity = function (city) {
                 $scope.data.searchBox = '';
                 $scope.data.cities.push({cityName: city.matching_full_name, latitude: city._embedded['city:item'].location.latlon.latitude, longitude: city._embedded['city:item'].location.latlon.longitude});
-                localDB.get($scope.$root.id).then(function (result) {
+                dbService.get($scope.$root.id).then(function (result) {
                     var myObj = { cityName: city.matching_full_name, latitude: city._embedded['city:item'].location.latlon.latitude, longitude: city._embedded['city:item'].location.latlon.longitude}
                     result.weatherLocations.push(myObj);
-                    return localDB.put(result, $scope.$root.id, result._rev);
+                    return dbService.put(result, $scope.$root.id, result._rev);
                 }).then(function (response) {
                     // handle response
                 }).catch(function (err) {
@@ -372,11 +248,11 @@
 
             var removeLocation = function ($index) {
                 $scope.data.cities.splice($index, 1);
-                localDB.get($scope.$root.id).then(function (result) {
+                dbService.get($scope.$root.id).then(function (result) {
 
                     result.weatherLocations.splice($index - 1, 1);
 
-                    return localDB.put(result, $scope.$root.id, result._rev);
+                    return dbService.put(result, $scope.$root.id, result._rev);
                 }).then(function (response) {
                     // handle response
                 }).catch(function (err) {
@@ -525,7 +401,7 @@
             }
         })
         
-        .controller("financialManagerCtrl", ["$scope", "$state", "$stateParams", function ($scope, $state, $stateParams) {
+        .controller("financialManagerCtrl", ["$scope", "$state", "$stateParams", 'dbService', function ($scope, $state, $stateParams, dbService) {
             $scope.$on('$ionicView.beforeEnter', function (e, data) {
                 $scope.$root.showMenuItems = true;
                 $scope.$root.showSignUp = false;
@@ -563,7 +439,7 @@
             var myResetDay;
             var myResetMonth;
             
-            localDB.get($scope.$root.id).then(function (result) {
+            dbService.get($scope.$root.id).then(function (result) {
                 myInitialInfo = result.financialInformation;
                 $scope.data.monthlyIncome = result.financialInformation.monthlyIncome;
                 $scope.data.monthlySpendings = result.financialInformation.monthlySpendings;
@@ -605,7 +481,7 @@
             
             
             $scope.saveInformation = function(){
-                localDB.get($scope.$root.id).then(function (result) {
+                dbService.get($scope.$root.id).then(function (result) {
                     var myObj = {  monthlyIncome: $scope.data.monthlyIncome,
                     monthlySpendings: $scope.data.monthlySpendings,
                     todaySpendings: $scope.data.todaySpendings,
@@ -616,7 +492,7 @@
                     monthlyTransactions: $scope.data.monthlyTransactions
                     }
                     result.financialInformation = myObj;
-                    return localDB.put(result, $scope.$root.id, result._rev);
+                    return dbService.put(result, $scope.$root.id, result._rev);
                 }).then(function (response) {
                     // handle response
                 }).catch(function (err) {
@@ -679,10 +555,16 @@
             
             var getLastDayMonth = function (day) {
                 if ((new Date()).getMonth() === 1 && day > 29) {
+                    $scope.data.dayOfTheMonth = 29;
                     return 29;
                 }
                 else if (((new Date()).getMonth() === 3 || (new Date()).getMonth() === 5 || (new Date()).getMonth() === 8 || (new Date()).getMonth() === 10) && day > 30) {
+                    $scope.data.dayOfTheMonth = 30;
                     return 30;
+                }
+                else if (((new Date()).getMonth() === 0 || (new Date()).getMonth() === 2 || (new Date()).getMonth() === 4 || (new Date()).getMonth() === 6 || (new Date()).getMonth() === 7 || (new Date()).getMonth() === 9 || (new Date()).getMonth() === 11) && day > 31) {
+                    $scope.data.dayOfTheMonth = 31;
+                    return 31;
                 }
                 else
                     return day;
