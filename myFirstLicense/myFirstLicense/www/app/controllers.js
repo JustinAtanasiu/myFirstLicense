@@ -574,7 +574,7 @@
                 if ($scope.data.incomeSpending) {
                     $scope.data.monthlyTransactions.push({
                         sum: $scope.data.incomeSpending,
-                        displaySum: $scope.data.incomeSpending > 0 ? '+' + $scope.data.incomeSpending : $scope.data.incomeSpending,
+                        displaySum: $scope.data.incomeSpending > 0 ? '+' + $scope.data.incomeSpending.toString() : $scope.data.incomeSpending.toString(),
                         date: (new Date()).toUTCString()
                     });
                     $scope.data.todaySpendings += $scope.data.incomeSpending;
