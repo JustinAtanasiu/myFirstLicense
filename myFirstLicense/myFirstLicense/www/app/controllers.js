@@ -449,15 +449,25 @@
                 myResetDay = new Date(result.financialInformation.resetDay);
                 myResetMonth = new Date(result.financialInformation.resetMonth);
                 $scope.data.monthlyTransactions = result.financialInformation.monthlyTransactions
-
+                
+                var oldTransactions = [];
+                $scope.data.monthlyTransactions.forEach(function(transaction, index){
+                   if(new Date(transaction.date) < (new Date()).addMonths(-1))
+                        oldTransactions.push(index);
+                });
+                
+                oldTransactions.forEach(function(indexOfTransaction){
+                    $scope.data.monthlyTransactions.splice(indexOfTransaction,1);
+                });
+                
                 if (new Date() > myResetMonth) {
                     $scope.data.remainingSum = $scope.data.monthlyIncome - $scope.data.monthlySpendings;
                     $scope.data.totalSpendingsMonth = 0;
                     if ((new Date()).getMonth() !== 11)
-                        myResetMonth = new Date(myResetMonth.getFullYear(), myResetMonth.getMonth() + 1, $scope.data.dayOfTheMonth + 1);
+                        myResetMonth = new Date(myResetMonth.getFullYear(), myResetMonth.getMonth() + 1, $scope.data.dayOfTheMonth + 1, 0, 0, 0);
                     else
-                        myResetMonth = new Date(myResetMonth.getFullYear() + 1, myResetMonth.getMonth() + 1, $scope.data.dayOfTheMonth + 1);
-
+                        myResetMonth = new Date(myResetMonth.getFullYear() + 1, myResetMonth.getMonth() + 1, $scope.data.dayOfTheMonth + 1, 0, 0, 0);
+                    
                 }
                 else
                     $scope.data.remainingSum = $scope.data.monthlyIncome - $scope.data.monthlySpendings + $scope.data.totalSpendingsMonth;
@@ -466,14 +476,38 @@
                     $scope.data.todaySpendings = 0;
                     myResetDay = (new Date());
                 }
+                
+                $scope.saveInformation();
                     
             }).then(function (response) {
                 // handle response
             }).catch(function (err) {
                 console.log(err);
-            });
+                });
+
+            Date.isLeapYear = function (year) {
+                return (((year % 4 === 0) && (year % 100 !== 0)) || (year % 400 === 0));
+            };
+
+            Date.getDaysInMonth = function (year, month) {
+                return [31, (Date.isLeapYear(year) ? 29 : 28), 31, 30, 31, 30, 31, 31, 30, 31, 30, 31][month];
+            };
+
+            Date.prototype.isLeapYear = function () {
+                return Date.isLeapYear(this.getFullYear());
+            };    
+                
+            Date.prototype.getDaysInMonth = function () {
+                return Date.getDaysInMonth(this.getFullYear(), this.getMonth());
+            };
            
-          
+            Date.prototype.addMonths = function (value) {
+                var n = this.getDate();
+                this.setDate(1);
+                this.setMonth(this.getMonth() + value);
+                this.setDate(Math.min(n, this.getDaysInMonth()));
+                return this;
+            };
             
             $scope.showTable = function(){
                 $scope.tableHidden = !$scope.tableHidden;
