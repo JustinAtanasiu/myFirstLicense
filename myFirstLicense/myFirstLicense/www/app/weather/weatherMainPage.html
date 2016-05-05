@@ -112,7 +112,7 @@
                 <ion-scroll direction="y" class="widthMax">
                     <div ng-repeat="city in data.cities track by $index">
                         <div class="row">
-                            <div class="col-75" ng-click="getWeather(city.longitude, city.latitude, city.cityName)">
+                            <div class="col-75" style="margin-top: 5px" ng-click="getWeather(city.longitude, city.latitude, city.cityName)">
                                 <h4 class="ion-item font-14px">
                                     {{city.cityName}}
                                 </h4>
