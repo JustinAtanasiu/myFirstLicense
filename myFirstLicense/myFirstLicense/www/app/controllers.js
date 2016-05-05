@@ -175,21 +175,22 @@
                     (response.data.daily.data).forEach(function(element) {
                        element.temperatureMax = Math.round(element.temperatureMax) + '\xB0' + 'C';
                        element.temperatureMin = Math.round(element.temperatureMin) + '\xB0' + 'C';
-                       element.time = element.time * 1000;
-                       var time = new Date(element.time);                       
-                       element.time = days[time.getDay() ];
+                       element.time = (element.time * 1000) + (offset*60 + new Date().getTimezoneOffset())*60*1000;
+                       var time = new Date(element.time);       
+                       element.iconPath = "/img/weatherIcons/" + element.icon + ".png";                
+                       element.time = days[time.getDay()];
                     }, this);  
                     $scope.data.weatherInDays = response.data.daily.data; 
-                    var sunriseTime = new Date(response.data.daily.data[0].sunriseTime*1000);
+                    var sunriseTime = new Date(response.data.daily.data[0].sunriseTime*1000 + (offset*60 + new Date().getTimezoneOffset())*60*1000);
                     var sunriseHours =  (sunriseTime.getHours() > 9) ? sunriseTime.getHours() : ('0'+sunriseTime.getHours());
                     var sunriseMinutes = (sunriseTime.getMinutes() > 9) ? sunriseTime.getMinutes() : ('0'+sunriseTime.getMinutes());
                     $scope.data.sunriseTime = sunriseHours + ':' + sunriseMinutes;
-                    var sunsetTime = new Date(response.data.daily.data[0].sunsetTime*1000);
+                    var sunsetTime = new Date(response.data.daily.data[0].sunsetTime*1000 + (offset*60 + new Date().getTimezoneOffset())*60*1000);
                     var sunsetHours = (sunsetTime.getHours() > 9) ? sunsetTime.getHours() : ('0'+sunsetTime.getHours());
                     var sunsetMinutes = (sunsetTime.getMinutes() > 9) ? sunsetTime.getMinutes() : ('0'+sunsetTime.getMinutes());
                     $scope.data.sunsetTime = sunsetHours  + ':' + sunsetMinutes;
                     $scope.data.windSpeed = response.data.currently.windSpeed + ' m/s';
-                    $scope.data.humidity = response.data.currently.humidity * 100 + '%';
+                    $scope.data.humidity = (response.data.currently.humidity * 100).toFixed(1) + '%';
                     $scope.data.apTemp = response.data.currently.apparentTemperature + '\xB0' + 'C';
                     if (response.data.minutely)
                         $scope.data.hourDescr = response.data.minutely.summary;
@@ -204,6 +205,17 @@
                                 });
                                 return;
                 });
+            }
+
+            $scope.getBackgroundStyle = function (imagepath) {
+                var css = {
+                    'background': 'rgba(255,255,255,0.5)',
+                    'background-image': 'url(' + imagepath + ')', 
+                    'background-position': 'center',
+                    'background-repeat': 'no-repeat',
+                    'opacity': '0.7'              
+                }
+                return css;
             }
             
             $scope.getWeather = getWeather;
