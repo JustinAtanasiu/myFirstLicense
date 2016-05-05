@@ -330,6 +330,28 @@
                 }).then(function (res) {
                     var jsonFromXMLRSS = convertXML(res.data, false);                  
                     $scope.data.feeds = $scope.data.feeds.concat(jsonFromXMLRSS.rss.channel.item.splice(0, 6));                    
+                    $scope.data.feeds.forEach(function(feed){
+                       if (feed){
+                           if(feed.thumbnail && feed.thumbnail._url){
+                               if(feed.thumbnail._width < 300 || feed.thumbnail._height < 300)
+                                 feed.thumbnail = { _url: '/img/news/newsBackground.jpg'};
+                           }
+                           else if(feed.content && feed.content.thumbnail && feed.content.thumbnail._url){
+                               feed.thumbnail = feed.content.thumbnail;
+                           }
+                           else if (feed.thumbnail && feed.thumbnail[0]._url) {
+                               if (feed.thumbnail[0]._width < 300 || feed.thumbnail[0]._height < 300)
+                                   feed.thumbnail = { _url: '/img/news/newsBackground.jpg' };
+                               else
+                                   feed.thumbnail = feed.thumbnail[0]
+                           }
+                           else if(feed.enclosure && feed.enclosure._url){
+                               feed.thumbnail = feed.enclosure;
+                           }
+                           else
+                               feed.thumbnail = { _url: '/img/news/newsBackground.jpg'};
+                       }
+                    });
                     shuffleArray($scope.data.feeds);
                 }).catch(function (err) {
                     console.log(err);
@@ -365,7 +387,7 @@
                     $scope.feedSrc = [];
                     
                     $scope.feedSrc.push("http://feeds.bbci.co.uk/news/video_and_audio/business/rss.xml");
-                    $scope.feedSrc.push("http://www.forbes.com/business/feed/");
+                    $scope.feedSrc.push("http://www.forbes.com/entrepreneurs/feed/");
                     $scope.feedSrc.push("http://feeds.skynews.com/feeds/rss/business.xml");
                 }
                 else if (value === "Politics") {
@@ -382,8 +404,7 @@
                     $scope.feedSrc.push("http://www.techlearning.com/RSS");
                 }
                 else if (value === "Sports") {
-                    $scope.feedSrc = [];
-                    
+                    $scope.feedSrc = [];                    
                 }
                 
             $scope.feedSrc.forEach(function (element) {
