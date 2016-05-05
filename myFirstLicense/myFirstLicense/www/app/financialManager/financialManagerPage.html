@@ -93,11 +93,13 @@
             <button class="button button-icon ion-ios-checkmark-outline floatRight" ng-click="registerIncomeSpending()"></button>
         </div>
         </div>
+        <div class="row height-5vh" ng-show="isLandscape"></div>
         <div class="row height-5vh">
             <button ng-show="tableHidden" class="floatRight button button-icon ion-plus" ng-click="showTable()"></button>
             <button ng-show="!tableHidden" class="floatRight button button-icon ion-minus" ng-click="showTable()">
                 </buttton>
         </div>
+        <div class="row height-5vh" ng-show="isLandscape"></div>
         <div class="row" ng-show="!tableHidden">
             <ion-scroll class="widthMax">
                 <div ng-repeat="transaction in data.monthlyTransactions track by $index">
