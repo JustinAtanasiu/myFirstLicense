@@ -334,7 +334,7 @@
                        if (feed){
                            if(feed.thumbnail && feed.thumbnail._url){
                                if(feed.thumbnail._width < 300 || feed.thumbnail._height < 300)
-                                 feed.thumbnail = { _url: '/img/news/newsBackground.jpg'};
+                                 feed.thumbnail = { _url: '/img/news/newsBackground2.jpg'};
                            }
                            else if(feed.content && feed.content.thumbnail && feed.content.thumbnail._url){
                                feed.thumbnail = feed.content.thumbnail;
