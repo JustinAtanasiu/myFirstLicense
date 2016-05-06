@@ -18,8 +18,8 @@
                             </div>
                             <div class="col-75">
                                 <h3>{{news.title}}</h3>
-                                <p ng-if="news.description.length>2">{{news.description}}</p>
-                                <p ng-if="news.description.length<3">{{news.description[0]}}</p>
+                                <p ng-if="news.description.length>2" ng-bind-html="news.description"></p>
+                                <p ng-if="news.description.length<3" ng-bind-html="news.description[0]"></p>
                                 <p>{{news.link}}</p>
                             </div>
                         </div>

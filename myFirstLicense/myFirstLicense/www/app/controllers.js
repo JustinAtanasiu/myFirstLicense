@@ -331,25 +331,39 @@
                     var jsonFromXMLRSS = convertXML(res.data, false);                  
                     $scope.data.feeds = $scope.data.feeds.concat(jsonFromXMLRSS.rss.channel.item.splice(0, 6));                    
                     $scope.data.feeds.forEach(function(feed){
-                       if (feed){
-                           if(feed.thumbnail && feed.thumbnail._url){
-                               if(feed.thumbnail._width < 300 || feed.thumbnail._height < 300)
-                                 feed.thumbnail = { _url: '/img/news/newsBackground2.jpg'};
+                        if(feed.link.substring(0,1) === "/" && $scope.data.filter === "Sports")
+                            feed.link = "http://www.fifa.com"+feed.link;
+                        if (feed) {
+                            if (feed.thumbnail && feed.thumbnail._url) {
+                                if (feed.thumbnail._width < 300 || feed.thumbnail._height < 300) {
+                                    if ($scope.data.filter === "Sports")
+                                        feed.thumbnail = { _url: '/img/news/sportNews.jpg' };
+                                    else
+                                        feed.thumbnail = { _url: '/img/news/newsBackground2.jpg' };
+                                }
+                            }
+                            else if (feed.content && feed.content.thumbnail && feed.content.thumbnail._url) {
+                                feed.thumbnail = feed.content.thumbnail;
+                            }
+                            else if (feed.thumbnail && feed.thumbnail[0]._url) {
+                                if (feed.thumbnail[0]._width < 300 || feed.thumbnail[0]._height < 300) {
+                                    if ($scope.data.filter === "Sports")
+                                        feed.thumbnail = { _url: '/img/news/sportNews.jpg' };
+                                    else
+                                        feed.thumbnail = { _url: '/img/news/newsBackground.jpg' };
+                                }
+                                else
+                                    feed.thumbnail = feed.thumbnail[0]
+                            }
+                            else if (feed.enclosure && feed.enclosure._url) {
+                                feed.thumbnail = feed.enclosure;
+                            }
+                            else {
+                                if ($scope.data.filter === "Sports")
+                                    feed.thumbnail = { _url: '/img/news/sportNews.jpg' };
+                                else
+                                    feed.thumbnail = { _url: '/img/news/newsBackground.jpg'};
                            }
-                           else if(feed.content && feed.content.thumbnail && feed.content.thumbnail._url){
-                               feed.thumbnail = feed.content.thumbnail;
-                           }
-                           else if (feed.thumbnail && feed.thumbnail[0]._url) {
-                               if (feed.thumbnail[0]._width < 300 || feed.thumbnail[0]._height < 300)
-                                   feed.thumbnail = { _url: '/img/news/newsBackground.jpg' };
-                               else
-                                   feed.thumbnail = feed.thumbnail[0]
-                           }
-                           else if(feed.enclosure && feed.enclosure._url){
-                               feed.thumbnail = feed.enclosure;
-                           }
-                           else
-                               feed.thumbnail = { _url: '/img/news/newsBackground.jpg'};
                        }
                     });
                     shuffleArray($scope.data.feeds);
@@ -379,21 +393,27 @@
             $scope.$watch("data.filter", function (value) {
                 if (value === "Top News") {
                     $scope.feedSrc = [];
-                    $scope.feedSrc.push("http://feeds.bbci.co.uk/news/video_and_audio/news_front_page/rss.xml?edition=uk");
+                    $scope.feedSrc.push("http://feeds.bbci.co.uk/news/world/europe/rss.xml");
+                    $scope.feedSrc.push("http://feeds.bbci.co.uk/news/world/us_and_canada/rss.xml");
+                    $scope.feedSrc.push("http://feeds.bbci.co.uk/news/world/middle_east/rss.xml");
                     $scope.feedSrc.push("http://www.forbes.com/most-popular/feed/");
                     $scope.feedSrc.push("http://feeds.skynews.com/feeds/rss/world.xml");
+                    $scope.feedSrc.push("http://syndication.cbc.ca/partnerrss/world.xml");
                 }
                 else if (value === "Economy") {
                     $scope.feedSrc = [];
                     
                     $scope.feedSrc.push("http://feeds.bbci.co.uk/news/video_and_audio/business/rss.xml");
-                    $scope.feedSrc.push("http://www.forbes.com/entrepreneurs/feed/");
+                    $scope.feedSrc.push("http://www.tradingeconomics.com/european-union/rss");
+                    $scope.feedSrc.push("http://www.tradingeconomics.com/united-states/rss");
                     $scope.feedSrc.push("http://feeds.skynews.com/feeds/rss/business.xml");
                 }
                 else if (value === "Politics") {
                     $scope.feedSrc = [];
                     $scope.feedSrc.push("http://feeds.bbci.co.uk/news/video_and_audio/politics/rss.xml");
-                    $scope.feedSrc.push("http://feeds.skynews.com/feeds/rss/business.xml");
+                    $scope.feedSrc.push("http://feeds.abcnews.com/abcnews/politicsheadlines");
+                    $scope.feedSrc.push("http://feeds.skynews.com/feeds/rss/politics.xml");
+                    $scope.feedSrc.push("https://globalvoices.org/-/topics/politics/feed/");
                 }
                 else if (value === "Science and Environment") {
                     $scope.feedSrc = [];
@@ -404,7 +424,11 @@
                     $scope.feedSrc.push("http://www.techlearning.com/RSS");
                 }
                 else if (value === "Sports") {
-                    $scope.feedSrc = [];                    
+                    $scope.feedSrc = [];             
+                    $scope.feedSrc.push("http://feeds.bbci.co.uk/sport/0/rss.xml?edition=uk");
+                    $scope.feedSrc.push("http://feeds.abcnews.com/abcnews/sportsheadlines");
+                    $scope.feedSrc.push("http://www.fifa.com/rss/index.xml");
+                    $scope.feedSrc.push("http://www.fifa.com/news/interviews/rss.xml");            
                 }
                 
             $scope.feedSrc.forEach(function (element) {
