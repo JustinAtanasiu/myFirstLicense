@@ -574,6 +574,13 @@
             
             
             $scope.saveInformation = function(){
+                if($scope.data.monthlySpendings === null || $scope.data.monthlySpendings === undefined)                    
+                    $scope.data.monthlySpendings = 0;
+                if($scope.data.monthlyIncome === null || $scope.data.Income === undefined)                    
+                    $scope.data.monthlyIncome = 0;    
+                if($scope.data.dayOfTheMonth === null || $scope.data.dayOfTheMonth === undefined)                    
+                    $scope.data.dayOfTheMonth = 1;   
+                    
                 dbService.get($scope.$root.id).then(function (result) {
                     var myObj = {  monthlyIncome: $scope.data.monthlyIncome,
                     monthlySpendings: $scope.data.monthlySpendings,
@@ -605,7 +612,8 @@
             });
             
             $scope.$watchCollection("[data.remainingSum, data.dayOfTheMonth]", function(newVal, oldVal){     
-
+                if($scope.data.dayOfTheMonth<=0)
+                    $scope.data.dayOfTheMonth = 1;
                 if (new Date().getDate() < $scope.data.dayOfTheMonth) {
                     myResetMonth = new Date((new Date()).getFullYear(), (new Date()).getMonth(), $scope.data.dayOfTheMonth + 1);
                 }
