@@ -7,8 +7,7 @@
     <title></title>
     <link href="lib/ionic/css/ionic.css" rel="stylesheet">
     <link href="css/app.css" rel="stylesheet">
-    <script src="scripts/pouchdb-5.2.1.min.js"></script>  
-    
+    <script src="scripts/pouchdb-5.2.1.min.js"></script>
 </head>
 
 <body>
@@ -36,14 +35,14 @@
                     </ion-item>
                     <ion-item ng-show="$root.showSignUp" menu-close href="#/signUp">
                         Sign up
-                    </ion-item>                    
+                    </ion-item>
                     <ion-item ng-show="$root.showMenuItems" class="item-icon-left" menu-close ui-sref="news({id: $root.id})">
                         <i class="icon ion-social-rss-outline"></i>News
                     </ion-item>
                     <ion-item ng-show="$root.showMenuItems" class="item-icon-left" menu-close ui-sref="calendar({id: $root.id})">
-                        <i class="icon ion-calendar"></i>Calendar
-                    </ion-item>                    
-                    <ion-item ng-show="$root.showMenuItems" menu-close class="item-icon-left"  ui-sref="weather({id: $root.id})">
+                        <i class="icon ion-clock"></i>Alarm
+                    </ion-item>
+                    <ion-item ng-show="$root.showMenuItems" menu-close class="item-icon-left" ui-sref="weather({id: $root.id})">
                         <i class="icon ion-ios-cloud-outline"></i>Weather
                     </ion-item>
                     <ion-item ng-show="$root.showMenuItems" class="item-icon-left" menu-close ui-sref="financialManager({id: $root.id})">
@@ -63,6 +62,11 @@
 
     <!-- Other Library/Framework references -->
     <script src="lib/ionic/js/ionic.bundle.js"></script>
+    <script src="lib/ng-cordova-master/dist/ng-cordova-mocks.min.js"></script>
+    <script src="lib/ng-cordova-master/dist/ng-cordova.min.js"></script>
+    <script src="lib/ng-cordova-master/src/plugins/device.js"></script>
+    <script src="lib/ng-cordova-master/src/plugins/file.js"></script>
+
     <script src="scripts/x2js-master/xml2json.js"></script>
     <!-- Cordova references -->
     <script src="cordova.js"></script>

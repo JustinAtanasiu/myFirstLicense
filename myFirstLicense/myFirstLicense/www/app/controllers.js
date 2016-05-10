@@ -279,11 +279,36 @@
             
         }])
 
-        .controller("calendarMainPageCtrl", ["$scope", "$state", "$stateParams", function ($scope, $state, $stateParams) {
+        .controller("calendarMainPageCtrl", ["$scope", "$state", "$stateParams", '$cordovaLocalNotification', function ($scope, $state, $stateParams, $cordovaLocalNotification) {
             $scope.$on('$ionicView.beforeEnter', function (e, data) {
                 $scope.$root.showMenuItems = true;
                 $scope.$root.showSignUp = false;
                 $scope.$root.id = $stateParams.id;
+            });
+
+            $scope.add = function () {
+                var alarmTime = new Date();
+                alarmTime.setMinutes(alarmTime.getMinutes() + 1);
+                $cordovaLocalNotification.add({
+                    id: "1234",
+                    date: alarmTime,
+                    message: "This is a message",
+                    title: "This is a title",
+                    autoCancel: true,
+                    sound: null
+                }).then(function () {
+                    console.log("The notification has been set");
+                });
+            };
+
+            $scope.isScheduled = function () {
+                $cordovaLocalNotification.isScheduled("1234").then(function (isScheduled) {
+                    alert("Notification 1234 Scheduled: " + isScheduled);
+                });
+            }
+
+            $scope.$on("$cordovaLocalNotification:added", function (id, state, json) {
+                alert("Added a notification");
             });
         }])
 

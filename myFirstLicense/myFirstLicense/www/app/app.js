@@ -1,8 +1,8 @@
 ﻿(function () {
     "use strict";
 
-    angular.module("myapp", ["ionic", "myapp.controllers", "myapp.services"])
-        .run(function ($ionicPlatform) {
+    angular.module("myapp", ["ionic", "myapp.controllers", "myapp.services", "ngCordova"])
+        .run(function ($ionicPlatform, $cordovaDevice, $timeout, $rootScope) {
             $ionicPlatform.ready(function () {
                 if (window.cordova && window.cordova.plugins && window.cordova.plugins.Keyboard) {
                     cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
@@ -10,6 +10,20 @@
                 if (window.StatusBar) {
                     StatusBar.styleDefault();
                 }
+                // if (device !== undefined && device !== null)
+                //     if (device.platform === "iOS") {
+                //         window.plugin.notification.local.promptForPermission();
+                //     }
+                window.plugin.notification.local.onadd = function (id, state, json) {
+                    var notification = {
+                        id: id,
+                        state: state,
+                        json: json
+                    };
+                    $timeout(function () {
+                        $rootScope.$broadcast("$cordovaLocalNotification:added", notification);
+                    });
+                };
             });
         })
         .config(function ($stateProvider, $urlRouterProvider) {
