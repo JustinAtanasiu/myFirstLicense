@@ -184,7 +184,7 @@
                                     return;
                                 }
                                 else {
-                                    $state.go('weather', { id: user.id });
+                                    $state.go('news', { id: user.id });
                                 }
                             }
                         });
