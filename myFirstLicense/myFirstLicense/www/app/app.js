@@ -14,16 +14,16 @@
                 //     if (device.platform === "iOS") {
                 //         window.plugin.notification.local.promptForPermission();
                 //     }
-                window.plugin.notification.local.onadd = function (id, state, json) {
-                    var notification = {
-                        id: id,
-                        state: state,
-                        json: json
-                    };
-                    $timeout(function () {
-                        $rootScope.$broadcast("$cordovaLocalNotification:added", notification);
-                    });
-                };
+                // window.plugin.notification.local.onadd = function (id, state, json) {
+                //     var notification = {
+                //         id: id,
+                //         state: state,
+                //         json: json
+                //     };
+                //     $timeout(function () {
+                //         $rootScope.$broadcast("$cordovaLocalNotification:added", notification);
+                //     });
+                // };
             });
         })
         .config(function ($stateProvider, $urlRouterProvider) {

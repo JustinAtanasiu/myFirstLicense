@@ -218,7 +218,12 @@
                     return css;
                 }
                 else
-                    return;
+                    return {
+                        'background-image': 'url(/img/weatherIcons/clear-day.png)',
+                        'background-position': 'center',
+                        'background-repeat': 'no-repeat',
+                        'opacity': '0.7'
+                    };
             }
             
             $scope.getWeather = getWeather;
