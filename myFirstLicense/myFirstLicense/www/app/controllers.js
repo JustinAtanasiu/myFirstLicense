@@ -601,7 +601,7 @@
             $scope.saveInformation = function(){
                 if($scope.data.monthlySpendings === null || $scope.data.monthlySpendings === undefined)                    
                     $scope.data.monthlySpendings = 0;
-                if($scope.data.monthlyIncome === null || $scope.data.Income === undefined)                    
+                if($scope.data.monthlyIncome === null || $scope.data.monthlyIncome === undefined)                    
                     $scope.data.monthlyIncome = 0;    
                 if($scope.data.dayOfTheMonth === null || $scope.data.dayOfTheMonth === undefined)                    
                     $scope.data.dayOfTheMonth = 1;   
