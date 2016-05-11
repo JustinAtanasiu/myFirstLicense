@@ -1,7 +1,7 @@
 ﻿(function () {
     "use strict";
 
-    angular.module("myapp", ["ionic", "myapp.controllers", "myapp.services", "ngCordova"])
+    angular.module("myapp", ["ionic", "myapp.controllers", "myapp.services", "ngCordova", "angular-md5"])
         .run(function ($ionicPlatform, $cordovaDevice, $timeout, $rootScope) {
             $ionicPlatform.ready(function () {
                 if (window.cordova && window.cordova.plugins && window.cordova.plugins.Keyboard) {
@@ -50,21 +50,18 @@
                 })
                 .state("calendar", {
                     url: "/calendar",
-                    cache: false,
                     templateUrl: "app/calendar/calendarMainPage.html",
                     controller: "calendarMainPageCtrl",
                     params: { id:null }
                 })
                 .state("news", {
                     url: "/news",
-                    cache: false,
                     templateUrl: "app/news/newsMainPage.html",
                     controller: "newsMainPageCtrl",
                     params: { id:null }
                 })
                 .state("financialManager", {
                     url: "/financialManager",
-                    cache: false,
                     templateUrl: "app/financialManager/financialManagerPage.html",
                     controller: "financialManagerCtrl",
                     params: { id:null }

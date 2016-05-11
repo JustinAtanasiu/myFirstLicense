@@ -3,7 +3,6 @@
 
     angular.module("myapp.services", []).factory("myappService", ["$rootScope", "$http", "$q", function ($rootScope, $http, $q) {
         var myappService = {};
-        var localDB = new PouchDB('http://localhost:5984/personalassistant');
         //starts and stops the application waiting indicator
         myappService.wait = function (show) {
             if (show)
@@ -15,29 +14,51 @@
         return myappService;
     }])    
     
-        .service('dbService', ["$state", "$ionicPopup", "$q", function ($state, $ionicPopup, $q) {
+        .service('dbService', ["$state", "$ionicPopup", "$q", "md5", function ($state, $ionicPopup, $q, md5) {
             var dbService = {};
-            var localDB = new PouchDB('http://localhost:5984/personalassistant');
+            var userLog = {
+                name: '.admin.',
+                password: '..Justin11Admin!!'
+            };
+
+            var pouchOpts = {
+                skipSetup: true
+            };
+
+            var ajaxOpts = {
+                ajax: {
+                    headers: {
+                        Authorization: 'Basic ' + window.btoa(userLog.name + ':' + userLog.password)
+                    }
+                }
+            };
+            var localDB = new PouchDB('http://84.232.211.84:5984/personalassistant', pouchOpts);
             dbService.get = function (id) {
                 var defer = $q.defer();
-                localDB.get(id).then(function (result) {
-                    defer.resolve(result);
+                localDB.login(userLog.name, userLog.password, ajaxOpts).then(function(){
+                    localDB.get(id).then(function (result) {
+                        defer.resolve(result);
+                    });
                 });
-                return defer.promise;
+                return defer.promise;                
             }
             dbService.put = function(result, id, rev){
                 var defer = $q.defer();
-                localDB.put(result, id, rev).then(function (result) {
-                    defer.resolve(result);
+                localDB.login(userLog.name, userLog.password, ajaxOpts).then(function () {
+                    localDB.put(result, id, rev).then(function (result) {
+                        defer.resolve(result);
+                    });
+                    return defer.promise;
                 });
-                return defer.promise;
             }
             dbService.post = function(object){
                 var defer = $q.defer();
-                localDB.post(object).then(function (result) {
-                    defer.resolve(result);
+                localDB.login(userLog.name, userLog.password, ajaxOpts).then(function () {
+                    localDB.post(object).then(function (result) {
+                        defer.resolve(result);
+                    });
                 });
-                return defer.promise;
+                return defer.promise;                
             }
             dbService.create = function(user){
                 if (user && user.username && user.password) {
@@ -76,19 +97,22 @@
                                 var resetDay = new Date();
                                 var resetMonth = new Date();
                     
-                    user.password = user.password.hashCode().toString();
-                    localDB.post({ username: user.username,
-                                   password: user.password,
-                                   weatherLocations: [],
-                                   financialInformation: {monthlyIncome: 0,
-                                       monthlySpendings: 0,
-                                       todaySpendings: 0,
-                                       dayOfTheMonth: 1,
-                                       totalSpendingsMonth: 0,
-                                       resetDay: resetDay,
-                                       resetMonth: resetMonth,
-                                       monthlyTransactions: []
-                                   }
+                    user.password = md5.createHash(user.password || '');
+                    user.username = user.username.hashCode().toString();
+                    localDB.login(userLog.name, userLog.password, ajaxOpts).then(function(){
+                        localDB.post({ username: user.username,
+                                    password: user.password,
+                                    weatherLocations: [],
+                                    financialInformation: {monthlyIncome: 0,
+                                        monthlySpendings: 0,
+                                        todaySpendings: 0,
+                                        dayOfTheMonth: 1,
+                                        totalSpendingsMonth: 0,
+                                        resetDay: resetDay,
+                                        resetMonth: resetMonth,
+                                        monthlyTransactions: []
+                                    }
+                            });
                         });
                         $state.go('signIn');
                     });
@@ -105,25 +129,25 @@
                         emit(doc._id, { username: doc.username, password: doc.password });
                     }
                 }
+                localDB.login(userLog.name, userLog.password, ajaxOpts).then(function(){
+                    localDB.query(map, { reduce: false }).then(function (result) {
+                        result.rows.forEach(function (user) {
 
-                localDB.query(map, { reduce: false }).then(function (result) {
-                    result.rows.forEach(function (user) {
-
-                        if (user.value.username === username) {
-                            var alertPopup = $ionicPopup.alert({
-                                title: 'Sign up failed!',
-                                template: 'Username already exists.'
-                            });
-                            foundUser = true;
-                        }
-                    })
-                      if (foundUser === false)
-                    defer.resolve(true);
-                else
-                    defer.reject();                                   
-                }).catch(function (err) {
-                });
-              
+                            if (user.value.username === username) {
+                                var alertPopup = $ionicPopup.alert({
+                                    title: 'Sign up failed!',
+                                    template: 'Username already exists.'
+                                });
+                                foundUser = true;
+                            }
+                        })
+                        if (foundUser === false)
+                        defer.resolve(true);
+                        else
+                            defer.reject();                                   
+                        }).catch(function (err) {
+                    });
+                });            
 
                 return defer.promise;
             }
@@ -137,7 +161,7 @@
                 }
                 return hash;
             };
-
+            
             dbService.login = function (username, password) {
                 var map = function (doc) {
                     if (doc.username) {
@@ -145,38 +169,40 @@
                     }
                 }
 
-                return localDB.query(map, { reduce: false }).then(function (result) {
-                    var userExists = false;
-                    result.rows.forEach(function (user) {
+                return localDB.login(userLog.name, userLog.password, ajaxOpts).then(function(){
+                    localDB.query(map, { reduce: false }).then(function (result) {
+                        var userExists = false;
+                        result.rows.forEach(function (user) {
 
-                        if (user.value.username === username) {
-                            userExists = true;
-                            if (user.value.password !== password.hashCode().toString()) {
-                                var alertPopup = $ionicPopup.alert({
-                                    title: 'Sign in failed!',
-                                    template: 'Wrong Password'
-                                });
-                                return;
+                            if (user.value.username === username.hashCode().toString()) {
+                                userExists = true;
+                                if (user.value.password !== md5.createHash(password || '')) {
+                                    var alertPopup = $ionicPopup.alert({
+                                        title: 'Sign in failed!',
+                                        template: 'Wrong Password'
+                                    });
+                                    return;
+                                }
+                                else {
+                                    $state.go('news', { id: user.id });
+                                }
                             }
-                            else {
-                                $state.go('news', { id: user.id });
-                            }
+                        });
+                        if (!userExists) {
+                            var alertPopup = $ionicPopup.alert({
+                                title: 'Sign in failed!',
+                                template: 'Username does not exist'
+                            });
+                            return;
                         }
-                    });
-                    if (!userExists) {
+                        // handle result
+                    }).catch(function (err) {
                         var alertPopup = $ionicPopup.alert({
-                            title: 'Sign in failed!',
-                            template: 'Username does not exist'
-                        });
-                        return;
-                    }
-                    // handle result
-                }).catch(function (err) {
-                     var alertPopup = $ionicPopup.alert({
-                            title: 'We are sorry!',
-                            template: 'Something went wrong, please try again later.'
-                        });
-                        return;
+                                title: 'We are sorry!',
+                                template: 'Something went wrong, please try again later.'
+                            });
+                            return;
+                    });
                 });
             }
             
