@@ -208,14 +208,17 @@
             }
 
             $scope.getBackgroundStyle = function (imagepath) {
-                var css = {
-                    'background': 'rgba(255,255,255,0.5)',
-                    'background-image': 'url(' + imagepath + ')', 
-                    'background-position': 'center',
-                    'background-repeat': 'no-repeat',
-                    'opacity': '0.7'              
+                if(imagepath){
+                    var css = {
+                        'background-image': 'url(' + imagepath + ')',
+                        'background-position': 'center',
+                        'background-repeat': 'no-repeat',
+                        'opacity': '0.7'
+                    }
+                    return css;
                 }
-                return css;
+                else
+                    return;
             }
             
             $scope.getWeather = getWeather;
