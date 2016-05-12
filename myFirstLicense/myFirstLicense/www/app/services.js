@@ -33,30 +33,25 @@
                 }
             };
             var localDB = new PouchDB('http://84.232.211.84:5984/personalassistant', pouchOpts);
+            localDB.login(userLog.name, userLog.password, ajaxOpts).then(function(){
             dbService.get = function (id) {
                 var defer = $q.defer();
-                localDB.login(userLog.name, userLog.password, ajaxOpts).then(function(){
                     localDB.get(id).then(function (result) {
                         defer.resolve(result);
                     });
-                });
                 return defer.promise;                
             }
             dbService.put = function(result, id, rev){
                 var defer = $q.defer();
-                localDB.login(userLog.name, userLog.password, ajaxOpts).then(function () {
                     localDB.put(result, id, rev).then(function (result) {
-                        defer.resolve(result);
-                    });
+                        defer.resolve(result);                   
                     return defer.promise;
                 });
             }
             dbService.post = function(object){
                 var defer = $q.defer();
-                localDB.login(userLog.name, userLog.password, ajaxOpts).then(function () {
                     localDB.post(object).then(function (result) {
-                        defer.resolve(result);
-                    });
+                        defer.resolve(result);                   
                 });
                 return defer.promise;                
             }
@@ -99,7 +94,6 @@
                     
                     user.password = md5.createHash(user.password || '');
                     user.username = user.username.hashCode().toString();
-                    localDB.login(userLog.name, userLog.password, ajaxOpts).then(function(){
                         localDB.post({ username: user.username,
                                     password: user.password,
                                     weatherLocations: [],
@@ -113,7 +107,6 @@
                                         monthlyTransactions: []
                                     }
                             });
-                        });
                         $state.go('signIn');
                     });
                 } else {
@@ -129,7 +122,6 @@
                         emit(doc._id, { username: doc.username, password: doc.password });
                     }
                 }
-                localDB.login(userLog.name, userLog.password, ajaxOpts).then(function(){
                     localDB.query(map, { reduce: false }).then(function (result) {
                         result.rows.forEach(function (user) {
 
@@ -146,8 +138,7 @@
                         else
                             defer.reject();                                   
                         }).catch(function (err) {
-                    });
-                });            
+                    });   
 
                 return defer.promise;
             }
@@ -169,8 +160,7 @@
                     }
                 }
 
-                return localDB.login(userLog.name, userLog.password, ajaxOpts).then(function(){
-                    localDB.query(map, { reduce: false }).then(function (result) {
+                localDB.query(map, { reduce: false }).then(function (result) {
                         var userExists = false;
                         result.rows.forEach(function (user) {
 
@@ -203,8 +193,9 @@
                             });
                             return;
                     });
-                });
             }
+            
+            });
             
             return dbService;
         }]);
