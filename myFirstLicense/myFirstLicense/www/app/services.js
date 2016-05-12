@@ -17,22 +17,25 @@
         .service('dbService', ["$state", "$ionicPopup", "$q", "md5", function ($state, $ionicPopup, $q, md5) {
             var dbService = {};
             var userLog = {
-                name: '.admin.',
-                password: '..Justin11Admin!!'
+                name: 'AdminJustin',
+                password: 'Justin11AdminPassword'
             };
 
             var pouchOpts = {
-                skipSetup: true
+                ajax: {
+                    skipSetup: true,
+                    withCredentials: false,
+                }
             };
 
             var ajaxOpts = {
                 ajax: {
                     headers: {
-                        Authorization: 'Basic ' + window.btoa(userLog.name + ':' + userLog.password)
+                        Authorization: 'Basic ' + window.btoa(userLog.name + ':' + userLog.password),
                     }
                 }
             };
-            var localDB = new PouchDB('http://84.232.211.84:5984/personalassistant', pouchOpts);
+            var localDB = new PouchDB('http://188.27.123.191:5984/personalassistant', pouchOpts);
             localDB.login(userLog.name, userLog.password, ajaxOpts).then(function(){
             dbService.get = function (id) {
                 var defer = $q.defer();
@@ -195,6 +198,12 @@
                     });
             }
             
+            }).catch(function (err){
+                var alertPopup = $ionicPopup.alert({
+                                title: 'We are sorry!',
+                                template: 'Something went wrong, please try again later.'
+                            });
+                            return;
             });
             
             return dbService;
