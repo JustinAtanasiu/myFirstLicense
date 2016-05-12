@@ -192,7 +192,7 @@
                     }).catch(function (err) {
                         var alertPopup = $ionicPopup.alert({
                                 title: 'We are sorry!',
-                                template: err.message
+                                template: 'Something went wrong, please try again later.'
                             });
                             return;
                     });

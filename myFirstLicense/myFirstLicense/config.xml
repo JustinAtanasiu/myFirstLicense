@@ -126,4 +126,5 @@
   <allow-navigation href="data:*" />
   <access origin="*" />
   <allow-intent href="*" />
+  <plugin name="cordova-plugin-geolocation" version="2.2.1-dev" src="https://github.com/apache/cordova-plugin-geolocation" />
 </widget>
