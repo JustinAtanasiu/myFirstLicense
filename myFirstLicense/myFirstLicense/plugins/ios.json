@@ -30,6 +30,9 @@
     "installed_plugins": {
         "cordova-plugin-inappbrowser": {
             "PACKAGE_NAME": "io.cordova.myappc25e5c"
+        },
+        "cordova-plugin-whitelist": {
+            "PACKAGE_NAME": "io.cordova.myappc25e5c"
         }
     },
     "dependent_plugins": {}

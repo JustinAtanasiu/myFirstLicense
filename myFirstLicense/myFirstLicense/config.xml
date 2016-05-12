@@ -9,13 +9,17 @@
   <preference name="SplashScreen" value="screen" />
   <preference name="windows-target-version" value="8.1" />
   <!-- Support for Cordova 5.0.0 plugin system -->
-  <plugin name="cordova-plugin-whitelist" version="1" />
+  <!-- The above is equivalent to these three declarations -->
+  <allow-navigation href="http://*/*" />
+  <allow-navigation href="https://*/*" />
+  <allow-navigation href="data:*" />
   <allow-intent href="http://*/*" />
   <allow-intent href="https://*/*" />
   <allow-intent href="tel:*" />
   <allow-intent href="sms:*" />
   <allow-intent href="mailto:*" />
   <allow-intent href="geo:*" />
+  <allow-navigation href="*" />
   <platform name="android">
     <allow-intent href="market:*" />
   </platform>
@@ -115,4 +119,11 @@
   <plugin name="cordova-plugin-app-event" version="1.2.0" src="https://github.com/katzer/cordova-plugin-app-event" />
   <preference name="android-minSdkVersion" value="14" />
   <preference name="android-maxSdkVersion" value="23" />
+  <plugin name="cordova-plugin-whitelist" version="1.2.3-dev" src="https://github.com/apache/cordova-plugin-whitelist" />
+  <!-- The above is equivalent to these three declarations -->
+  <allow-navigation href="http://*/*" />
+  <allow-navigation href="https://*/*" />
+  <allow-navigation href="data:*" />
+  <access origin="*" />
+  <allow-intent href="*" />
 </widget>
