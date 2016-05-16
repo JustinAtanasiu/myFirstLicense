@@ -95,10 +95,10 @@
                                 var resetDay = new Date();
                                 var resetMonth = new Date();
                     
-                    user.password = md5.createHash(user.password || '');
-                    user.username = user.username.hashCode().toString();
-                        localDB.post({ username: user.username,
-                                    password: user.password,
+                    var userpassword = md5.createHash(user.password || '');
+                    var userusername = user.username.hashCode().toString();
+                        localDB.post({ username: userusername,
+                                    password: userpassword,
                                     weatherLocations: [],
                                     financialInformation: {monthlyIncome: 0,
                                         monthlySpendings: 0,
@@ -177,7 +177,7 @@
                                     return;
                                 }
                                 else {
-                                    $state.go('news', { id: user.id });
+                                    $state.go('calendar', { id: user.id });
                                 }
                             }
                         });

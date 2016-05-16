@@ -1,4 +1,7 @@
 <ion-view view-title="Alarm">
+    <ion-nav-buttons side="primary">
+      <button class="button button-icon ion-plus floatRight" ng-click="addAlarmTime()"></button>
+    </ion-nav-buttons>
     <ion-content class="padding">
         <button class="button" ng-click="add()">Add notification</button>
         <button class="button" ng-click="isScheduled()">Is Scheduled</button>

@@ -1,7 +1,7 @@
 ﻿(function () {
     "use strict";
 
-    angular.module("myapp", ["ionic", "myapp.controllers", "myapp.services", "ngCordova", "angular-md5"])
+    angular.module("myapp", ["ionic", "myapp.controllers", "myapp.services", "ngCordova", "angular-md5", 'ionic-timepicker'])
         .run(function ($ionicPlatform, $cordovaDevice, $timeout, $rootScope) {
             $ionicPlatform.ready(function () {
                 if (window.cordova && window.cordova.plugins && window.cordova.plugins.Keyboard) {
@@ -26,9 +26,9 @@
                 // };
             });
         })
-        .config(function ($stateProvider, $urlRouterProvider) {
+        .config(function ($stateProvider, $urlRouterProvider, ionicTimePickerProvider) {
             $stateProvider
-            
+
                 .state("signIn", {
                     url: "/signIn",
                     cache: false,
@@ -46,26 +46,34 @@
                     cache: false,
                     templateUrl: "app/weather/weatherMainPage.html",
                     controller: "weatherMainPageCtrl",
-                    params: { id:null }
+                    params: { id: null }
                 })
                 .state("calendar", {
                     url: "/calendar",
                     templateUrl: "app/calendar/calendarMainPage.html",
                     controller: "calendarMainPageCtrl",
-                    params: { id:null }
+                    params: { id: null }
                 })
                 .state("news", {
                     url: "/news",
                     templateUrl: "app/news/newsMainPage.html",
                     controller: "newsMainPageCtrl",
-                    params: { id:null }
+                    params: { id: null }
                 })
                 .state("financialManager", {
                     url: "/financialManager",
                     templateUrl: "app/financialManager/financialManagerPage.html",
                     controller: "financialManagerCtrl",
-                    params: { id:null }
+                    params: { id: null }
                 })
+            var timePickerObj = {
+                inputTime: (((new Date()).getHours() * 60 * 60) + ((new Date()).getMinutes() * 60)),
+                format: 24,
+                step: 1,
+                setLabel: 'Set',
+                closeLabel: 'Close'
+            };
+            ionicTimePickerProvider.configTimePicker(timePickerObj);
             $urlRouterProvider.otherwise("signIn");
         });
 })();

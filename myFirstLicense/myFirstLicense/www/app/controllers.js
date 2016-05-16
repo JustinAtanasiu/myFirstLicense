@@ -287,14 +287,31 @@
             
         }])
 
-        .controller("calendarMainPageCtrl", ["$scope", "$state", "$stateParams", '$cordovaLocalNotification', function ($scope, $state, $stateParams, $cordovaLocalNotification) {
+        .controller("calendarMainPageCtrl", ["$scope", "$state", "$stateParams", '$cordovaLocalNotification', 'ionicTimePicker', function ($scope, $state, $stateParams, $cordovaLocalNotification, ionicTimePicker) {
             $scope.$on('$ionicView.beforeEnter', function (e, data) {
                 $scope.$root.showMenuItems = true;
                 $scope.$root.showSignUp = false;
                 $scope.$root.id = $stateParams.id;
             });
+            $scope.data = {};
+            $scope.data.alarms = [];
 
-            $scope.add = function () {
+            $scope.addAlarmTime = function () {
+                var ipObj1 = {
+                    callback: function (val) {      //Mandatory
+                        if (typeof (val) === 'undefined') {
+                            console.log('Time not selected');
+                        } else {
+                             addAlarm(val);
+                        }
+                    },
+                    setLabel: 'Add',
+                    closeLabel: 'Close'
+                };
+                ionicTimePicker.openTimePicker(ipObj1);                
+            }
+            
+            var addAlarm = function () {
                 var alarmTime = new Date();
                 alarmTime.setMinutes(alarmTime.getMinutes() + 1);
                 $cordovaLocalNotification.add({
@@ -302,8 +319,6 @@
                     date: alarmTime,
                     message: "This is a message",
                     title: "This is a title",
-                    autoCancel: true,
-                    sound: null
                 }).then(function () {
                     console.log("The notification has been set");
                 });
@@ -318,6 +333,7 @@
             $scope.$on("$cordovaLocalNotification:added", function (id, state, json) {
                 alert("Added a notification");
             });
+            
         }])
 
         .controller("newsMainPageCtrl", ["$scope", "$state", "$stateParams", '$http', 'xmlParser', function ($scope, $statem, $stateParams, $http, xmlParser) {
