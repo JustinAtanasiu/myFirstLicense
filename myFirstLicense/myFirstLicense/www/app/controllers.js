@@ -298,11 +298,11 @@
 
             $scope.addAlarmTime = function () {
                 var ipObj1 = {
-                    callback: function (val) {      //Mandatory
+                    callback: function (val, weekDays) {      //Mandatory
                         if (typeof (val) === 'undefined') {
                             console.log('Time not selected');
                         } else {
-                             addAlarm(val);
+                             addAlarm(val,weekDays);
                         }
                     },
                     setLabel: 'Add',
@@ -311,17 +311,17 @@
                 ionicTimePicker.openTimePicker(ipObj1);                
             }
             
-            var addAlarm = function () {
-                var alarmTime = new Date();
-                alarmTime.setMinutes(alarmTime.getMinutes() + 1);
-                $cordovaLocalNotification.add({
-                    id: "1234",
-                    date: alarmTime,
-                    message: "This is a message",
-                    title: "This is a title",
-                }).then(function () {
-                    console.log("The notification has been set");
-                });
+            var addAlarm = function (val, weekDays) {
+                // var alarmTime = new Date();
+                // alarmTime.setMinutes(alarmTime.getMinutes() + 1);
+                // $cordovaLocalNotification.add({
+                //     id: "1234",
+                //     date: alarmTime,
+                //     message: "This is a message",
+                //     title: "This is a title",
+                // }).then(function () {
+                //     console.log("The notification has been set");
+                // });
             };
 
             $scope.isScheduled = function () {
