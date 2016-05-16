@@ -337,6 +337,18 @@
                 ionicTimePicker.openTimePicker(ipObj1);                
             }
             
+            $scope.removeAlarm = function(index){
+                $scope.data.alarms.splice(index, 1);
+                 dbService.get($scope.$root.id).then(function (result) {
+                    result.alarmTimes = $scope.data.alarms;
+                    return dbService.put(result, $scope.$root.id, result._rev);
+                }).then(function (response) {
+                    // handle response
+                }).catch(function (err) {
+                    console.log(err);
+                });
+            }
+            
             var addAlarm = function (val, weekDays) {
                 var displayDays =[];
                 weekDays.forEach(function(element, index) {
