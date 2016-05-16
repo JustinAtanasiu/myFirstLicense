@@ -104,10 +104,6 @@
   white-space: nowrap;  
 }
 
-.high-as-needed {
-  white-space: ;  
-}
-
 .longText {
     overflow: auto;
 }
@@ -145,11 +141,24 @@
 .newsItemBackground {
     background: transparent;
 }
-.newsBackground {
-}
+
 .no-border {
     border: 0px;
 }
 .border-2px {
     border: 20px;
+}
+
+.row#myRow, .scroll#myScroll {
+  height: 100%;
+}
+
+input[type=checkbox]
+{
+  /* Double-sized Checkboxes */
+  -ms-transform: scale(2); /* IE */
+  -moz-transform: scale(2); /* FF */
+  -webkit-transform: scale(2); /* Safari and Chrome */
+  -o-transform: scale(2); /* Opera */
+  padding: 10px;
 }

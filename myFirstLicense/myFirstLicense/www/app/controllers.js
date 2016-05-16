@@ -287,7 +287,7 @@
             
         }])
 
-        .controller("calendarMainPageCtrl", ["$scope", "$state", "$stateParams", '$cordovaLocalNotification', 'ionicTimePicker', function ($scope, $state, $stateParams, $cordovaLocalNotification, ionicTimePicker) {
+        .controller("calendarMainPageCtrl", ["$scope", "$state", "$stateParams", '$cordovaLocalNotification', 'ionicTimePicker', 'dbService', function ($scope, $state, $stateParams, $cordovaLocalNotification, ionicTimePicker, dbService) {
             $scope.$on('$ionicView.beforeEnter', function (e, data) {
                 $scope.$root.showMenuItems = true;
                 $scope.$root.showSignUp = false;
@@ -295,7 +295,33 @@
             });
             $scope.data = {};
             $scope.data.alarms = [];
-
+            var weekdaysDisplay = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+            
+            dbService.get($scope.$root.id).then(function (result) {
+                result.alarmTimes.sort(function(a,b){
+                    a.hours = a.hourMinutes.substring(0, a.hourMinutes.indexOf(":"));
+                    a.minutes =  a.hourMinutes.substring(a.hourMinutes.indexOf(":")+1, a.hourMinutes.length);
+                    b.hours = b.hourMinutes.substring(0, b.hourMinutes.indexOf(":"));
+                    b.minutes =  b.hourMinutes.substring(b.hourMinutes.indexOf(":")+1, b.hourMinutes.length);
+                    if(parseInt(a.hours) === parseInt(b.hours))
+                        return parseInt(a.minutes) - parseInt(b.minutes);
+                    else
+                        return parseInt(a.hours) - parseInt(b.hours);
+                });
+                $scope.data.alarms = result.alarmTimes;
+            });
+            
+            $scope.saveAlarm = function(alarm, index){
+                dbService.get($scope.$root.id).then(function (result) {
+                    result.alarmTimes[index] = alarm ;
+                    return dbService.put(result, $scope.$root.id, result._rev);
+                }).then(function (response) {
+                    // handle response
+                }).catch(function (err) {
+                    console.log(err);
+                });
+            }
+            
             $scope.addAlarmTime = function () {
                 var ipObj1 = {
                     callback: function (val, weekDays) {      //Mandatory
@@ -312,6 +338,20 @@
             }
             
             var addAlarm = function (val, weekDays) {
+                var displayDays =[];
+                weekDays.forEach(function(element, index) {
+                    if(element === 1){
+                        displayDays.push(weekdaysDisplay[index]);
+                    }
+                }, this);
+                var myAlarm = {
+                    hourMinutes: val.hours + ":" + val.minutes,
+                    message: val.message ? val.message : "No alarm message",
+                    weekDaysDisplay: displayDays.length ? displayDays.join(',') : "Next",
+                    active: true
+                }
+                $scope.data.alarms.push(myAlarm);
+                $scope.saveAlarm(myAlarm, $scope.data.alarms.length);
                 // var alarmTime = new Date();
                 // alarmTime.setMinutes(alarmTime.getMinutes() + 1);
                 // $cordovaLocalNotification.add({

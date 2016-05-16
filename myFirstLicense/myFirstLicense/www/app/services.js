@@ -108,7 +108,8 @@
                                         resetDay: resetDay,
                                         resetMonth: resetMonth,
                                         monthlyTransactions: []
-                                    }
+                                    },
+                                    alarmTimes: []
                             });
                         $state.go('signIn');
                     });
@@ -177,7 +178,7 @@
                                     return;
                                 }
                                 else {
-                                    $state.go('calendar', { id: user.id });
+                                    $state.go('news', { id: user.id });
                                 }
                             }
                         });
