@@ -109,7 +109,8 @@
                                         resetMonth: resetMonth,
                                         monthlyTransactions: []
                                     },
-                                    alarmTimes: []
+                                    alarmTimes: [],
+                                    notesList: []
                             });
                         $state.go('signIn');
                     });

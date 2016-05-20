@@ -1,0 +1,45 @@
+<ion-view view-title="Notes">
+    <ion-nav-buttons side="primary">
+        <button class="button button-icon ion-plus floatRight" ng-click="addNote()"></button>
+    </ion-nav-buttons>
+    <ion-content class="padding">
+        <div class="row height-70vh">
+            <div class="row">
+                <h4>{{data.selectedNote.date ? 'Note date:' + data.selectedNote.date.toString("dd/MM/yyyy HH:mm") : ''}}</h4>
+            </div>
+            <div class="row">
+                <input ng-model="data.selectedNote.text"></input>
+            </div>
+        </div>
+        <div class="row height-5vh">
+            <ion-item class="no-border item-icon-right floatRight" ng-click="saveNote()">
+                <span>Save current note</span>
+                <i class="icon ion-ios-cloud-upload-outline"></i>
+            </ion-item>
+        </div>
+        <div class="row height-5vh">
+        </div>
+        <div class="row height-5vh">
+            <button ng-show="tableHidden" class="floatRight button button-icon ion-plus" ng-click="showTable()"></button>
+            <button ng-show="!tableHidden" class="floatRight button button-icon ion-minus" ng-click="showTable()">
+                </buttton>
+        </div>
+        <div class="row" ng-show="!tableHidden">
+            <ion-scroll class="widthMax">
+                <div ng-repeat="note in data.notesList track by $index">
+                    <div class="row">
+                        <div class="col-50" style="margin-top:2px">
+                            <span style="font-size: 12px">{{note.date.toString('dd/MM/yyyy HH:mm')}}</span>
+                        </div>
+                        <div class="col-25">
+                            <span>{{note.text.substring(0,10)}}</span>
+                        </div>
+                        <div class="col-25">
+                            <button class="button button-icon ion-ios-trash-outline" ng-click="removeNote($index)">
+                        </div>
+                    </div>
+                </div>
+            </ion-scroll>
+        </div>
+    </ion-content>
+</ion-view>

@@ -66,6 +66,12 @@
                     controller: "financialManagerCtrl",
                     params: { id: null }
                 })
+                .state("notes", {
+                    url: "/notes",
+                    templateUrl: "app/notes/notesPage.html",
+                    controller: "notesCtrl",
+                    params: { id: null }
+                })
             var timePickerObj = {
                 inputTime: (((new Date()).getHours() * 60 * 60) + ((new Date()).getMinutes() * 60)),
                 format: 24,

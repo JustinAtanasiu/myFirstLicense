@@ -298,22 +298,25 @@
             var weekdaysDisplay = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
             
             dbService.get($scope.$root.id).then(function (result) {
-                result.alarmTimes.sort(function(a,b){
-                    a.hours = a.hourMinutes.substring(0, a.hourMinutes.indexOf(":"));
-                    a.minutes =  a.hourMinutes.substring(a.hourMinutes.indexOf(":")+1, a.hourMinutes.length);
-                    b.hours = b.hourMinutes.substring(0, b.hourMinutes.indexOf(":"));
-                    b.minutes =  b.hourMinutes.substring(b.hourMinutes.indexOf(":")+1, b.hourMinutes.length);
-                    if(parseInt(a.hours) === parseInt(b.hours))
-                        return parseInt(a.minutes) - parseInt(b.minutes);
-                    else
-                        return parseInt(a.hours) - parseInt(b.hours);
-                });
+                if (result.alarmTimes.length > 2) {
+                    result.alarmTimes.sort(function (a, b) {
+                        a.hours = a.hourMinutes.substring(0, a.hourMinutes.indexOf(":"));
+                        a.minutes = a.hourMinutes.substring(a.hourMinutes.indexOf(":") + 1, a.hourMinutes.length);
+                        b.hours = b.hourMinutes.substring(0, b.hourMinutes.indexOf(":"));
+                        b.minutes = b.hourMinutes.substring(b.hourMinutes.indexOf(":") + 1, b.hourMinutes.length);
+                        if (parseInt(a.hours) === parseInt(b.hours))
+                            return parseInt(a.minutes) - parseInt(b.minutes);
+                        else
+                            return parseInt(a.hours) - parseInt(b.hours);
+                    });
+                }
                 $scope.data.alarms = result.alarmTimes;
+
             });
             
-            $scope.saveAlarm = function(alarm, index){
+            $scope.saveAlarm = function(alarm){
                 dbService.get($scope.$root.id).then(function (result) {
-                    result.alarmTimes[index] = alarm ;
+                    result.alarmTimes.push(alarm);
                     return dbService.put(result, $scope.$root.id, result._rev);
                 }).then(function (response) {
                     // handle response
@@ -363,7 +366,7 @@
                     active: true
                 }
                 $scope.data.alarms.push(myAlarm);
-                $scope.saveAlarm(myAlarm, $scope.data.alarms.length);
+                $scope.saveAlarm(myAlarm);
                 // var alarmTime = new Date();
                 // alarmTime.setMinutes(alarmTime.getMinutes() + 1);
                 // $cordovaLocalNotification.add({
@@ -786,6 +789,90 @@
                     $scope.saveInformation();
                 }
             }
+        }])
+        .controller("notesCtrl", ["$scope", "$state", "$stateParams", 'dbService', function ($scope, $state, $stateParams, dbService) {
+           $scope.$on('$ionicView.beforeEnter', function (e, data) {
+                $scope.$root.showMenuItems = true;
+                $scope.$root.showSignUp = false;
+                $scope.$root.id = $stateParams.id;     
+                switch (window.orientation) {
+                    case -90:
+                    case 90:
+                        $scope.isLandscape = true;
+                        break;
+                    default:
+                        $scope.isLandscape = false;
+                        break;
+                }
+            });
+             
+            
+            window.addEventListener("orientationchange", function () {
+                // Announce the new orientation number
+                switch (window.orientation) {
+                    case -90:
+                    case 90:
+                        $scope.isLandscape = true;
+                        $scope.$apply(); // <--
+                        break;
+                    default:
+                        $scope.isLandscape = false;
+                        $scope.$apply(); // <--
+                        break;
+                }
+            }, false);
+            
+            $scope.data = {};            
+            $scope.tableHidden = true;
+            $scope.data.notesList = [];
+            $scope.data.selectedNote = {};
+            
+            dbService.get($scope.$root.id).then(function (result) {
+                $scope.data.notesList = result.notesList;
+                if (result.notesList === undefined || (result.notesList && result.notesList.length === 0))
+                    $scope.data.selectedNote = { text: "There are no active notes" };
+                else
+                    $scope.data.selectedNote = result.notesList[0];
+            });
+            
+            $scope.showTable = function(){
+                $scope.tableHidden = !$scope.tableHidden;
+            }
+            $scope.addNote = function(){
+                $scope.saveNote();
+                $scope.data.notesList.push({text: '', date: (new Date).toUTCString()});
+                $scope.data.selectedNote = $scope.data.notesList[$scope.data.notesList.length-1];                
+            }
+            
+            $scope.removeNote = function (index) {
+                $scope.data.notesList.splice(index, 1);
+                if ($scope.data.notesList.length > 0)
+                    $scope.data.selectedNote = $scope.data.notesList[0]
+                else
+                    $scope.data.selectedNote = { text: "There are no active notes" };
+                $scope.saveNote();
+            }
+            
+            $scope.saveNote = function(){                
+                var tempNote = angular.copy($scope.data.selectedNote);
+                if(tempNote && tempNote.date){
+                $scope.data.notesList.forEach(function(note, index){
+                        if(note.date === tempNote.date){
+                            $scope.data.notesList[index] = tempNote;
+                            return;
+                        }
+                    });
+                }
+                 dbService.get($scope.$root.id).then(function (result) {
+                        result.notesList = $scope.data.notesList;
+                    return dbService.put(result, $scope.$root.id, result._rev);
+                }).then(function (response) {
+                    // handle response
+                }).catch(function (err) {
+                    console.log(err);
+                });
+            }
+                       
         }])
 
     //errorCtrl managed the display of error messages bubbled up from other controllers, directives, myappService
