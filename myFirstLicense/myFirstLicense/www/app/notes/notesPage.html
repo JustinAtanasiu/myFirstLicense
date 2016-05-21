@@ -6,10 +6,10 @@
         <form name="myForm">
             <div ng-class="{isLandscape ? height-60vh : height-70vh}">
                 <div class="height-5vh">
-                    <h6 ng-if="data.selectedNote.date">Note date: {{getDate(data.selectedNote.date) | date: 'yyyy-MM-dd HH:mm:ss'}}</h6>
+                    <h6 ng-if="data.selectedNote.date" >Note date: {{getDate(data.selectedNote.date) | date: 'yyyy-MM-dd HH:mm:ss'}}</h6>
+                    <h6 ng-if="!data.selectedNote.date">{{data.selectedNote.text}}</h6>
                 </div>
                 <div class="height-60vh" ng-if="!isLandscape">
-                    <h5 ng-if="!data.selectedNote.date">{{data.selectedNote.text}}</h5>
                     <textarea class="myTextArea widthMax heightMax" ng-model="data.selectedNote.text" ng-if="data.selectedNote.date"></textarea>
                 </div>
                 <div class="height-50vh" ng-if="isLandscape">
