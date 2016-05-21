@@ -81,7 +81,7 @@
 
             <div class="row height-10vh">
                 <ion-item class="no-border item-icon-right floatRight" ng-click="saveInformation()">
-                    <span>Save current values</span>
+                    <span>Save values</span>
                     <i class="icon ion-ios-cloud-upload-outline"></i>
                 </ion-item>
             </div>
@@ -105,7 +105,7 @@
                 <div ng-repeat="transaction in data.monthlyTransactions track by $index">
                     <div class="row">
                         <div class="col-75" style="margin-top:2px">
-                            <span>{{transaction.date}}</span>
+                            <span>{{getDate(transaction.date) | date: 'yyyy-MM-dd HH:mm'}}</span>
                         </div>
                         <div class="col-25">
                             <span>{{transaction.displaySum}}</span>

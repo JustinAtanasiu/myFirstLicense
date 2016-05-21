@@ -3,20 +3,33 @@
         <button class="button button-icon ion-plus floatRight" ng-click="addNote()"></button>
     </ion-nav-buttons>
     <ion-content class="padding">
-        <div class="row height-70vh">
-            <div class="row">
-                <h4>{{data.selectedNote.date ? 'Note date:' + data.selectedNote.date.toString("dd/MM/yyyy HH:mm") : ''}}</h4>
+        <form name="myForm">
+            <div ng-class="{isLandscape ? height-60vh : height-70vh}">
+                <div class="height-5vh">
+                    <h6 ng-if="data.selectedNote.date">Note date: {{getDate(data.selectedNote.date) | date: 'yyyy-MM-dd HH:mm:ss'}}</h6>
+                </div>
+                <div class="height-60vh" ng-if="!isLandscape">
+                    <h5 ng-if="!data.selectedNote.date">{{data.selectedNote.text}}</h5>
+                    <textarea class="myTextArea widthMax heightMax" ng-model="data.selectedNote.text" ng-if="data.selectedNote.date"></textarea>
+                </div>
+                <div class="height-50vh" ng-if="isLandscape">
+                    <h5 ng-if="!data.selectedNote.date">{{data.selectedNote.text}}</h5>
+                    <textarea class="myTextArea widthMax heightMax" ng-model="data.selectedNote.text" ng-if="data.selectedNote.date"></textarea>
+                </div>
             </div>
-            <div class="row">
-                <input ng-model="data.selectedNote.text"></input>
+            <div class="row height-5vh" ng-if="!isLandscape">
+                <ion-item class="no-border item-icon-right floatRight" ng-click="saveNote()">
+                    <span>Save note</span>
+                    <i class="icon ion-ios-cloud-upload-outline"></i>
+                </ion-item>
             </div>
-        </div>
-        <div class="row height-5vh">
-            <ion-item class="no-border item-icon-right floatRight" ng-click="saveNote()">
-                <span>Save current note</span>
-                <i class="icon ion-ios-cloud-upload-outline"></i>
-            </ion-item>
-        </div>
+            <div class="row height-10vh" ng-if="isLandscape">
+                <ion-item class="no-border item-icon-right floatRight" ng-click="saveNote()">
+                    <span>Save note</span>
+                    <i class="icon ion-ios-cloud-upload-outline"></i>
+                </ion-item>
+            </div>
+        </form>
         <div class="row height-5vh">
         </div>
         <div class="row height-5vh">
@@ -25,14 +38,14 @@
                 </buttton>
         </div>
         <div class="row" ng-show="!tableHidden">
-            <ion-scroll class="widthMax">
-                <div ng-repeat="note in data.notesList track by $index">
-                    <div class="row">
-                        <div class="col-50" style="margin-top:2px">
-                            <span style="font-size: 12px">{{note.date.toString('dd/MM/yyyy HH:mm')}}</span>
+                <ion-scroll class="widthMax">
+                    <div ng-repeat="note in data.notesList track by $index" class="row row-center">
+                    <div class="row row-center">
+                        <div class="col-50">
+                            <span style="font-size: 12px;">{{getDate(note.date) | date: 'yyyy-MM-dd HH:mm'}}</span>
                         </div>
                         <div class="col-25">
-                            <span>{{note.text.substring(0,10)}}</span>
+                            <span style="font-size: 12px;">{{note.text.substring(0,10)+'...'}}</span>
                         </div>
                         <div class="col-25">
                             <button class="button button-icon ion-ios-trash-outline" ng-click="removeNote($index)">

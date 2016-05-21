@@ -647,7 +647,11 @@
             }).catch(function (err) {
                 console.log(err);
                 });
-
+                
+            $scope.getDate = function (string) {
+                return new Date(string);
+            }
+                
             Date.isLeapYear = function (year) {
                 return (((year % 4 === 0) && (year % 100 !== 0)) || (year % 400 === 0));
             };
@@ -871,6 +875,10 @@
                 }).catch(function (err) {
                     console.log(err);
                 });
+            }
+            
+            $scope.getDate = function(string){
+                return new Date(string);
             }
                        
         }])
