@@ -10,20 +10,20 @@
                 if (window.StatusBar) {
                     StatusBar.styleDefault();
                 }
-                // if (device !== undefined && device !== null)
-                //     if (device.platform === "iOS") {
-                //         window.plugin.notification.local.promptForPermission();
-                //     }
-                // window.plugin.notification.local.onadd = function (id, state, json) {
-                //     var notification = {
-                //         id: id,
-                //         state: state,
-                //         json: json
-                //     };
-                //     $timeout(function () {
-                //         $rootScope.$broadcast("$cordovaLocalNotification:added", notification);
-                //     });
-                // };
+                if (device !== undefined && device !== null)
+                    if (device.platform === "iOS") {
+                        window.plugin.notification.local.promptForPermission();
+                    }
+                window.plugin.notification.local.onadd = function (id, state, json) {
+                    var notification = {
+                        id: id,
+                        state: state,
+                        json: json
+                    };
+                    $timeout(function () {
+                        $rootScope.$broadcast("$cordovaLocalNotification:added", notification);
+                    });
+                };
             });
         })
         .config(function ($stateProvider, $urlRouterProvider, ionicTimePickerProvider) {

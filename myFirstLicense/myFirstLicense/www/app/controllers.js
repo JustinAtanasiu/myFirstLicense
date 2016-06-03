@@ -311,12 +311,77 @@
                     });
                 }
                 $scope.data.alarms = result.alarmTimes;
-
+                    
             });
             
-            $scope.saveAlarm = function(alarm){
+            $scope.saveAlarm = function(alarm, weekDays){
+                if(alarm.active){
+                    if (alarm.weekDaysDisplay !== "Next") {
+                        weekDays.forEach(function (element, index) {
+                            if(element === 1){
+                                var hour = parseInt(alarm.hourMinutes.split(":")[0]);
+                                var minutes = parseInt(alarm.hourMinutes.split(":")[1]);
+                                var alarmTime = nextDay(index,hour,minutes);
+                                var today = new Date();
+                                if(today.getDay() === index){
+                                    if (today.getHours() > hour) {
+                                        alarmTime.setDate(alarmTime.getDate() + 7);
+                                    } else if (today.getHours() === hour) {
+                                        if (minutes <= today.getMinutes()) {
+                                            alarmTime.setDate(alarmTime.getDate() + 7);
+                                        }
+                                    } 
+                                }
+                                alarmTime.setMinutes(alarmTime.getMinutes() + 1);
+                                cordova.plugins.notification.local.schedule({
+                                    id: alarm.id,
+                                    title: "Reminder",
+                                    text: alarm.message ? alarm.message : "No reminder message",
+                                    firstAt: alarmTime,
+                                    every: "week",
+                                });
+                            }
+                        });
+                        function nextDay(x, hour, minute) {
+                            var now = new Date();
+                            now.setHours(hour,minute,0,0);
+                            now.setDate(now.getDate() + (x + (7 - now.getDay())) % 7);
+                            return now;
+                        }
+                    }
+                    else {
+                        var alarmTime = new Date();
+                        var hour = parseInt(alarm.hourMinutes.split(":")[0]);
+                        var minutes = parseInt(alarm.hourMinutes.split(":")[1]);
+                        if (alarmTime.getHours() < hour) {
+                            alarmTime.setHours(hour, minutes);
+                        } else if (alarmTime.getHours() === hour) {
+                            if (minutes > alarmTime.getMinutes()) {
+                                alarmTime.setHours(hour, minutes,0,0);
+                            }
+                            else {
+                                alarmTime.setHours(hour, minutes,0,0);
+                                alarmTime.setDate(alarmTime.getDate() + 1);
+                            }
+                        } else {
+                            alarmTime.setHours(hour, minutes,0,0);
+                            alarmTime.setDate(alarmTime.getDate() + 1);
+                        }
+                        cordova.plugins.notification.local.schedule({
+                            id: alarm.id,
+                            title: "Reminder",
+                            text: alarm.message ? alarm.message : "No reminder message",
+                            at: alarmTime
+                        });
+                    }
+                }
+                else {
+                    cordova.plugins.notification.local.cancel(alarm.id, function () {
+                        // Notification was cancelled
+                    }, $scope);
+                }
                 dbService.get($scope.$root.id).then(function (result) {
-                    result.alarmTimes.push(alarm);
+                    result.alarmTimes = $scope.data.alarms;
                     return dbService.put(result, $scope.$root.id, result._rev);
                 }).then(function (response) {
                     // handle response
@@ -340,7 +405,12 @@
                 ionicTimePicker.openTimePicker(ipObj1);                
             }
             
-            $scope.removeAlarm = function(index){
+            $scope.removeAlarm = function(index){            
+
+                cordova.plugins.notification.local.cancel($scope.data.alarms[index].id, function () {
+                    // Notification was cancelled
+                }, $scope);            
+                
                 $scope.data.alarms.splice(index, 1);
                  dbService.get($scope.$root.id).then(function (result) {
                     result.alarmTimes = $scope.data.alarms;
@@ -354,6 +424,11 @@
             
             var addAlarm = function (val, weekDays) {
                 var displayDays =[];
+                var maxId=1;
+                $scope.data.alarms.forEach(function(element){
+                    if(maxId<=element.id)
+                        maxId = element.id;
+                });
                 weekDays.forEach(function(element, index) {
                     if(element === 1){
                         displayDays.push(weekdaysDisplay[index]);
@@ -361,33 +436,14 @@
                 }, this);
                 var myAlarm = {
                     hourMinutes: val.hours + ":" + val.minutes,
-                    message: val.message ? val.message : "No alarm message",
+                    message: val.message ? val.message : "No reminder message",
                     weekDaysDisplay: displayDays.length ? displayDays.join(',') : "Next",
-                    active: true
-                }
+                    active: true,
+                    id: maxId+1
+                };
                 $scope.data.alarms.push(myAlarm);
-                $scope.saveAlarm(myAlarm);
-                // var alarmTime = new Date();
-                // alarmTime.setMinutes(alarmTime.getMinutes() + 1);
-                // $cordovaLocalNotification.add({
-                //     id: "1234",
-                //     date: alarmTime,
-                //     message: "This is a message",
-                //     title: "This is a title",
-                // }).then(function () {
-                //     console.log("The notification has been set");
-                // });
+                $scope.saveAlarm(myAlarm, weekDays);                
             };
-
-            $scope.isScheduled = function () {
-                $cordovaLocalNotification.isScheduled("1234").then(function (isScheduled) {
-                    alert("Notification 1234 Scheduled: " + isScheduled);
-                });
-            }
-
-            $scope.$on("$cordovaLocalNotification:added", function (id, state, json) {
-                alert("Added a notification");
-            });
             
         }])
 
