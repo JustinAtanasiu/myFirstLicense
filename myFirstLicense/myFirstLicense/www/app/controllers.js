@@ -339,7 +339,6 @@
                                         }
                                     } 
                                 }
-                                alarmTime.setMinutes(alarmTime.getMinutes() + 1);
                                 cordova.plugins.notification.local.schedule({
                                     id: alarm.id,
                                     title: "Reminder",
@@ -356,13 +355,13 @@
                         var hour = parseInt(alarm.hourMinutes.split(":")[0]);
                         var minutes = parseInt(alarm.hourMinutes.split(":")[1]);
                         if (alarmTime.getHours() < hour) {
-                            alarmTime.setHours(hour, minutes);
+                            alarmTime.setHours(hour, minutes, 0, 0);
                         } else if (alarmTime.getHours() === hour) {
                             if (minutes > alarmTime.getMinutes()) {
-                                alarmTime.setHours(hour, minutes,0,0);
+                                alarmTime.setHours(hour, minutes, 0, 0);
                             }
                             else {
-                                alarmTime.setHours(hour, minutes,0,0);
+                                alarmTime.setHours(hour, minutes, 0, 0);
                                 alarmTime.setDate(alarmTime.getDate() + 1);
                             }
                         } else {
