@@ -314,6 +314,13 @@
                     
             });
             
+            var nextDay = function(x, hour, minute) {
+                var now = new Date();
+                now.setHours(hour, minute, 0, 0);
+                now.setDate(now.getDate() + (x + (7 - now.getDay())) % 7);
+                return now;
+            }
+            
             $scope.saveAlarm = function(alarm, weekDays){
                 if(alarm.active){
                     if (alarm.weekDaysDisplay !== "Next") {
@@ -342,12 +349,7 @@
                                 });
                             }
                         });
-                        function nextDay(x, hour, minute) {
-                            var now = new Date();
-                            now.setHours(hour,minute,0,0);
-                            now.setDate(now.getDate() + (x + (7 - now.getDay())) % 7);
-                            return now;
-                        }
+                       
                     }
                     else {
                         var alarmTime = new Date();
@@ -371,7 +373,7 @@
                             id: alarm.id,
                             title: "Reminder",
                             text: alarm.message ? alarm.message : "No reminder message",
-                            at: alarmTime
+                            at: alarmTime,
                         });
                     }
                 }

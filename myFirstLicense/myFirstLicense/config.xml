@@ -20,6 +20,9 @@
   <allow-intent href="mailto:*" />
   <allow-intent href="geo:*" />
   <allow-navigation href="*" />
+  <feature name="Toast">
+    <param name="android-package" value="nl.xservices.plugins.Toast" />
+  </feature>
   <platform name="android">
     <allow-intent href="market:*" />
   </platform>
@@ -126,4 +129,5 @@
   <allow-intent href="*" />
   <plugin name="cordova-plugin-geolocation" version="2.2.1-dev" src="https://github.com/apache/cordova-plugin-geolocation" />
   <preference name="android-minSdkVersion" value="14" />
+  <plugin name="cordova-plugin-x-toast" version="2.5.2" src="https://github.com/EddyVerbruggen/Toast-PhoneGap-Plugin" />
 </widget>

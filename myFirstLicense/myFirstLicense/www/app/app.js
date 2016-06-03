@@ -14,16 +14,21 @@
                     if (device.platform === "iOS") {
                         window.plugin.notification.local.promptForPermission();
                     }
-                window.plugin.notification.local.onadd = function (id, state, json) {
-                    var notification = {
-                        id: id,
-                        state: state,
-                        json: json
-                    };
-                    $timeout(function () {
-                        $rootScope.$broadcast("$cordovaLocalNotification:added", notification);
-                    });
-                };
+                cordova.plugins.notification.local.on('trigger', function (notification) {
+                    window.plugins.toast.showWithOptions(
+                        {
+                            message: notification.text,
+                            duration: 4000, // ms
+                            position: "top",
+                            addPixelsY: 40,  // (optional) added a negative value to move it up a bit (default 0)
+                            data: { 'foo': 'bar' } // (optional) pass in a JSON object here (it will be sent back in the success callback below)
+                        },
+                        // implement the success callback
+                        function (result) {
+                            window.plugins.toast.hide();
+                        }
+                        );
+                }, this);
             });
         })
         .config(function ($stateProvider, $urlRouterProvider, ionicTimePickerProvider) {

@@ -2,10 +2,11 @@
     <ion-nav-buttons side="primary">
         <button class="button button-icon ion-plus floatRight" ng-click="addAlarmTime()"></button>
     </ion-nav-buttons>
-    <ion-content class="padding">
+    <ion-content class="padding" style="overflow-scroll: false">
         <div class="row" id="myRow" name="myRow">
             <ion-scroll direction="y" class="widthMax" id="myScroll" name="myScroll">
-                <div ng-repeat="alarm in data.alarms track by $index" class="row row-center" style="border: 1px solid #eeeeee" id="myRow" name="myRow"> 
+                <div ng-repeat="alarm in data.alarms track by $index" class="row row-center" style="border: 1px solid #eeeeee" id="myRow"
+                name="myRow">
                     <div class="col-25">
                         <h4> {{alarm.hourMinutes}} </h4>
                     </div>
@@ -18,12 +19,13 @@
                         </div>
                     </div>
                     <div class="col-25" style="margin-left: 4vw">
-                        <input width="20px" height="20px" type="checkbox" style="margin-top: 10px" name="favoriteColors" ng-model="alarm.active" ng-click="saveAlarm(alarm, $index)"></input>
-                        <button style="margin-top: -6px" class="floatRight  button button-icon ion-ios-trash-outline" ng-click="removeAlarm($index)"/>
+                        <input width="20px" height="20px" type="checkbox" style="margin-top: 10px" name="favoriteColors" ng-model="alarm.active"
+                        ng-click="saveAlarm(alarm, $index)"></input>
+                        <button style="margin-top: -6px" class="floatRight  button button-icon ion-ios-trash-outline" ng-click="removeAlarm($index)"
+                        />
                     </div>
                 </div>
             </ion-scroll>
         </div>
-        <button class="button" ng-click="isScheduled()">Is Scheduled</button>
     </ion-content>
 </ion-view>

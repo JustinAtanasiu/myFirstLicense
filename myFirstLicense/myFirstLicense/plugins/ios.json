@@ -18,6 +18,12 @@
                             "xml": false,
                             "count": 1
                         }
+                    ],
+                    "QuartzCore.framework": [
+                        {
+                            "xml": false,
+                            "count": 1
+                        }
                     ]
                 }
             },
@@ -30,6 +36,10 @@
                         },
                         {
                             "xml": "<feature name=\"Geolocation\"><param name=\"ios-package\" value=\"CDVLocation\" /></feature>",
+                            "count": 1
+                        },
+                        {
+                            "xml": "<feature name=\"Toast\"><param name=\"ios-package\" value=\"Toast\" /></feature>",
                             "count": 1
                         }
                     ]
@@ -55,6 +65,9 @@
             "PACKAGE_NAME": "io.cordova.myappc25e5c"
         },
         "cordova-plugin-geolocation": {
+            "PACKAGE_NAME": "io.cordova.myappc25e5c"
+        },
+        "cordova-plugin-x-toast": {
             "PACKAGE_NAME": "io.cordova.myappc25e5c"
         }
     },
