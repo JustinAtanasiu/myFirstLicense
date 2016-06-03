@@ -498,9 +498,9 @@
                             if (feed.thumbnail && feed.thumbnail._url) {
                                 if (feed.thumbnail._width < 300 || feed.thumbnail._height < 300) {
                                     if ($scope.data.filter === "Sports")
-                                        feed.thumbnail = { _url: '/img/news/sportNews.jpg' };
+                                        feed.thumbnail = { _url: 'img/news/sportNews.jpg' };
                                     else
-                                        feed.thumbnail = { _url: '/img/news/newsBackground2.jpg' };
+                                        feed.thumbnail = { _url: 'img/news/newsBackground2.jpg' };
                                 }
                             }
                             else if (feed.content && feed.content.thumbnail && feed.content.thumbnail._url) {
@@ -509,9 +509,9 @@
                             else if (feed.thumbnail && feed.thumbnail[0]._url) {
                                 if (feed.thumbnail[0]._width < 300 || feed.thumbnail[0]._height < 300) {
                                     if ($scope.data.filter === "Sports")
-                                        feed.thumbnail = { _url: '/img/news/sportNews.jpg' };
+                                        feed.thumbnail = { _url: 'img/news/sportNews.jpg' };
                                     else
-                                        feed.thumbnail = { _url: '/img/news/newsBackground.jpg' };
+                                        feed.thumbnail = { _url: 'img/news/newsBackground.jpg' };
                                 }
                                 else
                                     feed.thumbnail = feed.thumbnail[0]
@@ -521,9 +521,9 @@
                             }
                             else {
                                 if ($scope.data.filter === "Sports")
-                                    feed.thumbnail = { _url: '/img/news/sportNews.jpg' };
+                                    feed.thumbnail = { _url: 'img/news/sportNews.jpg' };
                                 else
-                                    feed.thumbnail = { _url: '/img/news/newsBackground.jpg'};
+                                    feed.thumbnail = { _url: 'img/news/newsBackground.jpg'};
                            }
                        }
                     });
