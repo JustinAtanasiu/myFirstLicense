@@ -169,7 +169,7 @@
                        var time = new Date(element.time);
                        var timeHours = (time.getHours() > 9) ? time.getHours() : ('0' + time.getHours());
                        element.time = timeHours + ":00";
-                       element.iconPath = "/img/weatherIcons/" + element.icon + ".png";
+                       element.iconPath = "img/weatherIcons/" + element.icon + ".png";
                     }, this);                    
                     $scope.data.weatherInHours = response.data.hourly.data;
                     (response.data.daily.data).forEach(function(element) {
@@ -177,7 +177,7 @@
                        element.temperatureMin = Math.round(element.temperatureMin) + '\xB0' + 'C';
                        element.time = (element.time * 1000) + (offset*60 + new Date().getTimezoneOffset())*60*1000;
                        var time = new Date(element.time);       
-                       element.iconPath = "/img/weatherIcons/" + element.icon + ".png";                
+                       element.iconPath = "img/weatherIcons/" + element.icon + ".png";                
                        element.time = days[time.getDay()];
                     }, this);  
                     $scope.data.weatherInDays = response.data.daily.data; 
@@ -219,7 +219,7 @@
                 }
                 else
                     return {
-                        'background-image': 'url(/img/weatherIcons/clear-day.png)',
+                        'background-image': 'url(img/weatherIcons/clear-day.png)',
                         'background-position': 'center',
                         'background-repeat': 'no-repeat',
                         'opacity': '0.7'
