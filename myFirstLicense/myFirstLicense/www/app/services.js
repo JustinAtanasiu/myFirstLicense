@@ -40,17 +40,24 @@
             // localDB.login(userLog.name, userLog.password, ajaxOpts).then(function(){
             dbService.get = function (id) {
                 var defer = $q.defer();
-                    localDB.get(id).then(function (result) {
-                        defer.resolve(result);
-                    });
-                return defer.promise;                
+                $http({
+                    url: 'http://localhost:8080/api/getInfo/'+id,
+                    method: "GET"
+                }).then(function (result) {
+                    defer.resolve(result.data);
+                });
+                return defer.promise;
             }
             dbService.put = function(result, id, rev){
                 var defer = $q.defer();
-                    localDB.put(result, id, rev).then(function (result) {
-                        defer.resolve(result);                   
-                    return defer.promise;
+                $http({
+                    url: 'http://localhost:8080/api/saveInfo/' + id,
+                    method: "POST",
+                    data: result
+                }).then(function (result) {
+                    defer.resolve(result.data);
                 });
+                return defer.promise;
             }
             dbService.post = function(object){
                 var defer = $q.defer();
