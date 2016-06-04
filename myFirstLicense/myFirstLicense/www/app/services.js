@@ -42,7 +42,10 @@
                 var defer = $q.defer();
                 $http({
                     url: 'http://localhost:8080/api/getInfo/'+id,
-                    method: "GET"
+                    method: "GET",
+                    headers: {
+                        'x-access-token': localStorage.token
+                    }
                 }).then(function (result) {
                     defer.resolve(result.data);
                 });
@@ -53,19 +56,16 @@
                 $http({
                     url: 'http://localhost:8080/api/saveInfo/' + id,
                     method: "POST",
-                    data: result
+                    data: result,
+                    headers: {
+                        'x-access-token': localStorage.token
+                    }
                 }).then(function (result) {
                     defer.resolve(result.data);
                 });
                 return defer.promise;
             }
-            dbService.post = function(object){
-                var defer = $q.defer();
-                    localDB.post(object).then(function (result) {
-                        defer.resolve(result);                   
-                });
-                return defer.promise;                
-            }
+            
             dbService.create = function(user){
                 if (user && user.username && user.password) {
                     if (user && user.username && user.password && user.username.length < 6 || user.password.length < 6) {
@@ -122,10 +122,10 @@
                                     title: 'Sign up completed!',
                                     template: 'User has been succesfully added.'
                                 });
+                    $state.go('signIn');
                     }, function errorCallback(response) {
 
                     });
-                        $state.go('signIn');
                     });
                 } else {
                     console.log("Action not completed");
@@ -162,55 +162,32 @@
             };
             
             dbService.login = function (username, password) {
-                var map = function (doc) {
-                    if (doc.username) {
-                        emit(doc._id, { username: doc.username, password: doc.password });
-                    }
-                }
 
-                localDB.query(map, { reduce: false }).then(function (result) {
-                        var userExists = false;
-                        result.rows.forEach(function (user) {
-
-                            if (user.value.username === username.hashCode().toString()) {
-                                userExists = true;
-                                if (user.value.password !== md5.createHash(password || '')) {
-                                    var alertPopup = $ionicPopup.alert({
-                                        title: 'Sign in failed!',
-                                        template: 'Wrong Password'
-                                    });
-                                    return;
-                                }
-                                else {
-                                    $state.go('news', { id: user.id });
-                                }
-                            }
-                        });
-                        if (!userExists) {
-                            var alertPopup = $ionicPopup.alert({
-                                title: 'Sign in failed!',
-                                template: 'Username does not exist'
-                            });
-                            return;
-                        }
-                        // handle result
-                    }).catch(function (err) {
+                $http({
+                    url: 'http://localhost:8080/api/authenticate',
+                    method: "POST",
+                    data: { username: username.hashCode().toString(), password: md5.createHash(password || '') }
+                }).then(function (result) {
+                    if (!result.data.success) {
                         var alertPopup = $ionicPopup.alert({
-                                title: 'We are sorry!',
-                                template: 'Something went wrong, please try again later.'
-                            });
-                            return;
+                            title: 'Sign in failed!',
+                            template: 'Username does not exist'
+                        });
+                    }
+                    else {
+                        localStorage.token = result.data.token;
+                        $state.go('news', { id: result.data.id });
+                    }                              
+                            
+                    // handle result
+                }).catch(function (err) {
+                    var alertPopup = $ionicPopup.alert({
+                        title: 'We are sorry!',
+                        template: 'Something went wrong, please try again later.'
                     });
-            }
-            
-            // }).catch(function (err){
-            //     var alertPopup = $ionicPopup.alert({
-            //                     title: 'We are sorry!',
-            //                     template: 'Something went wrong, please try again later.'
-            //                 });
-            //                 return;
-            // });
-            
+                    return;
+                });
+            };
             return dbService;
         }]);
 })();
