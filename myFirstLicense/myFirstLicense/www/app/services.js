@@ -189,5 +189,13 @@
                 });
             };
             return dbService;
-        }]);
+        }]).directive('logOut', function () {
+            return {
+                link: function ($scope, element) {
+                    element.on('click', function () {
+                        localStorage.clear();
+                    });
+                }
+            }
+        });
 })();
