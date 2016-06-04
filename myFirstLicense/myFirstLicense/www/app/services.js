@@ -14,7 +14,7 @@
         return myappService;
     }])    
     
-        .service('dbService', ["$state", "$ionicPopup", "$q", "md5", function ($state, $ionicPopup, $q, md5) {
+        .service('dbService', ["$state", "$ionicPopup", "$q", "md5", "$http", function ($state, $ionicPopup, $q, md5, $http) {
             var dbService = {};
             var userLog = {
                 name: 'AdminJustin',
@@ -35,8 +35,9 @@
                     }
                 }
             };
-            var localDB = new PouchDB('http://188.27.123.191:5984/personalassistant', pouchOpts);
-            localDB.login(userLog.name, userLog.password, ajaxOpts).then(function(){
+            var localServer = "localhost:8080";
+            var localDB = new PouchDB('http://localhost:5984/personalassistant');
+            // localDB.login(userLog.name, userLog.password, ajaxOpts).then(function(){
             dbService.get = function (id) {
                 var defer = $q.defer();
                     localDB.get(id).then(function (result) {
@@ -87,17 +88,14 @@
                     });
                 if (user !== undefined) {
                                       
-                    checkUsers(user.username).then(function (){
-                        var alertPopup = $ionicPopup.alert({
-                                    title: 'Sign up completed!',
-                                    template: 'User has been succesfully added.'
-                                });
-                                var resetDay = new Date();
-                                var resetMonth = new Date();
-                    
-                    var userpassword = md5.createHash(user.password || '');
-                    var userusername = user.username.hashCode().toString();
-                        localDB.post({ username: userusername,
+                    checkUsers(user.username).then(function () {
+
+                        var resetDay = new Date();
+                        var resetMonth = new Date();
+
+                        var userpassword = md5.createHash(user.password || '');
+                        var userusername = user.username.hashCode().toString();
+                        var data = {username: userusername,
                                     password: userpassword,
                                     weatherLocations: [],
                                     financialInformation: {monthlyIncome: 0,
@@ -110,8 +108,16 @@
                                         monthlyTransactions: []
                                     },
                                     alarmTimes: [],
-                                    notesList: []
-                            });
+                                    notesList: []                            
+                    }
+                    $http.post('http://localhost:8080/api/signUp', data).then(function successCallback(response) {
+                        var alertPopup = $ionicPopup.alert({
+                                    title: 'Sign up completed!',
+                                    template: 'User has been succesfully added.'
+                                });
+                    }, function errorCallback(response) {
+
+                    });
                         $state.go('signIn');
                     });
                 } else {
@@ -119,31 +125,21 @@
                 }
             }
             
-            var checkUsers = function (username, password) {
+            var checkUsers = function (username) {
+                var userusername = username.hashCode().toString();
                 var defer = $q.defer();
-                var foundUser = false;
-                var map = function (doc) {
-                    if (doc.username) {
-                        emit(doc._id, { username: doc.username, password: doc.password });
+                $http.post('http://localhost:8080/api/checkUsers', { username: userusername }).then(function successCallback(response) {
+                    if (response.data.status === 400) {
+                        defer.reject();
+                        var alertPopup = $ionicPopup.alert({
+                            title: 'Sign up failed!',
+                            template: 'Username already exists.'
+                        });
                     }
-                }
-                    localDB.query(map, { reduce: false }).then(function (result) {
-                        result.rows.forEach(function (user) {
+                    defer.resolve(true);
+                }, function errorCallback(response) {
 
-                            if (user.value.username === username) {
-                                var alertPopup = $ionicPopup.alert({
-                                    title: 'Sign up failed!',
-                                    template: 'Username already exists.'
-                                });
-                                foundUser = true;
-                            }
-                        })
-                        if (foundUser === false)
-                        defer.resolve(true);
-                        else
-                            defer.reject();                                   
-                        }).catch(function (err) {
-                    });   
+                });
 
                 return defer.promise;
             }
@@ -200,13 +196,13 @@
                     });
             }
             
-            }).catch(function (err){
-                var alertPopup = $ionicPopup.alert({
-                                title: 'We are sorry!',
-                                template: 'Something went wrong, please try again later.'
-                            });
-                            return;
-            });
+            // }).catch(function (err){
+            //     var alertPopup = $ionicPopup.alert({
+            //                     title: 'We are sorry!',
+            //                     template: 'Something went wrong, please try again later.'
+            //                 });
+            //                 return;
+            // });
             
             return dbService;
         }]);
