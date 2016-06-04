@@ -41,10 +41,10 @@
                 <ion-scroll class="widthMax">
                     <div ng-repeat="note in data.notesList track by $index" class="row row-center">
                     <div class="row row-center">
-                        <div class="col-50">
+                        <div class="col-50" ng-click="selectNote(note)">
                             <span style="font-size: 12px;">{{getDate(note.date) | date: 'yyyy-MM-dd HH:mm'}}</span>
                         </div>
-                        <div class="col-25">
+                        <div class="col-25" ng-click="selectNote(note)">
                             <span style="font-size: 12px;">{{note.text.substring(0,10)+'...'}}</span>
                         </div>
                         <div class="col-25">

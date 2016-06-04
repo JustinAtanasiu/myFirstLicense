@@ -169,10 +169,18 @@
                     data: { username: username.hashCode().toString(), password: md5.createHash(password || '') }
                 }).then(function (result) {
                     if (!result.data.success) {
-                        var alertPopup = $ionicPopup.alert({
-                            title: 'Sign in failed!',
-                            template: 'Username does not exist'
-                        });
+                        if (result.data.status === 404) {
+                            var alertPopup = $ionicPopup.alert({
+                                title: 'Sign in failed!',
+                                template: 'Username does not exist'
+                            });
+                        }
+                        else if (result.data.status === 503) {
+                            var alertPopup = $ionicPopup.alert({
+                                title: 'We are sorry!',
+                                template: 'Something went wrong, please try again later.'
+                            });
+                        }
                     }
                     else {
                         localStorage.token = result.data.token;

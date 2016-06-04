@@ -937,6 +937,10 @@
             $scope.getDate = function(string){
                 return new Date(string);
             }
+            
+            $scope.selectNote = function(note){
+                $scope.data.selectedNote = note;
+            }
                        
         }])
 
