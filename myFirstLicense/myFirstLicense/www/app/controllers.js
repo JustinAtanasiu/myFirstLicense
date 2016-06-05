@@ -128,8 +128,12 @@
 
             var getCity = function (longitude, latitude) {
                 $http({
-                    method: 'GET',
-                    url: 'http://nominatim.openstreetmap.org/reverse?email=justin.atanasiu@gmail.com&format=json&lat=' + latitude + '&lon=' + longitude
+                    method: 'POST',
+                    url: 'http://localhost:8080/api/location',
+                    data: {latitude: latitude, longitude: longitude},
+                    headers: {
+                        'x-access-token': localStorage.token
+                    }
                 }).then(function successCallback(response) {
                     $scope.data.cityName = response.data.address.city + ", " + response.data.address.country;
                     $scope.data.cities.push({cityName: response.data.address.city + ", " + response.data.address.country,
@@ -155,8 +159,12 @@
                     $scope.data.cityName = cityName;
                 }
                 $http({
-                    method: 'GET',
-                    url: 'https://api.forecast.io/forecast/2d4d24f3d98fd833669ca7ccd52a18bd/' + latitude + ',' + longitude + '?units=si'
+                    method: 'POST',
+                    url: 'http://localhost:8080/api/weather',
+                    data: { latitude: latitude, longitude: longitude },
+                    headers: {
+                        'x-access-token': localStorage.token
+                    }
                 }).then(function successCallback(response) {
                     $scope.data.weather = Math.round(response.data.currently.temperature) + '\xB0' + 'C';
                     $scope.data.weatherMin = Math.round(response.data.daily.data[0].temperatureMin) + '\xB0' + 'C';
