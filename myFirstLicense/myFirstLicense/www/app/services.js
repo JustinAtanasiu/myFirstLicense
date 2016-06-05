@@ -26,7 +26,16 @@
                         'x-access-token': localStorage.token
                     }
                 }).then(function (result) {
-                    defer.resolve(result.data);
+                    if (result.data.status === 402) {
+                        var alertPopup = $ionicPopup.alert({
+                            title: 'Session expired!',
+                            template: 'Please log in again'
+                        });
+                        $state.go('signIn');
+                        defer.reject();
+                    } else{
+                        defer.resolve(result.data);
+                    }
                 }).catch(function (err) {
                     var alertPopup = $ionicPopup.alert({
                         title: 'We are sorry!',
@@ -46,7 +55,16 @@
                         'x-access-token': localStorage.token
                     }
                 }).then(function (result) {
-                    defer.resolve(result.data);
+                    if (result.data.status === 402) {
+                        var alertPopup = $ionicPopup.alert({
+                            title: 'Session expired!',
+                            template: 'Please log in again'
+                        });
+                        $state.go('signIn');
+                        defer.reject();
+                    } else{
+                        defer.resolve(result.data);
+                    }
                 }).catch(function (err) {
                     var alertPopup = $ionicPopup.alert({
                         title: 'We are sorry!',
