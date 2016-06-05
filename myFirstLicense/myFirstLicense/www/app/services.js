@@ -16,28 +16,7 @@
     
         .service('dbService', ["$state", "$ionicPopup", "$q", "md5", "$http", function ($state, $ionicPopup, $q, md5, $http) {
             var dbService = {};
-            var userLog = {
-                name: 'AdminJustin',
-                password: 'Justin11AdminPassword'
-            };
-
-            var pouchOpts = {
-                ajax: {
-                    skipSetup: true,
-                    withCredentials: false,
-                }
-            };
-
-            var ajaxOpts = {
-                ajax: {
-                    headers: {
-                        Authorization: 'Basic ' + window.btoa(userLog.name + ':' + userLog.password),
-                    }
-                }
-            };
-            var localServer = "localhost:8080";
-            var localDB = new PouchDB('http://localhost:5984/personalassistant');
-            // localDB.login(userLog.name, userLog.password, ajaxOpts).then(function(){
+            
             dbService.get = function (id) {
                 var defer = $q.defer();
                 $http({
@@ -48,6 +27,12 @@
                     }
                 }).then(function (result) {
                     defer.resolve(result.data);
+                }).catch(function (err) {
+                    var alertPopup = $ionicPopup.alert({
+                        title: 'We are sorry!',
+                        template: 'Something went wrong, please try again later.'
+                    });
+                    return;
                 });
                 return defer.promise;
             }
@@ -62,7 +47,13 @@
                     }
                 }).then(function (result) {
                     defer.resolve(result.data);
-                });
+                }).catch(function (err) {
+                    var alertPopup = $ionicPopup.alert({
+                        title: 'We are sorry!',
+                        template: 'Something went wrong, please try again later.'
+                    });
+                    return;
+                });;
                 return defer.promise;
             }
             

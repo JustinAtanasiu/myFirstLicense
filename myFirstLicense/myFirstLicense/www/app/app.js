@@ -55,24 +55,28 @@
                 })
                 .state("calendar", {
                     url: "/calendar",
+                    cache: false,
                     templateUrl: "app/calendar/calendarMainPage.html",
                     controller: "calendarMainPageCtrl",
                     params: { id: null }
                 })
                 .state("news", {
                     url: "/news",
+                    cache: false,
                     templateUrl: "app/news/newsMainPage.html",
                     controller: "newsMainPageCtrl",
                     params: { id: null }
                 })
                 .state("financialManager", {
                     url: "/financialManager",
+                    cache: false,
                     templateUrl: "app/financialManager/financialManagerPage.html",
                     controller: "financialManagerCtrl",
                     params: { id: null }
                 })
                 .state("notes", {
                     url: "/notes",
+                    cache: false,
                     templateUrl: "app/notes/notesPage.html",
                     controller: "notesCtrl",
                     params: { id: null }
