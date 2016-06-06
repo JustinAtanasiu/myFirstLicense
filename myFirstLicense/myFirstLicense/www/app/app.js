@@ -13,7 +13,8 @@
                 if (device !== undefined && device !== null)
                     if (device.platform === "iOS") {
                         window.plugin.notification.local.promptForPermission();
-                    }
+                    }  
+                    
                 cordova.plugins.notification.local.on('trigger', function (notification) {
                     window.plugins.toast.showWithOptions(
                         {

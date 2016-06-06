@@ -130,8 +130,9 @@
   <access origin="*" />
   <allow-intent href="*" />
   <plugin name="cordova-plugin-geolocation" version="2.2.1-dev" src="https://github.com/apache/cordova-plugin-geolocation" />
-  <preference name="android-minSdkVersion" value="21" />
+  <preference name="android-minSdkVersion" value="14" />
   <plugin name="cordova-plugin-x-toast" version="2.5.2" src="https://github.com/EddyVerbruggen/Toast-PhoneGap-Plugin" />
   <plugin name="cordova-plugin-compat" version="1.0.0" />
   <plugin name="cordova-plugin-splashscreen" version="4.0.0" src="https://github.com/apache/cordova-plugin-splashscreen" />
+  <plugin name="cordova-plugin-certificates" version="0.6.4" src="https://github.com/hypery2k/cordova-certificate-plugin" />
 </widget>

@@ -16,6 +16,12 @@
                         $scope.isLandscape = false;
                         break;
                 }  
+                if(localStorage.token && localStorage.id){
+                    dbService.get(localStorage.id).then(function(result){
+                        $state.go('news', { id: localStorage.id });
+                    }).catch(function (err) {
+                    });                    
+                }
                
             });
             
@@ -399,7 +405,7 @@
                 });
             }
             
-            $scope.addAlarmTime = function () {
+            $scope.addAlarmTime = function () {                
                 var ipObj1 = {
                     callback: function (val, weekDays) {      //Mandatory
                         if (typeof (val) === 'undefined') {
@@ -409,7 +415,8 @@
                         }
                     },
                     setLabel: 'Add',
-                    closeLabel: 'Close'
+                    closeLabel: 'Close',
+                    inputTime: (((new Date()).getHours() * 60 * 60) + ((new Date()).getMinutes() * 60))
                 };
                 ionicTimePicker.openTimePicker(ipObj1);                
             }

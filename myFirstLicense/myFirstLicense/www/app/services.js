@@ -16,11 +16,12 @@
     
         .service('dbService', ["$state", "$ionicPopup", "$q", "md5", "$http", function ($state, $ionicPopup, $q, md5, $http) {
             var dbService = {};
+            var serverUrl = 'https://188.27.195.2';
             
             dbService.get = function (id) {
                 var defer = $q.defer();
                 $http({
-                    url: 'http://localhost:8080/api/getInfo/'+id,
+                    url: serverUrl + '/api/getInfo/'+id,
                     method: "GET",
                     headers: {
                         'x-access-token': localStorage.token
@@ -48,7 +49,7 @@
             dbService.put = function(result, id, rev){
                 var defer = $q.defer();
                 $http({
-                    url: 'http://localhost:8080/api/saveInfo/' + id,
+                    url: serverUrl + '/api/saveInfo/' + id,
                     method: "POST",
                     data: result,
                     headers: {
@@ -126,7 +127,7 @@
                                     alarmTimes: [],
                                     notesList: []                            
                     }
-                    $http.post('http://localhost:8080/api/signUp', data).then(function successCallback(response) {
+                    $http.post(serverUrl + '/api/signUp', data).then(function successCallback(response) {
                         var alertPopup = $ionicPopup.alert({
                                     title: 'Sign up completed!',
                                     template: 'User has been succesfully added.'
@@ -144,7 +145,7 @@
             var checkUsers = function (username) {
                 var userusername = username.hashCode().toString();
                 var defer = $q.defer();
-                $http.post('http://localhost:8080/api/checkUsers', { username: userusername }).then(function successCallback(response) {
+                $http.post(serverUrl + '/api/checkUsers', { username: userusername }).then(function successCallback(response) {
                     if (response.data.status === 400) {
                         defer.reject();
                         var alertPopup = $ionicPopup.alert({
@@ -173,7 +174,7 @@
             dbService.login = function (username, password) {
 
                 $http({
-                    url: 'http://localhost:8080/api/authenticate',
+                    url: serverUrl + '/api/authenticate',
                     method: "POST",
                     data: { username: username.hashCode().toString(), password: md5.createHash(password || '') }
                 }).then(function (result) {
@@ -193,6 +194,7 @@
                     }
                     else {
                         localStorage.token = result.data.token;
+                        localStorage.id = result.data.id;
                         $state.go('news', { id: result.data.id });
                     }                              
                             
