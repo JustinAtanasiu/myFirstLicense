@@ -80,14 +80,12 @@
                             title: 'Sign up failed!',
                             template: text
                         });
-                        return;
                     }
                     else if (user.password !== user.retypePassword) {
                         var alertPopup = $ionicPopup.alert({
                             title: 'Sign up failed!',
                             template: 'Please enter the same password!'
                         });
-                        return;
                     }
                 }
                 else
@@ -196,7 +194,6 @@
                         title: 'We are sorry!',
                         template: 'Something went wrong, please try again later.'
                     });
-                    return;
                 });
             };
             return dbService;
