@@ -133,9 +133,9 @@
 
 
             var getCity = function (longitude, latitude) {
-                $http({
+                $http({                    
+                    url: 'https://188.27.195.2/api/location',
                     method: 'POST',
-                    url: 'http://localhost:8080/api/location',
                     data: {latitude: latitude, longitude: longitude},
                     headers: {
                         'x-access-token': localStorage.token
@@ -165,8 +165,8 @@
                     $scope.data.cityName = cityName;
                 }
                 $http({
+                    url: 'https://188.27.195.2/api/weather',
                     method: 'POST',
-                    url: 'http://localhost:8080/api/weather',
                     data: { latitude: latitude, longitude: longitude },
                     headers: {
                         'x-access-token': localStorage.token
@@ -217,7 +217,6 @@
                                     title: 'Fetching data failed!',
                                     template: 'We are sorry, but we could not reach you'
                                 });
-                                return;
                 });
             }
 

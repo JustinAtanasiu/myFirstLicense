@@ -38,11 +38,7 @@
                         defer.resolve(result.data);
                     }
                 }).catch(function (err) {
-                    var alertPopup = $ionicPopup.alert({
-                        title: 'We are sorry!',
-                        template: 'Something went wrong, please try again later.'
-                    });
-                    return;
+                    
                 });
                 return defer.promise;
             }
@@ -67,11 +63,7 @@
                         defer.resolve(result.data);
                     }
                 }).catch(function (err) {
-                    var alertPopup = $ionicPopup.alert({
-                        title: 'We are sorry!',
-                        template: 'Something went wrong, please try again later.'
-                    });
-                    return;
+                    
                 });;
                 return defer.promise;
             }
