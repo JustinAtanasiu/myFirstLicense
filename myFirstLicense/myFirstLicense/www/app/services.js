@@ -16,7 +16,7 @@
     
         .service('dbService', ["$state", "$ionicPopup", "$q", "md5", "$http", function ($state, $ionicPopup, $q, md5, $http) {
             var dbService = {};
-            var serverUrl = 'https://188.27.195.2';
+            var serverUrl = 'http://10.0.3.2:8080';
             
             dbService.get = function (id) {
                 var defer = $q.defer();

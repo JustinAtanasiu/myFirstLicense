@@ -1,17 +1,26 @@
 {
-    "cordova-plugin-inappbrowser": {
+    "cordova-plugin-app-event": {
         "source": {
             "type": "git",
-            "url": "https://git-wip-us.apache.org/repos/asf/cordova-plugin-inappbrowser.git",
+            "url": "https://github.com/katzer/cordova-plugin-app-event",
             "subdir": "."
         },
         "is_top_level": true,
         "variables": {}
     },
-    "de.appplant.cordova.plugin.local-notification": {
+    "cordova-plugin-certificates": {
         "source": {
             "type": "git",
-            "url": "https://github.com/katzer/cordova-plugin-local-notifications",
+            "url": "https://github.com/hypery2k/cordova-certificate-plugin",
+            "subdir": "."
+        },
+        "is_top_level": true,
+        "variables": {}
+    },
+    "cordova-plugin-compat": {
+        "source": {
+            "type": "git",
+            "url": "https://github.com/apache/cordova-plugin-compat",
             "subdir": "."
         },
         "is_top_level": true,
@@ -26,24 +35,6 @@
         "is_top_level": true,
         "variables": {}
     },
-    "cordova-plugin-app-event": {
-        "source": {
-            "type": "git",
-            "url": "https://github.com/katzer/cordova-plugin-app-event",
-            "subdir": "."
-        },
-        "is_top_level": true,
-        "variables": {}
-    },
-    "cordova-plugin-whitelist": {
-        "source": {
-            "type": "git",
-            "url": "https://github.com/apache/cordova-plugin-whitelist",
-            "subdir": "."
-        },
-        "is_top_level": true,
-        "variables": {}
-    },
     "cordova-plugin-geolocation": {
         "source": {
             "type": "git",
@@ -53,18 +44,10 @@
         "is_top_level": true,
         "variables": {}
     },
-    "cordova-plugin-compat": {
-        "source": {
-            "type": "registry",
-            "id": "cordova-plugin-compat"
-        },
-        "is_top_level": false,
-        "variables": {}
-    },
-    "cordova-plugin-x-toast": {
+    "cordova-plugin-inappbrowser": {
         "source": {
             "type": "git",
-            "url": "https://github.com/EddyVerbruggen/Toast-PhoneGap-Plugin",
+            "url": "https://github.com/apache/cordova-plugin-inappbrowser",
             "subdir": "."
         },
         "is_top_level": true,
@@ -79,10 +62,30 @@
         "is_top_level": true,
         "variables": {}
     },
-    "cordova-plugin-certificates": {
+    "cordova-plugin-x-toast": {
         "source": {
             "type": "git",
-            "url": "https://github.com/hypery2k/cordova-certificate-plugin",
+            "url": "https://github.com/EddyVerbruggen/Toast-PhoneGap-Plugin",
+            "subdir": "."
+        },
+        "is_top_level": true,
+        "variables": {}
+    },
+    "de.appplant.cordova.plugin.local-notification": {
+        "source": {
+            "type": "git",
+            "url": "https://github.com/katzer/cordova-plugin-local-notifications",
+            "subdir": "."
+        },
+        "is_top_level": true,
+        "variables": {
+            "WindowsToastCapable": ""
+        }
+    },
+    "cordova-plugin-whitelist": {
+        "source": {
+            "type": "git",
+            "url": "https://github.com/apache/cordova-plugin-whitelist",
             "subdir": "."
         },
         "is_top_level": true,
