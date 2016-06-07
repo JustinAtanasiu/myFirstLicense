@@ -268,11 +268,14 @@
             $scope.selectCity = selectCity;
                     
             var searchList = function (searchBox) {
-                $http({
-                    method: 'GET',
-                    url: 'https://api.teleport.org/api/cities/?search=' + searchBox + '&embed=city%3Asearch-results%2Fcity%3Aitem'
+                 $http({
+                    url: 'http://localhost:8080/api/searchLoc',
+                    method: 'POST',
+                    data: { searchBox: searchBox },
+                    headers: {
+                        'x-access-token': localStorage.token
+                    }
                 }).then(function successCallback(response) {
-                    response.data._embedded['city:search-results'].splice(5);
                     $scope.data.searchBoxResponse = response.data._embedded['city:search-results'];
                 }, function errorCallback(response) {
 
