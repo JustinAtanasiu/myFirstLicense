@@ -134,7 +134,7 @@
 
             var getCity = function (longitude, latitude) {
                 $http({                    
-                    url: 'https://188.27.195.2/api/location',
+                    url: 'https://188.25.214.23/api/location',
                     method: 'POST',
                     data: {latitude: latitude, longitude: longitude},
                     headers: {
@@ -165,7 +165,7 @@
                     $scope.data.cityName = cityName;
                 }
                 $http({
-                    url: 'https://188.27.195.2/api/weather',
+                    url: 'https://188.25.214.23/api/weather',
                     method: 'POST',
                     data: { latitude: latitude, longitude: longitude },
                     headers: {
@@ -269,7 +269,7 @@
                     
             var searchList = function (searchBox) {
                  $http({
-                    url: 'http://localhost:8080/api/searchLoc',
+                    url: 'https://188.25.214.23/api/searchLoc',
                     method: 'POST',
                     data: { searchBox: searchBox },
                     headers: {
