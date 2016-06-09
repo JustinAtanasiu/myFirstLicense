@@ -135,4 +135,6 @@
   <plugin name="cordova-plugin-compat" version="1.0.0" />
   <plugin name="cordova-plugin-splashscreen" version="4.0.0" src="https://github.com/apache/cordova-plugin-splashscreen" />
   <plugin name="cordova-plugin-certificates" version="0.6.4" src="https://github.com/hypery2k/cordova-certificate-plugin" />
+  <plugin name="cordova-admob" version="4.1.10" src="https://github.com/appfeel/admob-google-cordova" />
+  <plugin name="cordova-connectivity-monitor" version="1.2.2" />
 </widget>
