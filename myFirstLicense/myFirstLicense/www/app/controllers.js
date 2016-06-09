@@ -1216,12 +1216,12 @@
                         else if (hoursDate.getHours() > 11 && hoursDate.getHours() < 18)
                             introduction = "Good afternoon! "
                         var speech = introduction;
-                        speech = speech +"Currently in " + $scope.data.cityName + " there are " + $scope.data.weatherTemp + " degrees Celcius. At the moment, the forecast says" + $scope.data.weatherIconPath.split('/')[2].split('.')[0].replace("-", " ") + ". ";
+                        speech = speech +"Currently in " + $scope.data.cityName + ", there are " + $scope.data.weatherTemp + " degrees Celcius. At the moment, the forecast says" + $scope.data.weatherIconPath.split('/')[2].split('.')[0].replace("-", " ") + ". ";
                         speech = speech + ($scope.data.reminders && $scope.data.reminders.length ? "For today you have reminders at " + $scope.data.reminders.join(",") + '. ' : "You have no active reminders today. ");
                         speech = speech + ($scope.financialInformation.dailySumLeft ? "The available sum for spending today according to the existing information is: " + $scope.financialInformation.dailySumLeft  + ". " : "");
                         speech = speech + "More weather information: " + $scope.data.weekDescr + " ";
                         speech = speech + (feedTitles !== "" ? "The top news at this hour are: " + feedTitles : "Unable to reach the news"); 
-                        speech = speech + "That is all for the moment.";
+                        speech = speech + "Thank you, that is all for the moment.";
                         TTS
                             .speak({
                                 text: speech,
