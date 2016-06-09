@@ -1156,7 +1156,6 @@
             $scope.feedSrc = [];
             $scope.feedSrc.push("http://feeds.bbci.co.uk/news/world/europe/rss.xml");
             $scope.feedSrc.push("http://feeds.bbci.co.uk/news/world/us_and_canada/rss.xml");
-            
             var loadFeed = function (e) {
                 $http({
                     method: 'GET',
@@ -1164,7 +1163,7 @@
                 }).then(function (res) {
                     var jsonFromXMLRSS = convertXML(res.data, false);                  
                     $scope.data.feeds = $scope.data.feeds.concat(jsonFromXMLRSS.rss.channel.item.splice(0, 2));                    
-                    $scope.data.feeds.forEach(function (feed) {
+                    $scope.data.feeds.forEach(function (feed, index) {
                         feed.thumbnail = { _url: 'img/news/newsBackground.jpg' };
                     });
                 }).catch(function (err) {
@@ -1199,13 +1198,39 @@
                 return new Date();
             }
             
-            $scope.$watchCollection('[data.reminders, financialInformation.dailySumLeft, data.cityName, data.weekDescr, data.weatherTemp, data.feeds]', function (newVal, oldVal) {
+            $scope.$watchCollection('[data.reminders, financialInformation.dailySumLeft, data.cityName, data.weekDescr, data.weatherTemp, data.feeds[3]]', function (newVal, oldVal) {
                 if (newVal[5] !== undefined && newVal[0] !== undefined && newVal[1] !== undefined && newVal[2] !== undefined && newVal[3] !== undefined && newVal[4] !== undefined)
-                    
-                    if (!localStorage.voiceDate || new Date((new Date()).getTime() - (new Date(localStorage.voiceDate).getTime())).getTime() > 1000 * 60 * 10)
-                        document.addEventListener("deviceready", function () {
-                            localStorage.voiceDate = new Date();
-                        });
+
+                    if (!localStorage.voiceDate || new Date((new Date()).getTime() - (new Date(localStorage.voiceDate).getTime())).getTime() > 1000 * 60 * 30) {
+                        localStorage.voiceDate = new Date();
+                        var feedTitles = "";
+                        $scope.data.feeds.forEach(function(feed, index){                            
+                            feedTitles = feedTitles + feed.title + (index === 3 ? '. ' : ', ');
+                        })
+                        var hoursDate = new Date();
+                        var introduction = "";
+                        if (hoursDate.getHours() <= 2 || hoursDate.getHours() >= 18)
+                            introduction = "Good evening! "
+                        else if (hoursDate.getHours() > 2 && hoursDate.getHours() < 12)
+                            introduction = "Good morning! "
+                        else if (hoursDate.getHours() > 11 && hoursDate.getHours() < 18)
+                            introduction = "Good afternoon! "
+                        var speech = introduction;
+                        speech = speech +"Currently in " + $scope.data.cityName + " there are " + $scope.data.weatherTemp + " degrees Celcius. At the moment, the forecast says" + $scope.data.weatherIconPath.split('/')[2].split('.')[0].replace("-", " ") + ". ";
+                        speech = speech + ($scope.data.reminders && $scope.data.reminders.length ? "For today you have reminders at " + $scope.data.reminders.join(",") + '. ' : "You have no active reminders today. ");
+                        speech = speech + ($scope.financialInformation.dailySumLeft ? "The available sum for spending today according to the existing information is: " + $scope.financialInformation.dailySumLeft  + ". " : "");
+                        speech = speech + "More weather information: " + $scope.data.weekDescr + " ";
+                        speech = speech + (feedTitles !== "" ? "The top news at this hour are: " + feedTitles : "Unable to reach the news"); 
+                        speech = speech + "That is all for the moment.";
+                        TTS
+                            .speak({
+                                text: speech,
+                                locale: 'en-GB',
+                                rate: 0.9
+                            }, function () {
+                            }, function (reason) {
+                            });
+                    }
             });
         }])
         
