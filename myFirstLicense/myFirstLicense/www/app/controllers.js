@@ -1204,7 +1204,6 @@
                     
                     if (!localStorage.voiceDate || new Date((new Date()).getTime() - (new Date(localStorage.voiceDate).getTime())).getTime() > 1000 * 60 * 10)
                         document.addEventListener("deviceready", function () {
-                            debugger;
                             localStorage.voiceDate = new Date();
                         });
             });
