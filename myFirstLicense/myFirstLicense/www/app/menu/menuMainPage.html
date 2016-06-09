@@ -1,0 +1,41 @@
+<ion-view view-title="Menu">
+    <ion-content style="overflow-scroll: false" class="padding">
+        <h3>Top News Today</h3>
+        <div ng-repeat="news in data.feeds">
+            <div class="item newsItemBackground" style="padding: 0px;" ng-click="browse(news.link)">
+                <div class="row">
+                    <div class="col-25 marginRight-20px">
+                        <img style="width: 100%; height: 100%;" ng-src="{{news.thumbnail._url}}" ng-if="news.thumbnail._url">
+                    </div>
+                    <div class="col-75">
+                        <h3>{{news.title}}</h3>
+                        <p ng-if="news.description.length>2" ng-bind-html="news.description"></p>
+                        <p ng-if="news.description.length<3" ng-bind-html="news.description[0]"></p>
+                        <p>{{news.link}}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row height-20vh">
+            <ul>
+                <li class="height-5vh widthMax" ng-if="data.cityName && data.weatherTempFormat">
+                    <div>
+                        <p class="font-12px" style="display: inline;">{{data.cityName + ": " + data.weatherTempFormat + " "}}</p>
+                        <image width="30" height="30" ng-src="{{$scope.data.weatherIconPath ? $scope.data.weatherIconPath : '/img/weatherIcons/clear-day.png'}}"
+                        style="vertical-align: middle;" style="display: inline;"></image>
+                    </div>
+                </li>
+                <li class="height-5vh widthMax" ng-if="data.reminders">
+                    <p style="vertical-align: middle;" class="font-12px">{{data.reminders && data.reminders.length ? "You have reminders today at: " + data.reminders.join(",")
+                        + "." : "You have no active reminders today."}}
+                </li>
+                <li class="height-5vh widthMax" ng-if="financialInformation.dailySumLeft">
+                    <p style="vertical-align: middle;" class="font-12px">{{"Daily sum available for today: " + financialInformation.dailySumLeft}}</p>
+                </li>
+                <li class="height-5vh widthMax" ng-if="data.weekDescr">
+                    <p style="vertical-align: middle;" class="font-12px longText">{{data.weekDescr}}</p>
+                </li>
+            </ul>
+        </div>
+    </ion-content>
+</ion-view>

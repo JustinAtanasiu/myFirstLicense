@@ -16,7 +16,7 @@
     
         .service('dbService', ["$state", "$ionicPopup", "$q", "md5", "$http", function ($state, $ionicPopup, $q, md5, $http) {
             var dbService = {};
-            var serverUrl = 'https://188.25.214.23';
+            var serverUrl = 'https://syblium.go.ro';
             
             dbService.get = function (id) {
                 var defer = $q.defer();
@@ -180,12 +180,13 @@
                                 title: 'We are sorry!',
                                 template: 'Something went wrong, please try again later.'
                             });
+                            return;
                         }
                     }
                     else {
                         localStorage.token = result.data.token;
                         localStorage.id = result.data.id;
-                        $state.go('news', { id: result.data.id });
+                        $state.go('menu', { id: result.data.id });
                     }                              
                             
                     // handle result
@@ -194,6 +195,7 @@
                         title: 'We are sorry!',
                         template: 'Something went wrong, please try again later.'
                     });
+                    return;
                 });
             };
             return dbService;

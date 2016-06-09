@@ -97,7 +97,7 @@
             <button ng-show="!tableHidden" class="floatRight button button-icon ion-minus" ng-click="showTable()">
                 </buttton>
         </div>
-        <div class="longText" type="search" ng-show="!tableHidden">
+        <div class="longText" type="search" ng-if="!tableHidden">
             <form>
                 <input class="widthMax" placeholder="Search for city" ng-model="data.searchBox" ng-keyup="searchList(data.searchBox)" type="text">
                 <ion-list ng-show="data.searchBox.length>1">
@@ -112,7 +112,7 @@
                 <ion-scroll direction="y" class="widthMax">
                     <div ng-repeat="city in data.cities track by $index">
                         <div class="row">
-                            <div class="col-75" style="margin-top: 5px" ng-click="getWeather(city.longitude, city.latitude, city.cityName)">
+                            <div class="col-75" style="margin-top: 5px" ng-click="getWeather(city.longitude, city.latitude, city.cityName, $index)">
                                 <h4 class="ion-item font-14px">
                                     {{city.cityName}}
                                 </h4>

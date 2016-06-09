@@ -148,6 +148,13 @@
                     controller: "notesCtrl",
                     params: { id: null }
                 })
+                .state("menu", {
+                    url: "/menu",
+                    cache: false,
+                    templateUrl: "app/menu/menuMainPage.html",
+                    controller: "mainPageCtrl",
+                    params: { id: null }
+                })
             var timePickerObj = {
                 inputTime: (((new Date()).getHours() * 60 * 60) + ((new Date()).getMinutes() * 60)),
                 format: 24,

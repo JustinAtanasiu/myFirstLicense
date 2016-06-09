@@ -37,6 +37,9 @@
                     <ion-item ng-show="$root.showSignUp" menu-close href="#/signUp">
                         Sign up
                     </ion-item>
+                    <ion-item ng-show="$root.showMenuItems" class="item-icon-left" menu-close ui-sref="menu({id: $root.id})">
+                        <i class="icon ion-ios-world-outline"></i>Menu
+                    </ion-item>
                     <ion-item ng-show="$root.showMenuItems" class="item-icon-left" menu-close ui-sref="news({id: $root.id})">
                         <i class="icon ion-social-rss-outline"></i>News
                     </ion-item>

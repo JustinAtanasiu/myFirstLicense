@@ -18,7 +18,7 @@
                 }  
                 if(localStorage.token && localStorage.id){
                     dbService.get(localStorage.id).then(function(result){
-                        $state.go('news', { id: localStorage.id });
+                        $state.go('menu', { id: localStorage.id });
                     }).catch(function (err) {
                     });                    
                 }
@@ -120,28 +120,8 @@
             $scope.data.searchBoxResponse = []; 
             $scope.data.cities = [];
             
-            var onSuccess = function (position) {
-                getCity(position.coords.longitude, position.coords.latitude);
-                getWeather(position.coords.longitude, position.coords.latitude);
-            };
-
-            function onError(error) {
-                $scope.weatherError = error;
-            }
-
-            navigator.geolocation.getCurrentPosition(onSuccess, onError);
-
-
-            var getCity = function (longitude, latitude) {
-                $http({                    
-                    url: 'https://188.25.214.23/api/location',
-                    method: 'POST',
-                    data: {latitude: latitude, longitude: longitude},
-                    headers: {
-                        'x-access-token': localStorage.token
-                    }
-                }).then(function successCallback(response) {
-                    $scope.data.cityName = response.data.address.city + ", " + response.data.address.country;
+            var showCity = function(response, latitude, longitude){
+                 $scope.data.cityName = response.data.address.city + ", " + response.data.address.country;
                     $scope.data.cities.push({cityName: response.data.address.city + ", " + response.data.address.country,
                                              latitude: latitude,
                                              longitude: longitude})
@@ -150,29 +130,10 @@
                             $scope.data.cities.push(location);
                         }, this);
                     });
-                }, function errorCallback(response) {
-                    // called asynchronously if an error occurs
-                    // or server returns response with an error status.
-                });
             }
-            
-            var getWeather = function(longitude, latitude, cityName){
-                if(cityName)
-                {   
-                    $ionicScrollDelegate.scrollTop();
-                    if(!$scope.tableHidden)
-                        $scope.tableHidden = !$scope.tableHidden;
-                    $scope.data.cityName = cityName;
-                }
-                $http({
-                    url: 'https://188.25.214.23/api/weather',
-                    method: 'POST',
-                    data: { latitude: latitude, longitude: longitude },
-                    headers: {
-                        'x-access-token': localStorage.token
-                    }
-                }).then(function successCallback(response) {
-                    $scope.data.weather = Math.round(response.data.currently.temperature) + '\xB0' + 'C';
+
+            var showWeather = function(response){
+                 $scope.data.weather = Math.round(response.data.currently.temperature) + '\xB0' + 'C';
                     $scope.data.weatherMin = Math.round(response.data.daily.data[0].temperatureMin) + '\xB0' + 'C';
                     $scope.data.weatherMax = Math.round(response.data.daily.data[0].temperatureMax) + '\xB0' + 'C';
                     response.data.hourly.data.splice(12);
@@ -212,14 +173,46 @@
                         $scope.data.dayDescr = response.data.hourly.summary;
                     if (response.data.daily)
                         $scope.data.weekDescr = response.data.daily.summary;
-                }, function errorCallback(response) {
-                     var alertPopup = $ionicPopup.alert({
-                                    title: 'Fetching data failed!',
-                                    template: 'We are sorry, but we could not reach you'
-                                });
-                });
             }
-
+            
+            var getWeather = function(longitude, latitude, cityName, index){
+                if (index === 0) {
+                    if (!$scope.tableHidden)
+                        $scope.tableHidden = !$scope.tableHidden;
+                    showWeather(JSON.parse(localStorage.weather));
+                    $ionicScrollDelegate.scrollTop();
+                    $scope.data.cityName = JSON.parse(localStorage.location).data.address.city + ", " + JSON.parse(localStorage.location).data.address.country;
+                }
+                else {
+                    if (cityName) {
+                        $ionicScrollDelegate.scrollTop();
+                        if (!$scope.tableHidden)
+                            $scope.tableHidden = !$scope.tableHidden;
+                        $scope.data.cityName = cityName;
+                    }
+                    $http({
+                        url: 'https://syblium.go.ro/api/weather',
+                        method: 'POST',
+                        data: { latitude: latitude, longitude: longitude },
+                        headers: {
+                            'x-access-token': localStorage.token
+                        }
+                    }).then(function successCallback(response) {
+                        showWeather(response);
+                    }, function errorCallback(response) {
+                        var alertPopup = $ionicPopup.alert({
+                            title: 'Fetching data failed!',
+                            template: 'We are sorry, but we could not reach you'
+                        });
+                    });
+                }
+            }
+            
+            if(localStorage.weather && localStorage.location){
+                showWeather(JSON.parse(localStorage.weather));
+                showCity(JSON.parse(localStorage.location), localStorage.latitude, localStorage.longitude);
+            }
+            
             $scope.getBackgroundStyle = function (imagepath) {
                 if(imagepath){
                     var css = {
@@ -240,12 +233,9 @@
             }
             
             $scope.getWeather = getWeather;
-            // $scope.data.weather = '-12' + '\xB0' + 'C';
-            // $scope.data.weatherMin = '-15\xB0' + 'C';
-            // $scope.data.weatherMax = '-10\xB0' + 'C';
-            // $scope.data.weatherInHours = [{temperature: 50}, {temperature: -10}, {temperature: -20}, {temperature: 50}, {temperature: -10}, {temperature: -20}, {temperature: 50}, {temperature: -10}, {temperature: -20}];
             var showTable = function () {
                 $scope.tableHidden = !$scope.tableHidden;
+                $ionicScrollDelegate.resize();
             }
 
             $scope.showTable = showTable;
@@ -269,7 +259,7 @@
                     
             var searchList = function (searchBox) {
                  $http({
-                    url: 'https://188.25.214.23/api/searchLoc',
+                    url: 'https://syblium.go.ro/api/searchLoc',
                     method: 'POST',
                     data: { searchBox: searchBox },
                     headers: {
@@ -339,7 +329,7 @@
             
             $scope.saveAlarm = function(alarm, weekDays){
                 if(alarm.active){
-                    if (alarm.weekDaysDisplay !== "Next") {
+                    if (alarm.weekDaysDisplay !== "Daily") {
                         weekDays.forEach(function (element, index) {
                             if(element === 1){
                                 var hour = parseInt(alarm.hourMinutes.split(":")[0]);
@@ -388,7 +378,8 @@
                             id: alarm.id,
                             title: "Reminder",
                             text: alarm.message ? alarm.message : "No reminder message",
-                            at: alarmTime,
+                            firstAt: alarmTime,
+                            every: "day",
                         });
                     }
                 }
@@ -455,7 +446,7 @@
                 var myAlarm = {
                     hourMinutes: val.hours + ":" + val.minutes,
                     message: val.message ? val.message : "No reminder message",
-                    weekDaysDisplay: displayDays.length ? displayDays.join(',') : "Next",
+                    weekDaysDisplay: displayDays.length ? displayDays.join(',') : "Daily",
                     active: true,
                     id: maxId+1
                 };
@@ -764,11 +755,11 @@
                     $scope.data.dayOfTheMonth = 1;   
                     
                 dbService.get($scope.$root.id).then(function (result) {
-                    var myObj = {  monthlyIncome: $scope.data.monthlyIncome,
-                    monthlySpendings: $scope.data.monthlySpendings,
-                    todaySpendings: $scope.data.todaySpendings,
-                    dayOfTheMonth: $scope.data.dayOfTheMonth,
-                    totalSpendingsMonth: $scope.data.totalSpendingsMonth,
+                    var myObj = {  monthlyIncome: $scope.data.monthlyIncome ? $scope.data.monthlyIncome : 0,
+                    monthlySpendings: $scope.data.monthlySpendings ? $scope.data.monthlySpendings : 0,
+                    todaySpendings: $scope.data.todaySpendings ? $scope.data.todaySpendings: 0,
+                    dayOfTheMonth: $scope.data.dayOfTheMonth ? $scope.data.dayOfTheMonth : 1,
+                    totalSpendingsMonth: $scope.data.totalSpendingsMonth ? $scope.data.totalSpendingsMonth: 0,
                     resetDay: myResetDay,
                     resetMonth: myResetMonth,
                     monthlyTransactions: $scope.data.monthlyTransactions
@@ -807,7 +798,7 @@
                 }
 
                 if (!$scope.data.dayOfTheMonth)
-                    $scope.data.dailySumLeft = undefined;
+                    $scope.data.dailySumLeft = 0;
                 else {
                     var now = new Date();
                     var nowDays = now.getDate();
@@ -960,6 +951,265 @@
             }
                        
         }])
+        
+        .controller("mainPageCtrl", ["$scope", "dbService", "$http", "$ionicPopup", "$stateParams", "xmlParser", function ($scope, dbService, $http, $ionicPopup, $stateParams, xmlParser) {
+            $scope.$on('$ionicView.beforeEnter', function (e, data) {
+                $scope.$root.showMenuItems = true;
+                $scope.$root.showSignUp = false;
+                $scope.$root.id = localStorage.id;    
+                switch (window.orientation) {
+                    case -90:
+                    case 90:
+                        $scope.isLandscape = true;
+                        break;
+                    default:
+                        $scope.isLandscape = false;
+                        break;
+                }           
+            });
+            
+            window.addEventListener("orientationchange", function () {
+                // Announce the new orientation number
+                switch (window.orientation) {
+                    case -90:
+                    case 90:
+                        $scope.isLandscape = true;
+                        $scope.$apply(); // <--
+                        break;
+                    default:
+                        $scope.isLandscape = false;
+                        $scope.$apply(); // <--
+                        break;
+                }
+            }, false);
+            
+            $scope.data={};
+            $scope.result={};
+            
+            var onSuccess = function (position) {
+                getCity(position.coords.longitude, position.coords.latitude);
+                getWeather(position.coords.longitude, position.coords.latitude);
+            };
+
+            function onError(error) {
+                $scope.weatherError = error;
+            }
+            if (!localStorage.locationDate || !localStorage.location || new Date((new Date()).getTime() - (new Date(localStorage.locationDate).getTime())).getTime() > 1000 * 60 * 10) {
+                navigator.geolocation.getCurrentPosition(onSuccess, onError);
+            } else {
+                $scope.data.cityName = localStorage.cityName;
+                $scope.data.weatherTemp = localStorage.weatherTemp;
+                $scope.data.weatherIconPath = localStorage.weatherIconPath;
+                $scope.data.weekDescr = localStorage.weekDescr;
+                $scope.data.weatherTempFormat = localStorage.weatherTemp + '\xB0' + 'C';
+            }
+            dbService.get(localStorage.id).then(function (result) {
+                $scope.financialInformation = result.financialInformation;
+                $scope.alarmTimes = result.alarmTimes;
+                $scope.data.reminders = [];
+                
+                $scope.alarmTimes.forEach(function(alarm){
+                    if (alarm.active) {
+                        var hour = parseInt(alarm.hourMinutes.split(":")[0]);
+                        var minutes = parseInt(alarm.hourMinutes.split(":")[1]);
+                        var alarmDate = new Date();
+                        alarmDate.setHours(hour);
+                        alarmDate.setMinutes(minutes);
+                        if (alarm.weekDaysDisplay === "Daily") {
+                            if (alarmDate > (new Date())) {
+                                $scope.data.reminders.push(alarm.hourMinutes);
+                            }
+                        }
+                        else {
+                            var weekdays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+                            alarm.weekDaysDisplay = alarm.weekDaysDisplay.split(",");
+                            alarm.weekDaysDisplay.forEach(function (week) {
+                                for (var i = 0; i < 6; i++) {
+                                    if (week === weekdays[i] && (new Date).getDay() === i) {
+                                        var hour = parseInt(alarm.hourMinutes.split(":")[0]);
+                                        var minutes = parseInt(alarm.hourMinutes.split(":")[1]);
+                                        var alarmDate = new Date();
+                                        alarmDate.setHours(hour);
+                                        alarmDate.setMinutes(minutes);
+                                        if (alarmDate > (new Date())) {
+                                            $scope.data.reminders.push(alarm.hourMinutes);
+                                        }
+                                        return;
+                                    }
+                                }
+                            });
+                        }
+                    }
+                });
+                
+                $scope.data.reminders.sort();
+                
+                var myResetDay;
+                var myResetMonth;
+                if (!$scope.financialInformation.dayOfTheMonth)
+                    $scope.financialInformation.dailySumLeft = 0;
+                else {
+
+                    myResetDay = new Date(result.financialInformation.resetDay);
+                    myResetMonth = new Date(result.financialInformation.resetMonth);
+                    if (new Date() > myResetMonth) {
+                        $scope.financialInformation.remainingSum = $scope.financialInformation.monthlyIncome - $scope.financialInformation.monthlySpendings;
+                        $scope.financialInformation.totalSpendingsMonth = 0;
+                        if ((new Date()).getMonth() !== 11)
+                            myResetMonth = new Date(myResetMonth.getFullYear(), myResetMonth.getMonth() + 1, $scope.financialInformation.dayOfTheMonth + 1, 0, 0, 0);
+                        else
+                            myResetMonth = new Date(myResetMonth.getFullYear() + 1, myResetMonth.getMonth() + 1, $scope.financialInformation.dayOfTheMonth + 1, 0, 0, 0);
+
+                    }
+                    else
+                        $scope.financialInformation.remainingSum = $scope.financialInformation.monthlyIncome - $scope.financialInformation.monthlySpendings + $scope.financialInformation.totalSpendingsMonth;
+
+                    var now = new Date();
+                    var nowDays = now.getDate();
+                    var nowMonths = now.getMonth();
+
+                    if (nowMonths === 1) {
+                        if (nowDays >= getLastDayMonth($scope.financialInformation.dayOfTheMonth))
+                            $scope.financialInformation.dailySumLeft = (($scope.financialInformation.remainingSum) / (29 - nowDays + getLastDayMonth($scope.financialInformation.dayOfTheMonth))).toFixed(2);
+                        else
+                            $scope.financialInformation.dailySumLeft = (($scope.financialInformation.remainingSum) / (getLastDayMonth($scope.financialInformation.dayOfTheMonth) - nowDays)).toFixed(2);
+                    }
+                    else if (nowMonths === 0 || nowMonths === 2 || nowMonths === 4 || nowMonths === 6 || nowMonths === 7 || nowMonths === 9 || nowMonths === 11) {
+                        if (nowDays >= getLastDayMonth($scope.financialInformation.dayOfTheMonth))
+                            $scope.financialInformation.dailySumLeft = (($scope.financialInformation.remainingSum) / (32 - nowDays + getLastDayMonth($scope.financialInformation.dayOfTheMonth))).toFixed(2);
+                        else
+                            $scope.financialInformation.dailySumLeft = (($scope.financialInformation.remainingSum) / (getLastDayMonth($scope.financialInformation.dayOfTheMonth) - nowDays)).toFixed(2);
+                    }
+                    else {
+                        if (nowDays >= getLastDayMonth($scope.financialInformation.dayOfTheMonth))
+                            $scope.financialInformation.dailySumLeft = (($scope.financialInformation.remainingSum) / (31 - nowDays + getLastDayMonth($scope.financialInformation.dayOfTheMonth))).toFixed(2);
+                        else
+                            $scope.financialInformation.dailySumLeft = (($scope.financialInformation.remainingSum) / (getLastDayMonth($scope.financialInformation.dayOfTheMonth) - nowDays)).toFixed(2);
+                    }
+                }                
+            });
+            
+            var getLastDayMonth = function (day) {
+                if ((new Date()).getMonth() === 1 && day > 29) {
+                    $scope.financialInformation.dayOfTheMonth = 29;
+                    return 29;
+                }
+                else if (((new Date()).getMonth() === 3 || (new Date()).getMonth() === 5 || (new Date()).getMonth() === 8 || (new Date()).getMonth() === 10) && day > 30) {
+                    $scope.financialInformation.dayOfTheMonth = 30;
+                    return 30;
+                }
+                else if (((new Date()).getMonth() === 0 || (new Date()).getMonth() === 2 || (new Date()).getMonth() === 4 || (new Date()).getMonth() === 6 || (new Date()).getMonth() === 7 || (new Date()).getMonth() === 9 || (new Date()).getMonth() === 11) && day > 31) {
+                    $scope.financialInformation.dayOfTheMonth = 31;
+                    return 31;
+                }
+                else
+                    return day;
+            }
+            
+            var getCity = function (longitude, latitude) {
+                $http({                    
+                    url: 'https://syblium.go.ro/api/location',
+                    method: 'POST',
+                    data: {latitude: latitude, longitude: longitude},
+                    headers: {
+                        'x-access-token': localStorage.token
+                    }
+                }).then(function successCallback(response) {
+                    localStorage.location = JSON.stringify(response);                  
+                    localStorage.locationDate = new Date();
+                    localStorage.latitude = latitude;
+                    localStorage.longitude = longitude;
+                    localStorage.cityName = response.data.address.city + ", " + response.data.address.country;                   
+                    $scope.data.cityName = localStorage.cityName;
+                }, function errorCallback(response) {
+                    // called asynchronously if an error occurs
+                    // or server returns response with an error status.
+                });
+            };
+            
+            var getWeather = function(longitude, latitude, cityName){                
+                $http({
+                    url: 'https://syblium.go.ro/api/weather',
+                    method: 'POST',
+                    data: { latitude: latitude, longitude: longitude },
+                    headers: {
+                        'x-access-token': localStorage.token
+                    }
+                }).then(function successCallback(response) {
+                    localStorage.weather = JSON.stringify(response);
+                    localStorage.weatherTemp = Math.round(response.data.currently.temperature);
+                    localStorage.weatherIconPath = "img/weatherIcons/" + response.data.currently.icon + ".png";
+                    if (response.data.daily)
+                        localStorage.weekDescr = response.data.daily.summary;
+                    $scope.data.weekDescr = localStorage.weekDescr;
+                    $scope.data.weatherTemp = localStorage.weatherTemp;
+                    $scope.data.weatherTempFormat = localStorage.weatherTemp + '\xB0' + 'C';
+                    $scope.data.weatherIconPath = localStorage.weatherIconPath;
+                    }, function errorCallback(response) {
+                        var alertPopup = $ionicPopup.alert({
+                            title: 'Fetching data failed!',
+                            template: 'We are sorry, but we could not reach you'
+                        });
+                    });
+            };
+            $scope.data.feeds = [];
+            $scope.feedSrc = [];
+            $scope.feedSrc.push("http://feeds.bbci.co.uk/news/world/europe/rss.xml");
+            $scope.feedSrc.push("http://feeds.bbci.co.uk/news/world/us_and_canada/rss.xml");
+            
+            var loadFeed = function (e) {
+                $http({
+                    method: 'GET',
+                    url: e
+                }).then(function (res) {
+                    var jsonFromXMLRSS = convertXML(res.data, false);                  
+                    $scope.data.feeds = $scope.data.feeds.concat(jsonFromXMLRSS.rss.channel.item.splice(0, 2));                    
+                    $scope.data.feeds.forEach(function (feed) {
+                        feed.thumbnail = { _url: 'img/news/newsBackground.jpg' };
+                    });
+                }).catch(function (err) {
+                    console.log(err);
+                });
+            }
+            
+            $scope.feedSrc.forEach(function(element){
+                $scope.data.feeds = [];
+                loadFeed(element);
+            });            
+            
+            
+            var convertXML = function (data, _withOutBind) {
+
+                if (_withOutBind === true) {
+                    try {
+                        return xmlParser.xml_str2json_withOutBind(data);
+                    } catch (EE) {
+                    }
+
+                } else {
+                    return xmlParser.xml_str2json(data);
+                }
+            }
+
+            $scope.browse = function (v) {
+                window.open(v, "_system", "location=yes");
+            }
+            
+            $scope.getDate = function(){
+                return new Date();
+            }
+            
+            $scope.$watchCollection('[data.reminders, financialInformation.dailySumLeft, data.cityName, data.weekDescr, data.weatherTemp, data.feeds]', function (newVal, oldVal) {
+                if (newVal[5] !== undefined && newVal[0] !== undefined && newVal[1] !== undefined && newVal[2] !== undefined && newVal[3] !== undefined && newVal[4] !== undefined)
+                    
+                    if (!localStorage.voiceDate || new Date((new Date()).getTime() - (new Date(localStorage.voiceDate).getTime())).getTime() > 1000 * 60 * 10)
+                        document.addEventListener("deviceready", function () {
+                            debugger;
+                            localStorage.voiceDate = new Date();
+                        });
+            });
+        }])
+        
 
     //errorCtrl managed the display of error messages bubbled up from other controllers, directives, myappService
         .controller("errorCtrl", ["$scope", "myappService", function ($scope, myappService) {
