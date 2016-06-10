@@ -21,7 +21,7 @@
                 <li class="height-5vh widthMax" ng-if="data.cityName && data.weatherTempFormat">
                     <div>
                         <p class="font-12px" style="display: inline;">{{data.cityName + ": " + data.weatherTempFormat + " "}}</p>
-                        <image width="30" height="30" ng-src="{{$scope.data.weatherIconPath ? $scope.data.weatherIconPath : '/img/weatherIcons/clear-day.png'}}"
+                        <image width="30" height="30" ng-src="{{data.weatherIconPath ? data.weatherIconPath : 'img/weatherIcons/clear-day.png'}}"
                         style="vertical-align: middle;" style="display: inline;"></image>
                     </div>
                 </li>
