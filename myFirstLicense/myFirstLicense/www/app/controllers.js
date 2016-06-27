@@ -330,6 +330,7 @@
             $scope.saveAlarm = function(alarm, weekDays){
                 if(alarm.active){
                     if (alarm.weekDaysDisplay !== "Daily") {
+                        var alarmIdIndex = 0;
                         weekDays.forEach(function (element, index) {
                             if(element === 1){
                                 var hour = parseInt(alarm.hourMinutes.split(":")[0]);
@@ -346,12 +347,13 @@
                                     } 
                                 }
                                 cordova.plugins.notification.local.schedule({
-                                    id: alarm.id,
+                                    id: alarm.id[alarmIdIndex],
                                     title: "Reminder",
                                     text: alarm.message ? alarm.message : "No reminder message",
                                     firstAt: alarmTime,
                                     every: "week",
                                 });
+                                alarmIdIndex++;
                             }
                         });
                        
@@ -434,22 +436,39 @@
             var addAlarm = function (val, weekDays) {
                 var displayDays =[];
                 var maxId=1;
-                $scope.data.alarms.forEach(function(element){
-                    if(maxId<=element.id)
-                        maxId = element.id;
+                $scope.data.alarms.forEach(function (element) {
+                    if (!element.id.length) {
+                        if (maxId <= element.id)
+                            maxId = element.id;
+                    }
+                    else {
+                        element.id.forEach(function (element) {
+                            if (maxId <= element)
+                                maxId = element;
+                        }, this);
+                    }
                 });
                 weekDays.forEach(function(element, index) {
                     if(element === 1){
                         displayDays.push(weekdaysDisplay[index]);
                     }
                 }, this);
+                
+                if (displayDays.length) {
+                    var idsArray = [];
+                    for (var i = 0; i < displayDays.length; i++) {
+                        idsArray.push(maxId+i+1);
+                    }
+                }
+                
                 var myAlarm = {
                     hourMinutes: val.hours + ":" + val.minutes,
                     message: val.message ? val.message : "No reminder message",
                     weekDaysDisplay: displayDays.length ? displayDays.join(',') : "Daily",
                     active: true,
-                    id: maxId+1
+                    id: idsArray && idsArray.length ? idsArray : maxId+1
                 };
+                
                 $scope.data.alarms.push(myAlarm);
                 $scope.saveAlarm(myAlarm, weekDays);                
             };
